@@ -2,7 +2,8 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.*;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

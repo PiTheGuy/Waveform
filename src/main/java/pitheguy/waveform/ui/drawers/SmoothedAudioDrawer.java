@@ -2,7 +2,8 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.*;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.util.rolling.RollingAverageTracker;
 
 public abstract class SmoothedAudioDrawer extends AudioDrawer {

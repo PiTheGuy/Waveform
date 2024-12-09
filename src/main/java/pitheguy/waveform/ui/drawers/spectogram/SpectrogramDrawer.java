@@ -1,6 +1,7 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.*;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.ui.drawers.CompoundDrawer;
 

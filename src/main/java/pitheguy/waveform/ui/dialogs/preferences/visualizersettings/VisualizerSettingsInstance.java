@@ -3,7 +3,8 @@ package pitheguy.waveform.ui.dialogs.preferences.visualizersettings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class VisualizerSettingsInstance {
     private final Map<String, Setting<?>> settings;

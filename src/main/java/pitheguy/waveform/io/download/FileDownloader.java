@@ -1,7 +1,7 @@
 package pitheguy.waveform.io.download;
 
 import java.io.*;
-import java.net.*;
+import java.net.URI;
 import java.net.http.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;

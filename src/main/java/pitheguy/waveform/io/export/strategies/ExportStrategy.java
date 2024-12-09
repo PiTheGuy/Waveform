@@ -6,7 +6,8 @@ import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.util.*;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 

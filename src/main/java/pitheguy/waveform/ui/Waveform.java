@@ -9,15 +9,16 @@ import pitheguy.waveform.io.download.YoutubeAudioGetter;
 import pitheguy.waveform.io.export.ExportManager;
 import pitheguy.waveform.io.microphone.MicrophoneCapture;
 import pitheguy.waveform.io.microphone.MicrophoneFrameUpdater;
-import pitheguy.waveform.main.*;
+import pitheguy.waveform.main.Main;
+import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.controls.ControlsPanel;
 import pitheguy.waveform.ui.dialogs.DialogManager;
 import pitheguy.waveform.ui.dialogs.preferences.PreferencesDialog;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
-import pitheguy.waveform.ui.visualizer.VisualizerSelectionWindow;
 import pitheguy.waveform.ui.queue.QueueKeyboardListener;
 import pitheguy.waveform.ui.queue.QueueManagementPanel;
 import pitheguy.waveform.ui.util.KeyBindingManager;
+import pitheguy.waveform.ui.visualizer.VisualizerSelectionWindow;
 import pitheguy.waveform.util.*;
 
 import javax.swing.*;
@@ -27,8 +28,8 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 

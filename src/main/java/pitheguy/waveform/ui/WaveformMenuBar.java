@@ -1,8 +1,8 @@
 package pitheguy.waveform.ui;
 
+import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.download.YoutubeAudioGetter;
 import pitheguy.waveform.io.session.SessionManager;
-import pitheguy.waveform.config.Config;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.util.MenuHelper;
 import pitheguy.waveform.util.ResourceGetter;
@@ -11,7 +11,6 @@ import pitheguy.waveform.util.rolling.RollingList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

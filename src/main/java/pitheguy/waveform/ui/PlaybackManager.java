@@ -1,8 +1,8 @@
 package pitheguy.waveform.ui;
 
+import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.io.players.AudioPlayer;
-import pitheguy.waveform.config.Config;
 import pitheguy.waveform.util.Util;
 
 import java.io.File;

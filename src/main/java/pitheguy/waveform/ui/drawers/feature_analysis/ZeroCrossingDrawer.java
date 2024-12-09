@@ -1,6 +1,5 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
-import pitheguy.waveform.config.Config;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;

@@ -1,7 +1,8 @@
 package pitheguy.waveform.ui.visualizer;
 
 import org.apache.commons.cli.*;
-import pitheguy.waveform.main.*;
+import pitheguy.waveform.main.Main;
+import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.Util;
 

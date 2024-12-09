@@ -1,7 +1,8 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.*;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 
 import java.util.*;
 

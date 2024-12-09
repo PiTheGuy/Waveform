@@ -1,7 +1,8 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.*;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.LineGraphDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 

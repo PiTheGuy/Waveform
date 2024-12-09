@@ -1,12 +1,10 @@
 package pitheguy.waveform.io;
 
-import pitheguy.waveform.config.Config;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 
 public class FileConverter {

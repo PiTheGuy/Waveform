@@ -1,13 +1,10 @@
 package pitheguy.waveform.ui;
 
 import org.junit.jupiter.api.*;
-import pitheguy.waveform.config.Config;
-import pitheguy.waveform.config.LoopState;
 import pitheguy.waveform.io.TrackInfo;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;

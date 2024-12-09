@@ -1,7 +1,6 @@
 package pitheguy.waveform.main;
 
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
-import pitheguy.waveform.ui.drawers.VolumeDrawer;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.ui.drawers.feature_analysis.*;
 import pitheguy.waveform.ui.drawers.spectogram.*;

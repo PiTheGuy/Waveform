@@ -3,8 +3,7 @@ package pitheguy.waveform.main.validator;
 import org.apache.commons.cli.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CommandLineValidatorTest {
     @Test

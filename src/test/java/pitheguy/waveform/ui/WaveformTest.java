@@ -2,7 +2,7 @@ package pitheguy.waveform.ui;
 
 import org.junit.jupiter.api.Test;
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.main.*;
+import pitheguy.waveform.main.Visualizer;
 
 import java.io.File;
 

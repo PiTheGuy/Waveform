@@ -1,8 +1,8 @@
 package pitheguy.waveform.ui.dialogs.preferences;
 
+import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.session.SavedPreferences;
 import pitheguy.waveform.io.session.SessionManager;
-import pitheguy.waveform.config.Config;
 import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.ButtonsPanel;

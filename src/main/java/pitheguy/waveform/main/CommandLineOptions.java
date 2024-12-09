@@ -1,6 +1,7 @@
 package pitheguy.waveform.main;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 
 public class CommandLineOptions {
     private final Options allOptions = new Options();

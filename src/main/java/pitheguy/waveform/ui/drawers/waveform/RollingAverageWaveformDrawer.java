@@ -1,6 +1,7 @@
 package pitheguy.waveform.ui.drawers.waveform;
 
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.*;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 
 import java.util.ArrayDeque;
 

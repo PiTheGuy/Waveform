@@ -1,17 +1,19 @@
 package pitheguy.waveform.ui.queue;
 
-import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.ui.AudioTransferHandler;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.ui.util.*;
+import pitheguy.waveform.ui.util.ClickableMouseListener;
+import pitheguy.waveform.ui.util.MenuHelper;
 import pitheguy.waveform.util.Util;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;

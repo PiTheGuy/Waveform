@@ -1,14 +1,13 @@
 package pitheguy.waveform.ui.queue;
 
 import com.google.api.client.repackaged.com.google.common.annotations.VisibleForTesting;
-import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.controls.ControlButton;
 import pitheguy.waveform.util.Util;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.Collections;
 
 public class ShuffleButton extends ControlButton {
     public static final ImageIcon ICON = new ImageIcon(Waveform.class.getResource("/icons/shuffle.png"));

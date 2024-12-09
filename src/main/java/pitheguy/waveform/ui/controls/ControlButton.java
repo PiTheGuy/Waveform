@@ -4,8 +4,7 @@ import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.util.HandIconMouseListener;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 
 public abstract class ControlButton extends JButton {
     protected final Waveform parent;

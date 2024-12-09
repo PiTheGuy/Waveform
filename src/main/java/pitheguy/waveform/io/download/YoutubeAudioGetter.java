@@ -4,7 +4,8 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.util.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;

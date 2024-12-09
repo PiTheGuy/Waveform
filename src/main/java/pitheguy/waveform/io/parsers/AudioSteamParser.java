@@ -1,7 +1,7 @@
 package pitheguy.waveform.io.parsers;
 
-import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.io.AudioData;
 
 import javax.sound.sampled.*;
 import java.io.File;

@@ -3,7 +3,6 @@ package pitheguy.waveform.ui.dialogs.preferences;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Test;
 import pitheguy.waveform.main.Main;
-import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;
 
 import java.awt.*;

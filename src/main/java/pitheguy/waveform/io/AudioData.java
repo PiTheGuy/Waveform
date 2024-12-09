@@ -1,7 +1,7 @@
 package pitheguy.waveform.io;
 
-import pitheguy.waveform.io.microphone.MicrophoneCapture;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.io.microphone.MicrophoneCapture;
 
 import java.util.Arrays;
 
