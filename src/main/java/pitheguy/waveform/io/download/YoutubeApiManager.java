@@ -18,13 +18,19 @@ public class YoutubeApiManager {
 
     public static List<PlaylistItem> getPlaylistItems(String playlistId) throws IOException {
         List<PlaylistItem> playlistItems = new ArrayList<>();
-        String response = sendRequest(PLAYLIST_ITEMS_FUNCTION_URL, "playlistId", playlistId);
-        JsonArray items = JsonParser.parseString(response).getAsJsonArray();
-        for (JsonElement item : items) {
-            String videoId = item.getAsJsonObject().get("videoId").getAsString();
-            String title = item.getAsJsonObject().get("title").getAsString();
-            playlistItems.add(new PlaylistItem(VIDEO_PREFIX + videoId, title));
-        }
+        String pageToken = null;
+        do {
+            String response = sendPlaylistItemsRequest(playlistId, pageToken);
+            JsonObject json = JsonParser.parseString(response).getAsJsonObject();
+            pageToken = json.has("nextPageToken") ? json.get("nextPageToken").getAsString() : null;
+            JsonArray items = json.getAsJsonArray("items");
+            for (JsonElement item : items) {
+                JsonObject snippet = item.getAsJsonObject().getAsJsonObject("snippet");
+                String videoId = snippet.getAsJsonObject("resourceId").get("videoId").getAsString();
+                String title = snippet.get("title").getAsString();
+                playlistItems.add(new PlaylistItem(VIDEO_PREFIX + videoId, title));
+            }
+        } while (pageToken != null);
         return Collections.synchronizedList(playlistItems);
     }
 
@@ -34,7 +40,7 @@ public class YoutubeApiManager {
         else if (url.startsWith(VIDEO_PREFIX)) videoId = url.substring(VIDEO_PREFIX.length());
         else throw new IllegalArgumentException("Invalid video url: " + url);
         if (videoId.contains("?")) videoId = videoId.substring(0, videoId.indexOf("?"));
-        String response = sendRequest(VIDEO_DATA_FUNCTION_URL, "videoId", videoId);
+        String response = sendVideoDataRequest(videoId);
         JsonObject json = JsonParser.parseString(response).getAsJsonObject();
         JsonArray items = json.get("items").getAsJsonArray();
         if (!items.isEmpty()) {
@@ -44,9 +50,18 @@ public class YoutubeApiManager {
         }
     }
 
-    private static String sendRequest(String functionUrl, String paramName, String paramValue) throws IOException {
+    private static String sendVideoDataRequest(String videoId) throws IOException {
+        return sendRequest(VIDEO_DATA_FUNCTION_URL + "?videoId=" + videoId);
+    }
+
+    private static String sendPlaylistItemsRequest(String playlistId, String pageToken) throws IOException {
+        String url = PLAYLIST_ITEMS_FUNCTION_URL + "?playlistId=" + playlistId;
+        if (pageToken != null) url += "&pageToken=" + pageToken;
+        return sendRequest(url);
+    }
+
+    private static String sendRequest(String url) throws IOException {
         try {
-            String url = functionUrl + "?" + paramName + "=" + paramValue;
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
             HttpResponse<InputStream> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofInputStream());
             try (InputStream body = response.body()) {
