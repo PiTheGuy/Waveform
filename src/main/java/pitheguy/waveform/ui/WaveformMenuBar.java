@@ -182,8 +182,7 @@ public class WaveformMenuBar extends JMenuBar {
         previousVisualizers.remove(visualizer);
         previousVisualizers.add(visualizer);
         repopulateVisualizerMenu();
-        if (SessionManager.getInstance() != null)
-            Util.showErrorOnException(() -> SessionManager.getInstance().savePreviousVisualizers(getPreviousVisualizers()), "Failed to save previous visualizers");
+        if (SessionManager.getInstance() != null) SessionManager.getInstance().savePreviousVisualizers(getPreviousVisualizers());
     }
 
     public void updateColors() {

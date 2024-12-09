@@ -1,5 +1,6 @@
 package pitheguy.waveform.main;
 
+import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.ui.drawers.feature_analysis.*;
@@ -108,6 +109,11 @@ public enum Visualizer {
 
     public boolean isCommandLineOnly() {
         return commandLineOnly;
+    }
+
+    public boolean shouldShowEpilepsyWarning() {
+        if (SessionManager.getInstance() == null) return false;
+        return getDrawer().shouldShowEpilepsyWarning();
     }
 
     public String getName() {

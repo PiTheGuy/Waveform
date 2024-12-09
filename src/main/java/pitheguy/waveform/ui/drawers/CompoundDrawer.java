@@ -56,4 +56,9 @@ public abstract class CompoundDrawer extends AudioDrawer {
         return drawer.usesDynamicIcon();
     }
 
+    @Override
+    public boolean shouldShowEpilepsyWarning() {
+        if (drawer == null) return super.shouldShowEpilepsyWarning();
+        return drawer.shouldShowEpilepsyWarning();
+    }
 }

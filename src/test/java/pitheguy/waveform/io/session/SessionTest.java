@@ -17,7 +17,7 @@ class SessionTest {
     @Test
     void testSaveCreatesFile() throws IOException {
         SavedPreferences preferences = SavedPreferences.create(Color.ORANGE, Color.GREEN, Color.BLUE, false, true, true, false, false);
-        Session session = new Session(preferences, List.of());
+        Session session = new Session(preferences, List.of(), List.of());
         session.save(SESSION_FILE);
         assertTrue(SESSION_FILE.exists());
         Files.delete(SESSION_FILE.toPath());
@@ -26,7 +26,7 @@ class SessionTest {
     @Test
     void testSaveAndLoadPreferences() throws IOException {
         SavedPreferences preferences = SavedPreferences.create(Color.RED, Color.GREEN, Color.BLUE, false, true, true, false, false);
-        Session session = new Session(preferences, List.of());
+        Session session = new Session(preferences, List.of(), List.of());
         session.save(SESSION_FILE);
         SavedPreferences loadedPreferences = Session.load(SESSION_FILE).savedPreferences();
         assertEquals(preferences, loadedPreferences);

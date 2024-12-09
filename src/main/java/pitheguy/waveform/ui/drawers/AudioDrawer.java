@@ -158,4 +158,8 @@ public abstract class AudioDrawer {
     public boolean usesDynamicIcon() {
         return true;
     }
+
+    public boolean shouldShowEpilepsyWarning() {
+        return false;
+    }
 }

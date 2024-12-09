@@ -12,8 +12,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public record Session(SavedPreferences savedPreferences, List<Visualizer> previousVisualizers) {
-    public static final Session EMPTY = new Session(SavedPreferences.EMPTY, List.of());
+public record Session(SavedPreferences savedPreferences, List<Visualizer> previousVisualizers, List<String> suppressedWarnings) {
+    public static final Session EMPTY = new Session(SavedPreferences.EMPTY, List.of(), List.of());
 
     void save(File file) throws IOException {
         if (!file.exists()) {
@@ -27,6 +27,9 @@ public record Session(SavedPreferences savedPreferences, List<Visualizer> previo
         previousVisualizers.stream().map(Enum::name).forEach(visualizers::add);
         json.add("previousVisualizers", visualizers);
         json.add("visualizerSettings", VisualizerSettings.saveToJson());
+        JsonArray suppressedWarnings = new JsonArray();
+        this.suppressedWarnings.forEach(suppressedWarnings::add);
+        json.add("suppressedWarnings", suppressedWarnings);
         Files.write(file.toPath(), json.toString().getBytes());
     }
 
@@ -40,10 +43,13 @@ public record Session(SavedPreferences savedPreferences, List<Visualizer> previo
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
             SavedPreferences savedPreferences = SavedPreferences.fromJson(json.getAsJsonObject("preferences"));
             List<Visualizer> previousVisualizers = new ArrayList<>();
+            List<String> suppressedWarnings = new ArrayList<>();
             if (json.has("previousVisualizers"))
                 json.getAsJsonArray("previousVisualizers").forEach(visualizer -> previousVisualizers.add(Visualizer.valueOf(visualizer.getAsString())));
+            if (json.has("suppressedWarnings"))
+                json.getAsJsonArray("suppressedWarnings").forEach(warning -> suppressedWarnings.add(warning.getAsString()));
             if (json.has("visualizerSettings")) VisualizerSettings.loadFromJson(json.getAsJsonObject("visualizerSettings"));
-            return new Session(savedPreferences, previousVisualizers);
+            return new Session(savedPreferences, previousVisualizers, suppressedWarnings);
         } catch (Exception e) {
             e.printStackTrace();
             return EMPTY;
@@ -62,10 +68,14 @@ public record Session(SavedPreferences savedPreferences, List<Visualizer> previo
     }
 
     public Session withPreferences(SavedPreferences savedPreferences) {
-        return new Session(savedPreferences, previousVisualizers);
+        return new Session(savedPreferences, previousVisualizers, suppressedWarnings);
     }
 
     public Session withPreviousVisualizers(List<Visualizer> previousVisualizers) {
-        return new Session(savedPreferences, previousVisualizers);
+        return new Session(savedPreferences, previousVisualizers, suppressedWarnings);
+    }
+
+    public Session withSuppressedWarnings(List<String> suppressedWarnings) {
+        return new Session(savedPreferences, previousVisualizers, suppressedWarnings);
     }
 }

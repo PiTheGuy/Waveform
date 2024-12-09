@@ -1,5 +1,6 @@
 package pitheguy.waveform.ui.drawers.spectrum;
 
+import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
@@ -36,5 +37,15 @@ public class FrequencyRingsDrawer extends AudioDrawer {
         int centerY = Waveform.HEIGHT / 2;
         g.setColor(color);
         g.drawOval(centerX - radius, centerY - radius, 2 * radius + 1, 2 * radius + 1);
+    }
+
+    @Override
+    public boolean shouldShowEpilepsyWarning() {
+        return true;
+    }
+
+    @Override
+    public boolean isSeekingAllowed() {
+        return Config.playerMode;
     }
 }

@@ -36,6 +36,8 @@ public class Main {
             new HelpFormatter().printHelp("java -jar Waveform.jar", createOptions().getVisibleOptions());
             System.exit(1);
         }
+        System.setProperty("sun.java2d.opengl", "true");
+        System.setProperty("sun.java2d.d3d", "true");
         Waveform waveform = new Waveform(Config.exportFile == null);
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         waveform.populateMenuBar();

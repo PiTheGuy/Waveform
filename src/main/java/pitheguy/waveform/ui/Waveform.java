@@ -423,8 +423,9 @@ public class Waveform extends JFrame {
 
     public void switchVisualizer(Visualizer newVisualizer) {
         if (newVisualizer.isCommandLineOnly()) throw new IllegalArgumentException("Cannot switch to a command line only visualizer");
-        if (!confirmVisualizerSwitch()) return;
         if (Config.visualizer == newVisualizer) return;
+        if (!confirmVisualizerSwitch()) return;
+        if (newVisualizer.shouldShowEpilepsyWarning() && !showEpilepsyWarning()) return;
         Config.visualizer = newVisualizer;
         audioDrawer = Config.visualizer.getDrawer();
         if (audioData != null) audioDrawer.setPlayingAudio(audioData);
@@ -437,11 +438,14 @@ public class Waveform extends JFrame {
 
     private boolean confirmVisualizerSwitch() {
         if (!Config.visualizer.isCommandLineOnly()) return true;
-        int choice = JOptionPane.showConfirmDialog(this, """
+        return dialogManager.showConfirmDialog("command_line_visualizer", "Confirm Visualizer Switch", """
                 You are about to switch off of a command line only visualizer. You won't be able to
-                switch back without rerunning the program. Are you sure you want to do this?""",
-                "Confirm Visualizer Switch", JOptionPane.YES_NO_OPTION);
-        return choice == JOptionPane.YES_OPTION;
+                switch back without rerunning the program. Are you sure you want to do this?""");
+    }
+
+    private boolean showEpilepsyWarning() {
+        return dialogManager.showConfirmDialog("flashing_images", "Epilepsy Warning",
+                "This visualizer may contain flashing images. Do you still want to switch to it?");
     }
 
     public static Cursor getCorrectCursor() {

@@ -135,7 +135,7 @@ public class PreferencesDialog extends JDialog {
         boolean shouldRegenerate = shouldRegenerate(preferences);
         preferences.apply();
         boolean visualizerSettingsChanged = visualizerSettingsPanel.saveSettings();
-        Util.showErrorOnException(() -> SessionManager.getInstance().savePreferences(preferences), "Failed to save preferences");
+        SessionManager.getInstance().savePreferences(preferences);
         if (Config.disableDynamicIcon) parent.setIconImage(Waveform.STATIC_ICON);
         parent.updateColors();
         parent.frameUpdater.forceUpdate();

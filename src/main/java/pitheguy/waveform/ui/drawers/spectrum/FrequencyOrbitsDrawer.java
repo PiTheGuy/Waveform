@@ -39,6 +39,7 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
 
     @Override
     public BufferedImage drawFrame(double sec) {
+        if (positions == null) return createBlankImage();
         super.drawFrame(sec);
         double[] frequencyData = FftAnalyser.performFFT(Util.normalize(AudioData.averageChannels(left, right)));
         double[] magnitudes = FftAnalyser.resampleMagnitudesToBands(frequencyData, positions.length);

@@ -1,9 +1,11 @@
 package pitheguy.waveform.ui.dialogs;
 
+import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.ui.Waveform;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.io.File;
 import java.util.List;
 
@@ -57,6 +59,20 @@ public class DialogManager {
         String url = pane.getInputValue().toString();
         if (pane.getValue() == null) return null;
         return new YoutubeImportInfo(url, pane.getValue().equals(options[0]));
+    }
+
+    public boolean showConfirmDialog(String key, String title, String message) {
+        if (SessionManager.getInstance().isWarningSuppressed(key)) return true;
+        JPanel panel = new JPanel(new BorderLayout());
+        String text = "<html>" + message.replace("\n", " <br>") + "</html>";
+        JLabel messageLabel = new JLabel(text);
+        JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this message again");
+        panel.add(messageLabel, BorderLayout.CENTER);
+        panel.add(doNotShowAgainCheckbox, BorderLayout.SOUTH);
+        int choice = JOptionPane.showConfirmDialog(parent, panel,
+                title, JOptionPane.YES_NO_OPTION);
+        if (doNotShowAgainCheckbox.isSelected()) SessionManager.getInstance().suppressWarning(key);
+        return choice == JOptionPane.YES_OPTION;
     }
 
     public record YoutubeImportInfo(String url, boolean addToQueue) {

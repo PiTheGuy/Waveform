@@ -1,8 +1,10 @@
 package pitheguy.waveform.io.session;
 
 import pitheguy.waveform.main.Visualizer;
+import pitheguy.waveform.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SessionManager {
@@ -18,13 +20,24 @@ public class SessionManager {
         return instance;
     }
 
-    public void savePreferences(SavedPreferences preferences) throws IOException {
+    public void savePreferences(SavedPreferences preferences) {
         session = session.withPreferences(preferences);
-        session.save();
+        Util.showErrorOnException(session::save, "Failed to save preferences");
     }
 
-    public void savePreviousVisualizers(List<Visualizer> previousVisualizers) throws IOException {
+    public void savePreviousVisualizers(List<Visualizer> previousVisualizers) {
         session = session.withPreviousVisualizers(previousVisualizers);
-        session.save();
+        Util.showErrorOnException(session::save, "Failed to save previous visualizers");
+    }
+
+    public void suppressWarning(String key) {
+        List<String> suppressedWarnings = new ArrayList<>(session.suppressedWarnings());
+        suppressedWarnings.add(key);
+        session = session.withSuppressedWarnings(suppressedWarnings);
+        Util.showErrorOnException(session::save, "Failed to suppress warning");
+    }
+
+    public boolean isWarningSuppressed(String key) {
+        return session.suppressedWarnings().contains(key);
     }
 }
