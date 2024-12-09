@@ -1,7 +1,9 @@
-package pitheguy.waveform.ui.drawers;
+package pitheguy.waveform.ui.drawers.spectrum;
 
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.ui.drawers.AudioDrawer;
+import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 
@@ -23,7 +25,7 @@ public class FrequencyRingsDrawer extends AudioDrawer {
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         for (int ring = 0; ring < numRings; ring++) {
-            drawRing(g, ring * 2, magnitudes[ring]);
+            drawRing(g, ring, magnitudes[ring]);
         }
         return image;
     }

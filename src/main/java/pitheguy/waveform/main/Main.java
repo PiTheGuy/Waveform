@@ -81,7 +81,7 @@ public class Main {
 
     private static void doExport(Waveform waveform, File outputFile) {
         switch (Config.exportType) {
-            case IMAGE -> waveform.exportManager.exportFullImage(outputFile);
+            case IMAGE -> waveform.exportManager.exportFullImage(outputFile, true);
             case VIDEO -> waveform.exportManager.exportVideo(outputFile, true);
             case GIF -> waveform.exportManager.exportGif(outputFile, true);
             case AUDIO -> waveform.exportManager.exportAudio(outputFile, true);

@@ -1,10 +1,12 @@
-package pitheguy.waveform.ui.drawers;
+package pitheguy.waveform.ui.drawers.spectrum;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.ui.drawers.AudioDrawer;
+import pitheguy.waveform.ui.drawers.CircularDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 

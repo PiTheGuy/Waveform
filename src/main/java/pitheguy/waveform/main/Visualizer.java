@@ -21,6 +21,8 @@ public enum Visualizer {
     SPECTRUM(SpectrumDrawer::new, "spectrum", false, Category.SPECTRUM),
     SMOOTH_SPECTRUM(SmoothSpectrumDrawer::new, "smooth_spectrum", false, Category.SPECTRUM),
     CIRCULAR_SPECTRUM(CircularSpectrumDrawer::new, "spectrum_circle", false, Category.SPECTRUM),
+    FREQUENCY_ORBITS(FrequencyOrbitsDrawer::new, "frequency_orbits", false, Category.SPECTRUM),
+    FREQUENCY_RINGS(FrequencyRingsDrawer::new, "frequency_rings", false, Category.SPECTRUM),
     SPECTROGRAM(SpectrogramDrawer::new, "spectrogram", false, Category.SPECTROGRAM),
     PHASE_SPECTROGRAM(PhaseSpectrogramDrawer::new, "phase_spectrogram", false, Category.SPECTROGRAM),
     DOUBLE_SPECTROGRAM(DoubleSpectrogramDrawer::new, "double_spectrogram", false, Category.SPECTROGRAM),
@@ -59,9 +61,7 @@ public enum Visualizer {
     LOUDNESS(LoudnessDrawer::new, "loudness", false, Category.MISC),
     CHANNEL_BIAS(ChannelBiasDrawer::new, "channel_bias", false, Category.MISC),
     POLARITY(PolarityDrawer::new, "polarity", false, Category.MISC),
-    ENERGY_DYNAMICS(EnergyDynamicsDrawer::new, "energy_dynamics", false, Category.MISC),
-    FREQUENCY_ORBITS(FrequencyOrbitsDrawer::new, "frequency_orbits", false, Category.MISC),
-    FREQUENCY_RINGS(FrequencyRingsDrawer::new, "frequency_rings", false, Category.MISC);
+    ENERGY_DYNAMICS(EnergyDynamicsDrawer::new, "energy_dynamics", false, Category.MISC);
 
 
     private final String key;

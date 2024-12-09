@@ -85,7 +85,7 @@ public class WaveformMenuBar extends JMenuBar {
     private void addExportMenu() {
         exportMenu = createMenu("Export", 'E');
         JMenuItem exportFrameItem = MenuHelper.createMenuItem("Export Frame...", 'F', KeyStroke.getKeyStroke("ctrl E"), e -> parent.exportManager.exportFrame(null));
-        JMenuItem exportFullItem = MenuHelper.createMenuItem("Export Full Image...", 'I', KeyStroke.getKeyStroke("shift ctrl E"), e -> parent.exportManager.exportFullImage(null));
+        JMenuItem exportFullItem = MenuHelper.createMenuItem("Export Full Image...", 'I', KeyStroke.getKeyStroke("shift ctrl E"), e -> parent.exportManager.exportFullImage(null, false));
         JMenuItem exportAudioFileItem = MenuHelper.createMenuItem("Export Audio...", 'A', null, e -> parent.exportManager.exportAudio());
         exportVideoItem = MenuHelper.createMenuItem("Export Video...", 'V', null, e -> parent.exportManager.exportVideo(null, false));
         exportGifItem = MenuHelper.createMenuItem("Export GIF...", 'G', null, e -> parent.exportManager.exportGif(null, false));

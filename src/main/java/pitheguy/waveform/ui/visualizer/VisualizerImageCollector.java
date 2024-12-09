@@ -64,7 +64,7 @@ public class VisualizerImageCollector {
             Main.processInput("-visualizer", visualizer.getKey(), "-size", "150", "100");
             Waveform waveform = new Waveform(false);
             waveform.play(inputFile);
-            waveform.exportManager.exportFullImage(outputFile);
+            waveform.exportManager.exportFullImage(outputFile, true);
             System.out.println("Exported image for " + visualizer.getName());
             waveform.destroy();
         }

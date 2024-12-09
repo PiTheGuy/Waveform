@@ -39,8 +39,8 @@ public class ExportManager {
         export(file, new FrameExportStrategy(parent.frameUpdater.getSec()), "frame", ExportType.IMAGE, false, false);
     }
 
-    public void exportFullImage(File file) {
-        export(file, new FullImageExportStrategy(), "image", ExportType.IMAGE, false, false);
+    public void exportFullImage(File file, boolean waitUntilFinished) {
+        export(file, new FullImageExportStrategy(), "image", ExportType.IMAGE, false, waitUntilFinished);
     }
 
     public void exportAudio() {
