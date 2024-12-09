@@ -10,6 +10,11 @@ import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.rolling.RollingList;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +54,7 @@ public class WaveformMenuBar extends JMenuBar {
         addExportMenu();
         addVisualizerMenu();
         addTrackMenu();
+        addHelpMenu();
         initialized = true;
     }
 
@@ -110,6 +116,21 @@ public class WaveformMenuBar extends JMenuBar {
         trackMenu.addSeparator();
         trackMenu.add(hideControlsItem);
         add(trackMenu);
+    }
+
+    private void addHelpMenu() {
+        JMenu helpMenu = createMenu("Help", 'H');
+        JMenuItem reportBugsItem = MenuHelper.createMenuItem("Report Bugs...", 'R', null, e -> reportBugs());
+        helpMenu.add(reportBugsItem);
+        add(helpMenu);
+    }
+
+    private static void reportBugs() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/PiTheGuy/Waveform/issues"));
+        } catch (IOException | URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void updateState() {
