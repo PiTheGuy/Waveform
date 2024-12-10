@@ -9,17 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RollingListTest {
     @Test
-    public void testAddAndIsFull() {
-        RollingList<Integer> list = new RollingList<>(3);
-        assertFalse(list.isFull());
-        list.add(1);
-        list.add(2);
-        assertFalse(list.isFull());
-        list.add(3);
-        assertTrue(list.isFull());
-    }
-
-    @Test
     public void testRemove() {
         RollingList<Integer> list = new RollingList<>(3);
         list.addAll(List.of(1, 2, 3));

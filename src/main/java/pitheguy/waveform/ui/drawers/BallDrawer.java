@@ -6,6 +6,7 @@ import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.ui.util.BeatDetectionHelper;
 import pitheguy.waveform.ui.util.DebugText;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -37,7 +38,7 @@ public class BallDrawer extends AudioDrawer {
         double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
         double energy = Arrays.stream(magnitudes).sum();
         history.add(energy);
-        double cutoff = getCutoff();
+        double cutoff = BeatDetectionHelper.getCutoff(history, getSetting("increased_sensitivity", Boolean.class));
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -52,16 +53,6 @@ public class BallDrawer extends AudioDrawer {
         g.fillOval(startX, startY, radius * 2, radius * 2);
         drawDebugText(g, new DebugText().add("Energy", energy).add("Cutoff", cutoff).add("Delta", delta));
         return image;
-    }
-
-    private double getCutoff() {
-        double average = history.stream().mapToDouble(Double::doubleValue).average().orElseThrow();
-        if (getSetting("increased_sensitivity", Boolean.class)) return average;
-        return average + stdDev(history.stream().mapToDouble(Double::doubleValue).toArray(), average);
-    }
-
-    private double stdDev(double[] data, double average) {
-        return Math.sqrt(Arrays.stream(data).map(value -> (value - average) * (value - average)).average().orElseThrow());
     }
 
     private double getDelta(boolean isPeak) {

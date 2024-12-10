@@ -11,7 +11,6 @@ import java.time.Duration;
 import java.util.*;
 
 public class YoutubeApiManager {
-    private static final HttpClient CLIENT = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     public static final String VIDEO_DATA_FUNCTION_URL = "https://us-central1-waveform-9ea83.cloudfunctions.net/getYouTubeVideoData";
     public static final String PLAYLIST_ITEMS_FUNCTION_URL = "https://us-central1-waveform-9ea83.cloudfunctions.net/getYouTubePlaylistItems";
     public static final String VIDEO_PREFIX = "https://www.youtube.com/watch?v=";

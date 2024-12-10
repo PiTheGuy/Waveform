@@ -49,8 +49,6 @@ public abstract class CircularDrawer extends AudioDrawer {
         int y = centerY + (int) (r * Math.sin(theta) * circleDiameter / 2);
         return new Point(x, y);
     }
-    
-    
 
     protected static void drawData(Graphics2D g, double[] data) {
         int numBars = data.length > MAX_DOUBLE_UP_LENGTH ? data.length : data.length * 2;
@@ -66,6 +64,14 @@ public abstract class CircularDrawer extends AudioDrawer {
             double interpolatedValue = (1 - weight) * data[lowerIndex] + weight * data[upperIndex];
             drawLinePolar(g, interpolatedValue, i * radiansPerBar);
         }
+    }
+
+    public static void drawRing(Graphics2D g, int radius, double brightness) {
+        Color color = HeatmapDrawer.getColor(brightness);
+        int centerX = Waveform.WIDTH / 2;
+        int centerY = Waveform.HEIGHT / 2;
+        g.setColor(color);
+        g.drawOval(centerX - radius, centerY - radius, 2 * radius + 1, 2 * radius + 1);
     }
 
     @Override

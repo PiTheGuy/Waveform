@@ -11,12 +11,12 @@ public class RollingList<T> implements Collection<T> {
         this.deque = new ArrayDeque<>(maxSize);
     }
 
-    public boolean isFull() {
-        return deque.size() == maxSize;
+    public int maxSize() {
+        return maxSize;
     }
 
     public boolean add(T element) {
-        if (deque.size() == maxSize) deque.removeFirst();
+        while (deque.size() >= maxSize()) deque.removeFirst();
         deque.addLast(element);
         return true;
     }
@@ -34,8 +34,8 @@ public class RollingList<T> implements Collection<T> {
     @Override
     public boolean addAll(Collection<? extends T> c) {
         if (c.isEmpty()) return false;
-        int itemsToAdd = Math.min(c.size(), maxSize);
-        int overflow = deque.size() + itemsToAdd - maxSize;
+        int itemsToAdd = Math.min(c.size(), maxSize());
+        int overflow = deque.size() + itemsToAdd - maxSize();
         for (int i = 0; i < overflow; i++) deque.removeFirst();
         return deque.addAll(c.stream().skip(c.size() - itemsToAdd).toList());
     }
