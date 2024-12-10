@@ -1,13 +1,14 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.DotPlotDrawer;
 
 import java.awt.image.BufferedImage;
 
 public class ChannelCorrelationDrawer extends DotPlotDrawer {
 
-    public ChannelCorrelationDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public ChannelCorrelationDrawer(DrawContext context) {
+        super(context);
     }
     
     @Override

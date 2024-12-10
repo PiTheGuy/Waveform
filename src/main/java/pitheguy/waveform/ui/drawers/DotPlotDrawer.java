@@ -1,7 +1,7 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 
@@ -9,8 +9,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class DotPlotDrawer extends MappedPlotDrawer {
-    public DotPlotDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public DotPlotDrawer(DrawContext context) {
+        super(context);
     }
 
     protected void drawPoint(Graphics2D g, int x, int y) {
@@ -30,8 +30,8 @@ public abstract class DotPlotDrawer extends MappedPlotDrawer {
 
     protected BufferedImage drawData(short[] xAxis, short[] yAxis) {
         BufferedImage image = createBlankImage();
-        int[] mappedXAxis = mapArrayToPixelCoords(xAxis, Waveform.WIDTH);
-        int[] mappedYAxis = mapArrayToPixelCoords(yAxis, Waveform.HEIGHT);
+        int[] mappedXAxis = mapArrayToPixelCoords(xAxis, getImageWidth());
+        int[] mappedYAxis = mapArrayToPixelCoords(yAxis, getImageHeight(context));
         Graphics2D g = image.createGraphics();
         g.setColor(Config.foregroundColor);
         for (int i = 0; i < xAxis.length; i++) drawPoint(g, mappedXAxis[i], mappedYAxis[i]);

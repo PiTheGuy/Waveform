@@ -1,13 +1,14 @@
 package pitheguy.waveform.ui.drawers.waveform;
 
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 
 public abstract class ResampledWaveformDrawer extends WaveformDrawer {
     protected short[] leftResampled;
     protected short[] rightResampled;
 
-    public ResampledWaveformDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public ResampledWaveformDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override

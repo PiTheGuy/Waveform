@@ -1,14 +1,15 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 
 import java.awt.image.BufferedImage;
 
 public abstract class CompoundDrawer extends AudioDrawer {
     protected AudioDrawer drawer;
 
-    public CompoundDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public CompoundDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override

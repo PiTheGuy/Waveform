@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers.spectrum;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
@@ -20,14 +20,14 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
     private double[] positions;
     private BufferedImage image;
 
-    public FrequencyOrbitsDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public FrequencyOrbitsDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     public BufferedImage drawFullAudio() {
         double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), FULL_AUDIO_ITERATIONS);
-        double[][] magnitudes = new double[Waveform.WIDTH][];
+        double[][] magnitudes = new double[getImageWidth()][];
         Arrays.setAll(magnitudes, i -> FftAnalyser.resampleMagnitudesToBands(frequencyData[i], positions.length));
         double speed = getSetting("speed", Double.class);
         for (int time = 0; time < frequencyData.length; time++)
@@ -73,9 +73,9 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
 
     private Point convertToDisplayPoint(int index, double position) {
         return switch (getSetting("orbit_path", OrbitPath.class)) {
-            case HORIZONTAL -> new Point((int) (position * Waveform.WIDTH), index);
-            case VERTICAL -> new Point(index, (int) (position * Waveform.HEIGHT));
-            case CIRCULAR -> CircularDrawer.getDrawPoint((double) index / positions.length, position * 2 * Math.PI);
+            case HORIZONTAL -> new Point((int) (position * getImageWidth()), index);
+            case VERTICAL -> new Point(index, (int) (position * getImageHeight()));
+            case CIRCULAR -> CircularDrawer.getDrawPoint(context, (double) index / positions.length, position * 2 * Math.PI);
         };
     }
 
@@ -110,9 +110,9 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
 
     private int getNumBands() {
         return switch (getSetting("orbit_path", OrbitPath.class)) {
-            case HORIZONTAL -> Waveform.HEIGHT;
-            case VERTICAL -> Waveform.WIDTH;
-            case CIRCULAR -> Math.min(Waveform.WIDTH, Waveform.HEIGHT);
+            case HORIZONTAL -> getImageHeight();
+            case VERTICAL -> getImageWidth();
+            case CIRCULAR -> Math.min(getImageWidth(), getImageHeight());
         };
     }
 

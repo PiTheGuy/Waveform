@@ -1,5 +1,6 @@
 package pitheguy.waveform.main;
 
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.*;
@@ -67,13 +68,13 @@ public enum Visualizer {
 
 
     private final String key;
-    private final Function<Boolean, AudioDrawer> drawer;
+    private final Function<DrawContext, AudioDrawer> drawer;
     private AudioDrawer mainDrawer;
     private final boolean commandLineOnly;
     private final Category category;
     private VisualizerSettingsInstance settings;
 
-    Visualizer(Function<Boolean, AudioDrawer> drawer, String key, boolean commandLineOnly, Category category) {
+    Visualizer(Function<DrawContext, AudioDrawer> drawer, String key, boolean commandLineOnly, Category category) {
         this.key = key;
         this.drawer = drawer;
         this.commandLineOnly = commandLineOnly;
@@ -85,7 +86,7 @@ public enum Visualizer {
     }
 
     public AudioDrawer getDrawer() {
-        if (mainDrawer == null) mainDrawer = drawer.apply(false);
+        if (mainDrawer == null) mainDrawer = drawer.apply(DrawContext.REALTIME);
         return mainDrawer;
     }
 
@@ -99,7 +100,7 @@ public enum Visualizer {
     }
 
     public AudioDrawer getExportDrawer(boolean fullAudio) {
-        return drawer.apply(fullAudio);
+        return drawer.apply(fullAudio ? DrawContext.EXPORT_FULL : DrawContext.EXPORT_FRAME);
     }
 
     public static Visualizer fromKey(String key) {

@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.util.Util;
 
 import java.awt.*;
@@ -11,8 +11,8 @@ import java.awt.image.BufferedImage;
 public abstract class HeatmapDrawer extends SlicedImageDrawer {
     protected short[] monoData;
 
-    public HeatmapDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public HeatmapDrawer(DrawContext context) {
+        super(context);
     }
 
     public static Color getColor(double delta) {
@@ -23,21 +23,21 @@ public abstract class HeatmapDrawer extends SlicedImageDrawer {
         return Util.blendColor(delta, Config.foregroundColor, Config.playedColor);
     }
 
-    protected static BufferedImage drawData(double[][] data) {
-        BufferedImage image = createBlankImage();
-        for (int x = 0; x < Waveform.WIDTH; x++) {
-            for (int y = 0; y < Waveform.HEIGHT; y++) {
+    protected static BufferedImage drawData(DrawContext context, double[][] data) {
+        BufferedImage image = createBlankImage(context);
+        for (int x = 0; x < getImageWidth(context); x++) {
+            for (int y = 0; y < getImageHeight(context); y++) {
                 Color color = getColor(data[x][y]);
-                image.setRGB(x, Waveform.HEIGHT - 1 - y, color.getRGB());
+                image.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
             }
         }
         return image;
     }
 
-    public static short[][] getSlicedAudioData(short[] sampleData) {
-        double samplesPerPixel = (double) sampleData.length / Waveform.WIDTH;
-        short[][] audioData = new short[Waveform.WIDTH][];
-        for (int x = 0; x < Waveform.WIDTH; x++) {
+    public static short[][] getSlicedAudioData(DrawContext context, short[] sampleData) {
+        double samplesPerPixel = (double) sampleData.length / getImageWidth(context);
+        short[][] audioData = new short[getImageWidth(context)][];
+        for (int x = 0; x < getImageWidth(context); x++) {
             final int start = (int) (x * samplesPerPixel);
             int sampleLength = (int) samplesPerPixel;
             short[] stripData = new short[sampleLength];
@@ -76,7 +76,7 @@ public abstract class HeatmapDrawer extends SlicedImageDrawer {
 
     @Override
     public void updatePlayed(BufferedImage image, double seconds, double duration) {
-        int maxX = (int) (seconds / duration * Waveform.WIDTH);
+        int maxX = (int) (seconds / duration * getImageWidth());
         maxX = Math.min(maxX, image.getWidth());
         HeatmapDrawer.replaceGradientPixels(image, Config.backgroundColor, Config.foregroundColor, Config.playedColor, maxX, 0.1);
     }

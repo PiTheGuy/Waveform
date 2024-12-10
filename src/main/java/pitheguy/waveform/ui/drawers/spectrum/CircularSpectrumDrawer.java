@@ -2,6 +2,7 @@ package pitheguy.waveform.ui.drawers.spectrum;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.CircularDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -10,8 +11,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class CircularSpectrumDrawer extends CircularDrawer {
-    public CircularSpectrumDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public CircularSpectrumDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class CircularSpectrumDrawer extends CircularDrawer {
         g.setColor(Config.foregroundColor);
         short[] data = AudioData.averageChannels(left, right);
         double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
-        drawData(g, magnitudes);
+        drawData(context, g, magnitudes);
         return image;
     }
 }

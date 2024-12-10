@@ -1,8 +1,8 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options.ColorChannel;
@@ -15,26 +15,26 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class HarmonicPercussiveDecompDrawer extends HeatmapDrawer {
-    public HarmonicPercussiveDecompDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public HarmonicPercussiveDecompDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), Waveform.WIDTH);
+        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth());
         double[][] harmonicSpectrogramData = applyHorizontalMedianFilter(spectrogramData);
         double[][] percussiveSpectrogramData = applyVerticalMedianFilter(spectrogramData);
         double[][] harmonicSignal = FftAnalyser.batchInverseFFT(harmonicSpectrogramData);
         double[][] percussiveSignal = FftAnalyser.batchInverseFFT(percussiveSpectrogramData);
         Signals signals = normalize(harmonicSignal, percussiveSignal);
         BufferedImage image = createBlankImage();
-        for (int x = 0; x < Waveform.WIDTH; x++) {
-            for (int y = 0; y < Waveform.HEIGHT; y++) {
+        for (int x = 0; x < getImageWidth(); x++) {
+            for (int y = 0; y < getImageHeight(context); y++) {
                 int scaleFactor = Config.highContrast ? 6 : 4;
                 float harmonicIntensity = (float) Math.min(signals.harmonic[x][y] * scaleFactor, 1);
                 float percussiveIntensity = (float) Math.min(signals.percussive[x][y] * scaleFactor, 1);
                 Color color = getColor(harmonicIntensity, percussiveIntensity);
-                image.setRGB(x, Waveform.HEIGHT - 1 - y, color.getRGB());
+                image.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
             }
         }
         return image;
@@ -43,10 +43,10 @@ public class HarmonicPercussiveDecompDrawer extends HeatmapDrawer {
     private Signals normalize(double[][] harmonic, double[][] percussive) {
         double max = Arrays.stream(harmonic).flatMapToDouble(Arrays::stream).max().orElseThrow();
         max = Math.max(max, Arrays.stream(percussive).flatMapToDouble(Arrays::stream).max().orElseThrow());
-        double[][] newHarmonic = new double[Waveform.WIDTH][Waveform.HEIGHT];
-        double[][] newPercussive = new double[Waveform.WIDTH][Waveform.HEIGHT];
-        for (int x = 0; x < Waveform.WIDTH; x++) {
-            for (int y = 0; y < Waveform.HEIGHT; y++) {
+        double[][] newHarmonic = new double[getImageWidth()][getImageHeight(context)];
+        double[][] newPercussive = new double[getImageWidth()][getImageHeight(context)];
+        for (int x = 0; x < getImageWidth(); x++) {
+            for (int y = 0; y < getImageHeight(context); y++) {
                 newHarmonic[x][y] = Math.abs(harmonic[x][y] / max);
                 newPercussive[x][y] = Math.abs(percussive[x][y] / max);
             }

@@ -1,14 +1,15 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 
 import java.awt.image.BufferedImage;
 
 public class TempoDrawer extends BarGraphDrawer {
-    public TempoDrawer(boolean forceFullAudio) {
-        super(forceFullAudio, true);
+    public TempoDrawer(DrawContext context) {
+        super(context, true);
     }
 
     

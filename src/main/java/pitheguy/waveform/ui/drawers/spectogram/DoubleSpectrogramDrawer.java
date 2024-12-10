@@ -1,7 +1,7 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
 import org.apache.commons.math3.complex.Complex;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options.ColorChannel;
@@ -12,13 +12,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class DoubleSpectrogramDrawer extends AbstractSpectrogramDrawer {
-    public DoubleSpectrogramDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public DoubleSpectrogramDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected BufferedImage precomputeImage() {
-        Complex[][] fftData = FftAnalyser.getComplexFrequencyData(playingAudio.getMonoData(), Waveform.WIDTH);
+        Complex[][] fftData = FftAnalyser.getComplexFrequencyData(playingAudio.getMonoData(), getImageWidth());
         double[][] magnitudes = new double[fftData.length][];
         double[][] phases = new double[fftData.length][];
         for (int i = 0; i < fftData.length; i++) {
@@ -31,12 +31,12 @@ public class DoubleSpectrogramDrawer extends AbstractSpectrogramDrawer {
         }
         phases = Util.normalize(phases);
         BufferedImage spectrogram = createBlankImage();
-        for (int x = 0; x < Waveform.WIDTH; x++) {
-            for (int y = 0; y < Waveform.HEIGHT; y++) {
+        for (int x = 0; x < getImageWidth(); x++) {
+            for (int y = 0; y < getImageHeight(context); y++) {
                 float magnitude = (float) Math.min(magnitudes[x][y], 1);
                 float phase = (float) Math.min(phases[x][y], 1);
                 Color color = getColor(magnitude, phase);
-                spectrogram.setRGB(x, Waveform.HEIGHT - 1 - y, color.getRGB());
+                spectrogram.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
             }
         }
         return spectrogram;

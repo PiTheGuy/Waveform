@@ -1,5 +1,6 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -10,20 +11,20 @@ import java.util.Arrays;
 
 public class ModulationSpectrogramDrawer extends AbstractSpectrogramDrawer {
 
-    public ModulationSpectrogramDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public ModulationSpectrogramDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), Waveform.WIDTH * 2);
+        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth() * 2);
         Arrays.stream(spectrogramData).forEach(array -> Arrays.setAll(array, i -> array[i] * array[i]));
         double[][] transposedData = Util.transpose(spectrogramData);
         double[][] modulationData = Util.transpose(FftAnalyser.batchFFT(transposedData));
         double[][] filteredData = applyFilters(modulationData);
-        double[][] resampledData = new double[Waveform.WIDTH][];
-        for (int i = 0; i < Waveform.WIDTH; i++) resampledData[i] = resample(filteredData[i]);
-        return HeatmapDrawer.drawData(Util.normalize(resampledData));
+        double[][] resampledData = new double[getImageWidth()][];
+        for (int i = 0; i < getImageWidth(); i++) resampledData[i] = resample(filteredData[i]);
+        return HeatmapDrawer.drawData(context, Util.normalize(resampledData));
     }
 
     private double[][] applyFilters(double[][] data) {

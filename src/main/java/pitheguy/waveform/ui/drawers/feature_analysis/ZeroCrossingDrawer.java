@@ -1,6 +1,6 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.SlicedImageDrawer;
@@ -10,16 +10,16 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class ZeroCrossingDrawer extends SlicedImageDrawer {
-    public ZeroCrossingDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public ZeroCrossingDrawer(DrawContext context) {
+        super(context);
     }
 
     
     @Override
     protected BufferedImage precomputeImage() {
-        int[] topData = getZeroCrossingData(playingAudio.left(), Waveform.WIDTH);
-        int[] bottomData = getZeroCrossingData(playingAudio.right(), Waveform.WIDTH);
-        return WaveformDrawer.drawData(createBlankImage(), topData, bottomData);
+        int[] topData = getZeroCrossingData(playingAudio.left(), getImageWidth());
+        int[] bottomData = getZeroCrossingData(playingAudio.right(), getImageWidth());
+        return WaveformDrawer.drawData(context, createBlankImage(), topData, bottomData);
     }
 
     private int[] getZeroCrossingData(short[] audioData, int arraySize) {
@@ -47,9 +47,9 @@ public class ZeroCrossingDrawer extends SlicedImageDrawer {
         return Arrays.stream(zeroCrossingData).map(value -> mapValue(value, maxValue)).toArray();
     }
 
-    private static int mapValue(int value, double maxValue) {
-        int mappedValue = (int) (value / maxValue * Waveform.HEIGHT);
-        return Math.min(mappedValue, Waveform.HEIGHT);
+    private int mapValue(int value, double maxValue) {
+        int mappedValue = (int) (value / maxValue * getImageHeight(context));
+        return Math.min(mappedValue, getImageHeight(context));
     }
 
     @Override

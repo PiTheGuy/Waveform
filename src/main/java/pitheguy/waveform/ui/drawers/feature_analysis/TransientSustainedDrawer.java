@@ -1,7 +1,7 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options.ColorChannel;
@@ -14,13 +14,13 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class TransientSustainedDrawer extends HeatmapDrawer {
-    public TransientSustainedDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public TransientSustainedDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), Waveform.WIDTH + 1);
+        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth() + 1);
         double[][] diffData = new double[frequencyData.length - 1][frequencyData[0].length];
         for (int time = 1; time < frequencyData.length; time++)
             for (int band = 0; band < frequencyData[0].length; band++)
@@ -31,9 +31,9 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
     }
 
     private BufferedImage drawSpectrogram(double[][] transientData, double[][] sustainedData) {
-        for (int x = 0; x < Waveform.WIDTH; x++) {
-            transientData[x] = FftAnalyser.resampleMagnitudesToBands(transientData[x], Waveform.WIDTH);
-            sustainedData[x] = FftAnalyser.resampleMagnitudesToBands(sustainedData[x], Waveform.WIDTH);
+        for (int x = 0; x < getImageWidth(); x++) {
+            transientData[x] = FftAnalyser.resampleMagnitudesToBands(transientData[x], getImageWidth());
+            sustainedData[x] = FftAnalyser.resampleMagnitudesToBands(sustainedData[x], getImageWidth());
         }
         if (getSetting("normalize", Boolean.class)) {
             int scaleFactor = Config.highContrast ? 15 : 10;
@@ -43,12 +43,12 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
 
     private BufferedImage drawData(double[][] transientData, double[][] sustainedData, double scaleFactor) {
         BufferedImage image = createBlankImage();
-        for (int x = 0; x < Waveform.WIDTH; x++) {
-            for (int y = 0; y < Waveform.HEIGHT; y++) {
+        for (int x = 0; x < getImageWidth(); x++) {
+            for (int y = 0; y < getImageHeight(context); y++) {
                 float trans = (float) Math.min(transientData[x][y] * scaleFactor, 1);
                 float sustained = (float) Math.min(sustainedData[x][y] * scaleFactor, 1);
                 Color color = getColor(trans, sustained);
-                image.setRGB(x, Waveform.HEIGHT - 1 - y, color.getRGB());
+                image.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
             }
         }
         return image;
@@ -64,7 +64,7 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
     }
 
     private double[][] computeSustainedData(double[][] frequencyData, double[][] transientData) {
-        double[][] data = Arrays.copyOf(frequencyData, Waveform.WIDTH);
+        double[][] data = Arrays.copyOf(frequencyData, getImageWidth());
         return switch (getSetting("calculation_mode", CalculationMode.class)) {
             case LOW_PASS -> {
                 int windowSize = getSetting("sustained_window_size", Integer.class);

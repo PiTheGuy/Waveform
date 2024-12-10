@@ -1,23 +1,23 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class RangeLineGraphDrawer extends SlicedImageDrawer {
-    public RangeLineGraphDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public RangeLineGraphDrawer(DrawContext context) {
+        super(context);
     }
 
-    protected static BufferedImage drawData(double[] centers, double[] deviations) {
+    protected BufferedImage drawData(double[] centers, double[] deviations) {
         BufferedImage image = createBlankImage();
         double previousCenter = 0, previousDeviation = 0;
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(HeatmapDrawer.getColor(0.5));
-        for (int x = 0; x < Waveform.WIDTH; x++) {
+        for (int x = 0; x < getImageWidth(); x++) {
             double deviation = deviations[x];
             double center = centers[x];
             if (x == 0) g.drawLine(x, mapToPixelHeight(center - deviation), x, mapToPixelHeight(center + deviation));
@@ -33,7 +33,7 @@ public abstract class RangeLineGraphDrawer extends SlicedImageDrawer {
             previousDeviation = deviation;
         }
         g.setColor(Config.foregroundColor);
-        for (int x = 0; x < Waveform.WIDTH; x++) {
+        for (int x = 0; x < getImageWidth(); x++) {
             double center = centers[x];
             int y = mapToPixelHeight(center);
             if (x != 0) g.drawLine(x, y, x - 1, mapToPixelHeight(previousCenter));
@@ -43,7 +43,7 @@ public abstract class RangeLineGraphDrawer extends SlicedImageDrawer {
         return image;
     }
 
-    private static int mapToPixelHeight(double value) {
-        return (int) (value * Waveform.HEIGHT);
+    private int mapToPixelHeight(double value) {
+        return (int) (value * getImageHeight(context));
     }
 }

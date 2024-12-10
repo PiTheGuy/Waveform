@@ -2,6 +2,7 @@ package pitheguy.waveform.ui.drawers.waveform;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.CircularDrawer;
 
 import java.awt.*;
@@ -10,8 +11,8 @@ import java.awt.image.BufferedImage;
 public class CircularWaveformDrawer extends CircularDrawer {
     public short maxValue = Short.MAX_VALUE;
 
-    public CircularWaveformDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public CircularWaveformDrawer(DrawContext context) {
+        super(context);
     }
 
     private double[] normalize(short[] input) {
@@ -28,7 +29,7 @@ public class CircularWaveformDrawer extends CircularDrawer {
         Graphics2D g = image.createGraphics();
         g.setColor(Config.foregroundColor);
         short[] data = AudioData.averageChannels(left, right);
-        drawData(g, normalize(data));
+        drawData(context, g, normalize(data));
         g.dispose();
         return image;
     }

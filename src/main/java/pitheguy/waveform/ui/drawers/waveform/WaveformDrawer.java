@@ -1,7 +1,7 @@
 package pitheguy.waveform.ui.drawers.waveform;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.MappedPlotDrawer;
 
 import java.awt.*;
@@ -11,15 +11,15 @@ public class WaveformDrawer extends MappedPlotDrawer {
     protected int[] leftMapped;
     protected int[] rightMapped;
 
-    public WaveformDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public WaveformDrawer(DrawContext context) {
+        super(context);
     }
 
-    public static BufferedImage drawData(BufferedImage image, int[] top, int[] bottom) {
+    public static BufferedImage drawData(DrawContext context, BufferedImage image, int[] top, int[] bottom) {
         Graphics2D g = image.createGraphics();
         g.setColor(Config.foregroundColor);
-        int width = Waveform.WIDTH; // Store width and height in case it changes
-        int height = Waveform.HEIGHT;
+        int width = getImageWidth(context); // Store width and height in case it changes
+        int height = getImageHeight(context);
         int halfHeight = height / 2;
         double scale = (double) top.length / width;
         for (int x = 0; x < width; x++) {
@@ -34,7 +34,7 @@ public class WaveformDrawer extends MappedPlotDrawer {
 
     void mapArrayToPixelHeight(short[] input, int[] output) {
         for (int i = 0; i < input.length; i++)
-            output[i] = (int) Math.abs(((double) input[i] / maxValue * Waveform.HEIGHT));
+            output[i] = (int) Math.abs(((double) input[i] / maxValue * getImageHeight(context)));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class WaveformDrawer extends MappedPlotDrawer {
         super.drawAudio(sec, length);
         mapArrayToPixelHeight(left, leftMapped);
         mapArrayToPixelHeight(right, rightMapped);
-        return drawData(createBlankImage(), leftMapped, rightMapped);
+        return drawData(context, createBlankImage(), leftMapped, rightMapped);
     }
 
     protected void initializeDataArrays() {

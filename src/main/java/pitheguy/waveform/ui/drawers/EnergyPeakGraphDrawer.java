@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.util.DebugText;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -17,8 +17,8 @@ public class EnergyPeakGraphDrawer extends BarGraphDrawer {
     private final RollingList<Double> history = new RollingList<>(HISTORY_SIZE);
     private double delta = 0.0;
 
-    public EnergyPeakGraphDrawer(boolean forceFullAudio) {
-        super(forceFullAudio, true);
+    public EnergyPeakGraphDrawer(DrawContext context) {
+        super(context, true);
     }
 
     
@@ -38,7 +38,7 @@ public class EnergyPeakGraphDrawer extends BarGraphDrawer {
         drawArray(displayData, image, Util.blendColor(delta, Config.foregroundColor, Config.playedColor));
 
         g.setColor(Config.playedColor);
-        g.drawLine(0, (int) (cutoff / 10000 * Waveform.HEIGHT), Waveform.WIDTH, (int) (cutoff / 10000 * Waveform.HEIGHT));
+        g.drawLine(0, (int) (cutoff / 10000 * getImageHeight(context)), getImageWidth(), (int) (cutoff / 10000 * getImageHeight(context)));
         drawDebugText(g, new DebugText().add("Cutoff", cutoff).add("Energy", energy));
         return image;
     }

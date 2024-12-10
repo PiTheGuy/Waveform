@@ -1,23 +1,23 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 
 import java.util.function.DoubleUnaryOperator;
 
 public abstract class ScaledSpectrogramDrawer extends AbstractSpectrogramDrawer {
-    public ScaledSpectrogramDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public ScaledSpectrogramDrawer(DrawContext context) {
+        super(context);
     }
 
     protected double[] resample(double[] data) {
         return resample(data, playingAudio.sampleRate(), this::rescale);
     }
 
-    protected static double[] resample(double[] data, double sampleRate, DoubleUnaryOperator rescaler) {
+    protected double[] resample(double[] data, double sampleRate, DoubleUnaryOperator rescaler) {
         double maxScaled = rescaler.applyAsDouble(sampleRate);
-        double scalePerPixel = maxScaled / Waveform.HEIGHT;
-        double[] finalData = new double[Waveform.HEIGHT];
-        double[] weightCounter = new double[Waveform.HEIGHT];
+        double scalePerPixel = maxScaled / getImageHeight(context);
+        double[] finalData = new double[getImageHeight(context)];
+        double[] weightCounter = new double[getImageHeight(context)];
         for (int i = 0; i < data.length - 1; i++) {
             double frequencyStart = i * sampleRate / (double) data.length;
             double frequencyEnd = (i + 1) * sampleRate / (double) data.length;

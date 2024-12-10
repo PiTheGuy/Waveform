@@ -2,8 +2,8 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.util.BeatDetectionHelper;
@@ -22,8 +22,8 @@ public class BallDrawer extends AudioDrawer {
 
     private final RollingList<Double> history = new RollingList<>(HISTORY_SIZE);
 
-    public BallDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public BallDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
@@ -43,13 +43,13 @@ public class BallDrawer extends AudioDrawer {
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(Config.foregroundColor);
-        int imageSize = Math.min(Waveform.WIDTH, Waveform.HEIGHT);
+        int imageSize = Math.min(getImageWidth(), getImageHeight(context));
         int smallRadius = (int) (imageSize * getSetting("small_radius", Double.class));
         int bigRadius = (int) (imageSize * getSetting("big_radius", Double.class));
         double delta = getDelta(energy > cutoff);
         int radius = (int) Util.lerp(delta, smallRadius, bigRadius);
-        int startX = Waveform.WIDTH / 2 - radius;
-        int startY = Waveform.HEIGHT / 2 - radius;
+        int startX = getImageWidth() / 2 - radius;
+        int startY = getImageHeight(context) / 2 - radius;
         g.fillOval(startX, startY, radius * 2, radius * 2);
         drawDebugText(g, new DebugText().add("Energy", energy).add("Cutoff", cutoff).add("Delta", delta));
         return image;

@@ -1,6 +1,7 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 
@@ -10,10 +11,8 @@ public class DifferenceSpectrogramDrawer extends AbstractSpectrogramDrawer {
     private int order;
     private Deque<double[]> history;
 
-    public DifferenceSpectrogramDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
-
-
+    public DifferenceSpectrogramDrawer(DrawContext context) {
+        super(context);
     }
 
     

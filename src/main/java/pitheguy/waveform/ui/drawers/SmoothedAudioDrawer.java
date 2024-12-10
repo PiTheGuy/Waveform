@@ -2,6 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.util.rolling.RollingAverageTracker;
@@ -11,12 +12,12 @@ public abstract class SmoothedAudioDrawer extends AudioDrawer {
     private final boolean addSetting;
     protected RollingAverageTracker.DoubleTracker tracker;
 
-    public SmoothedAudioDrawer(boolean forceFullAudio, int defaultWindow) {
-        this(forceFullAudio, defaultWindow, true);
+    public SmoothedAudioDrawer(DrawContext context, int defaultWindow) {
+        this(context, defaultWindow, true);
     }
 
-    public SmoothedAudioDrawer(boolean forceFullAudio, int defaultWindow, boolean addSetting) {
-        super(forceFullAudio);
+    public SmoothedAudioDrawer(DrawContext context, int defaultWindow, boolean addSetting) {
+        super(context);
         this.defaultWindow = defaultWindow;
         this.addSetting = addSetting;
     }

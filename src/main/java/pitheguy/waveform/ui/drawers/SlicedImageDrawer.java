@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,8 +12,8 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
     BufferedImage image;
     protected boolean initialized = false;
 
-    public SlicedImageDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public SlicedImageDrawer(DrawContext context) {
+        super(context);
     }
 
     public BufferedImage drawFullAudio() {
@@ -27,10 +27,10 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
         if (!initialized) return createBlankImage();
         double duration = playingAudio.duration();
         double percentPlayed = Math.min(sec / duration, 1);
-        int maxX = (int) (percentPlayed * Waveform.WIDTH);
+        int maxX = (int) (percentPlayed * getImageWidth());
         Graphics2D g = image.createGraphics();
         if (maxX > 0) {
-            BufferedImage subimage = precomputedImage.getSubimage(0, 0, maxX, Waveform.HEIGHT);
+            BufferedImage subimage = precomputedImage.getSubimage(0, 0, maxX, getImageHeight(context));
             g.drawImage(subimage, 0, 0, null);
             return image;
         }
@@ -53,7 +53,7 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
         if (Config.playerMode) g.drawImage(precomputedImage, 0, 0, null);
         else {
             g.setColor(Config.backgroundColor);
-            g.fillRect(0, 0, Waveform.WIDTH, Waveform.HEIGHT);
+            g.fillRect(0, 0, getImageWidth(), getImageHeight(context));
         }
         g.dispose();
     }

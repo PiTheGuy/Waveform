@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.DotPlotDrawer;
@@ -15,20 +15,20 @@ public class PhasePlotDrawer extends DotPlotDrawer {
     private double phaseFactor;
     private int phaseFrames;
 
-    public PhasePlotDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public PhasePlotDrawer(DrawContext context) {
+        super(context);
     }
 
     
     @Override
     public BufferedImage drawFullAudio() {
         short[] monoData = playingAudio.getMonoData();
-        int[] mappedCurrentData = mapArrayToPixelCoords(monoData, Waveform.WIDTH);
-        int[] mappedPhaseData = mapArrayToPixelCoords(monoData, Waveform.HEIGHT);
+        int[] mappedCurrentData = mapArrayToPixelCoords(monoData, getImageWidth());
+        int[] mappedPhaseData = mapArrayToPixelCoords(monoData, getImageHeight(context));
         BufferedImage image = createBlankImage();
         for (int i = phaseFrames; i < mappedCurrentData.length; i++) {
-            int x = Math.min(Math.abs(mappedCurrentData[i]), Waveform.WIDTH - 1);
-            int y = Math.min(Math.abs(mappedPhaseData[i]), Waveform.HEIGHT - 1);
+            int x = Math.min(Math.abs(mappedCurrentData[i]), getImageWidth() - 1);
+            int y = Math.min(Math.abs(mappedPhaseData[i]), getImageHeight(context) - 1);
             image.setRGB(x, y, Config.foregroundColor.getRGB());
         }
         return image;

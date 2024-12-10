@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.util.DebugText;
@@ -11,16 +11,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class PolarityDrawer extends CompoundDrawer {
-    public PolarityDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public PolarityDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected AudioDrawer getDrawer() {
         VisualizationMode mode = getSetting("visualization_mode", VisualizationMode.class);
         return switch (mode) {
-            case INSTANTANEOUS -> new Instantaneous(forceFullAudio);
-            case GRAPH -> new Graph(forceFullAudio);
+            case INSTANTANEOUS -> new Instantaneous(context);
+            case GRAPH -> new Graph(context);
         };
     }
 
@@ -36,8 +36,8 @@ public class PolarityDrawer extends CompoundDrawer {
     }
 
     public static class Instantaneous extends AudioDrawer {
-        public Instantaneous(boolean forceFullAudio) {
-            super(forceFullAudio);
+        public Instantaneous(DrawContext context) {
+            super(context);
         }
 
         @Override
@@ -49,9 +49,9 @@ public class PolarityDrawer extends CompoundDrawer {
             Graphics2D g = image.createGraphics();
             g.setColor(Config.foregroundColor);
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            int ballSize = (int) (Math.min(Waveform.WIDTH, Waveform.HEIGHT) * 0.2);
-            int ballX = Waveform.WIDTH / 2;
-            int ballY = (int) (polarity.percentPositive() * Waveform.HEIGHT);
+            int ballSize = (int) (Math.min(getImageWidth(), getImageHeight(context)) * 0.2);
+            int ballX = getImageWidth() / 2;
+            int ballY = (int) (polarity.percentPositive() * getImageHeight(context));
             drawBall(g, ballX, ballY, ballSize);
             drawDebugText(g, new DebugText().add("Positive", polarity.positive()).add("Negative", polarity.negative()).add("Displayed", polarity.percentPositive()));
             return image;
@@ -65,13 +65,13 @@ public class PolarityDrawer extends CompoundDrawer {
     }
 
     public static class Graph extends ReferenceLineGraphDrawer {
-        public Graph(boolean forceFullAudio) {
-            super(forceFullAudio);
+        public Graph(DrawContext context) {
+            super(context);
         }
 
         @Override
         protected BufferedImage precomputeImage() {
-            short[][] audioDataSlices = HeatmapDrawer.getSlicedAudioData(playingAudio.getMonoData());
+            short[][] audioDataSlices = HeatmapDrawer.getSlicedAudioData(context, playingAudio.getMonoData());
             double[] displayData = new double[audioDataSlices.length];
             for (int i = 0; i < audioDataSlices.length; i++) {
                 short[] audioData = audioDataSlices[i];

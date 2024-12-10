@@ -2,6 +2,7 @@ package pitheguy.waveform.ui.drawers.spectrum;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.util.FftAnalyser;
@@ -14,8 +15,8 @@ public class SmoothSpectrumDrawer extends SpectrumDrawer {
     public static final int DEFAULT_WINDOW = 20;
     private RollingAverageTracker.DoubleArrayTracker tracker;
 
-    public SmoothSpectrumDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public SmoothSpectrumDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override

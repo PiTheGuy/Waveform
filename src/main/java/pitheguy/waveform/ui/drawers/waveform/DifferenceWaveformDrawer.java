@@ -1,9 +1,11 @@
 package pitheguy.waveform.ui.drawers.waveform;
 
+import pitheguy.waveform.io.DrawContext;
+
 public class DifferenceWaveformDrawer extends ResampledWaveformDrawer {
 
-    public DifferenceWaveformDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public DifferenceWaveformDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override

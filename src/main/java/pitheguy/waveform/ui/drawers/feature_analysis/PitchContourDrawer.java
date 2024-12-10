@@ -1,6 +1,6 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.BarGraphDrawer;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -11,8 +11,8 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class PitchContourDrawer extends HeatmapDrawer {
-    public PitchContourDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public PitchContourDrawer(DrawContext context) {
+        super(context);
     }
 
     
@@ -20,10 +20,10 @@ public class PitchContourDrawer extends HeatmapDrawer {
     protected BufferedImage precomputeImage() {
         BufferedImage image = createBlankImage();
         short[] monoData = playingAudio.getMonoData();
-        double[] pitchContour = new double[Waveform.WIDTH];
-        double[] pitchSalience = new double[Waveform.WIDTH];
-        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, Waveform.WIDTH);
-        for (int x = 0; x < Waveform.WIDTH; x++) {
+        double[] pitchContour = new double[getImageWidth()];
+        double[] pitchSalience = new double[getImageWidth()];
+        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, getImageWidth());
+        for (int x = 0; x < getImageWidth(); x++) {
             Result result = calculatePitch(frequencyData[x]);
             pitchContour[x] = result.pitch;
             pitchSalience[x] = result.salience;
@@ -31,10 +31,10 @@ public class PitchContourDrawer extends HeatmapDrawer {
         pitchContour = Util.normalize(pitchContour);
         pitchSalience = Util.normalize(pitchSalience);
         Graphics2D g = image.createGraphics();
-        int[] pixelHeights = BarGraphDrawer.mapArrayToPixelHeight(pitchContour);
+        int[] pixelHeights = BarGraphDrawer.mapArrayToPixelHeight(context, pitchContour);
         for (int x = 0; x < pixelHeights.length; x++) {
             g.setColor(getSecondaryColor(pitchSalience[x]));
-            g.drawLine(x, Waveform.HEIGHT - 1, x, Waveform.HEIGHT - 1 - pixelHeights[x]);
+            g.drawLine(x, getImageHeight() - 1, x, getImageHeight() - 1 - pixelHeights[x]);
         }
         return image;
     }

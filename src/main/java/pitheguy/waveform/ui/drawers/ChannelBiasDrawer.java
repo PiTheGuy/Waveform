@@ -1,8 +1,8 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options.VisualizationMode;
@@ -14,16 +14,16 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class ChannelBiasDrawer extends CompoundDrawer {
-    public ChannelBiasDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public ChannelBiasDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected AudioDrawer getDrawer() {
         VisualizationMode mode = getSetting("visualization_mode", VisualizationMode.class);
         return switch (mode) {
-            case INSTANTANEOUS -> new Instantaneous(forceFullAudio);
-            case GRAPH -> new Graph(forceFullAudio);
+            case INSTANTANEOUS -> new Instantaneous(context);
+            case GRAPH -> new Graph(context);
         };
     }
 
@@ -33,8 +33,8 @@ public class ChannelBiasDrawer extends CompoundDrawer {
     }
 
     public static class Instantaneous extends SmoothedAudioDrawer {
-        public Instantaneous(boolean forceFullAudio) {
-            super(forceFullAudio, 10, false);
+        public Instantaneous(DrawContext context) {
+            super(context, 10, false);
         }
 
         @Override
@@ -44,13 +44,13 @@ public class ChannelBiasDrawer extends CompoundDrawer {
             double rightRMS = VolumeDrawer.calculateRMS(Util.normalize(right));
             double bias = getBias(leftRMS, rightRMS);
             double displayValue = getDisplayValue(bias);
-            int ballSize = (int) (Math.min(Waveform.WIDTH, Waveform.HEIGHT) * 0.2);
+            int ballSize = (int) (Math.min(getImageWidth(), getImageHeight(context)) * 0.2);
             BufferedImage image = createBlankImage();
             Graphics2D g = image.createGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(Config.foregroundColor);
-            int ballX = (int) ((displayValue + 1) / 2 * Waveform.WIDTH);
-            int ballY = Waveform.HEIGHT / 2;
+            int ballX = (int) ((displayValue + 1) / 2 * getImageWidth());
+            int ballY = getImageHeight(context) / 2;
             drawBall(g, ballX, ballY, ballSize);
             drawDebugText(g, new DebugText().add("Left", leftRMS).add("Right", rightRMS).add("Bias", bias).add("Displayed", displayValue));
             return image;
@@ -74,14 +74,14 @@ public class ChannelBiasDrawer extends CompoundDrawer {
     }
 
     public static class Graph extends ReferenceLineGraphDrawer {
-        public Graph(boolean forceFullAudio) {
-            super(forceFullAudio);
+        public Graph(DrawContext context) {
+            super(context);
         }
 
         @Override
         protected BufferedImage precomputeImage() {
-            short[][] leftData = HeatmapDrawer.getSlicedAudioData(playingAudio.left());
-            short[][] rightData = HeatmapDrawer.getSlicedAudioData(playingAudio.right());
+            short[][] leftData = HeatmapDrawer.getSlicedAudioData(context, playingAudio.left());
+            short[][] rightData = HeatmapDrawer.getSlicedAudioData(context, playingAudio.right());
             double[] biases = new double[leftData.length];
             for (int x = 0; x < leftData.length; x++) {
                 double leftRMS = VolumeDrawer.calculateRMS(Util.normalize(leftData[x]));

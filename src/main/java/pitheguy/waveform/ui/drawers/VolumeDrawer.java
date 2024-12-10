@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.util.DebugText;
 import pitheguy.waveform.util.Util;
 
@@ -12,8 +12,8 @@ import java.util.Arrays;
 
 public class VolumeDrawer extends SmoothedAudioDrawer {
 
-    public VolumeDrawer(boolean forceFullAudio) {
-        super(forceFullAudio, 5);
+    public VolumeDrawer(DrawContext context) {
+        super(context, 5);
     }
 
     
@@ -26,7 +26,7 @@ public class VolumeDrawer extends SmoothedAudioDrawer {
         Graphics2D g = image.createGraphics();
         g.setColor(Config.foregroundColor);
         double displayValue = getDisplayValue(rms);
-        g.fillRect(0, 0, image.getWidth(), (int) (displayValue * Waveform.HEIGHT));
+        g.fillRect(0, 0, image.getWidth(), (int) (displayValue * getImageHeight(context)));
         drawDebugText(g, new DebugText().add("RMS", rms).add("Displayed", displayValue), Color.RED);
         return image;
     }

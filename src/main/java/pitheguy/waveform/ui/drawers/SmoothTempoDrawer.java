@@ -1,6 +1,7 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.util.rolling.RollingAverageTracker;
@@ -12,8 +13,8 @@ public class SmoothTempoDrawer extends TempoDrawer {
     public static final int DEFAULT_WINDOW = 20;
     private RollingAverageTracker.DoubleArrayTracker tracker;
 
-    public SmoothTempoDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public SmoothTempoDrawer(DrawContext context) {
+        super(context);
 
     }
 

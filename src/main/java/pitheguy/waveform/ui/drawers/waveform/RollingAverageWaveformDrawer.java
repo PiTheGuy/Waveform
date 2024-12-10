@@ -1,5 +1,6 @@
 package pitheguy.waveform.ui.drawers.waveform;
 
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 
@@ -8,8 +9,8 @@ import java.util.ArrayDeque;
 public class RollingAverageWaveformDrawer extends ResampledWaveformDrawer {
     public static final int DEFAULT_WINDOW = 50;
 
-    public RollingAverageWaveformDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public RollingAverageWaveformDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override

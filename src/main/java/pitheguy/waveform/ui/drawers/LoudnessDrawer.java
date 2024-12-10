@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options.VisualizationMode;
@@ -15,22 +15,22 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class LoudnessDrawer extends CompoundDrawer {
-    public LoudnessDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public LoudnessDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected AudioDrawer getDrawer() {
         VisualizationMode mode = getSetting("visualization_mode", VisualizationMode.class);
         return switch (mode) {
-            case INSTANTANEOUS -> new Instantaneous(forceFullAudio);
-            case GRAPH -> new Graph(forceFullAudio);
+            case INSTANTANEOUS -> new Instantaneous(context);
+            case GRAPH -> new Graph(context);
         };
     }
 
     private static class Instantaneous extends SmoothedAudioDrawer {
-        public Instantaneous(boolean forceFullAudio) {
-            super(forceFullAudio, 10, false);
+        public Instantaneous(DrawContext context) {
+            super(context, 10, false);
         }
 
         @Override
@@ -43,22 +43,22 @@ public class LoudnessDrawer extends CompoundDrawer {
             Graphics2D g = image.createGraphics();
             g.setColor(Config.foregroundColor);
             double displayValue = Math.min(getDisplayValue(loudness / 3), 1);
-            int height = (int) (displayValue * Waveform.HEIGHT);
-            g.fillRect(0, Waveform.HEIGHT - height, image.getWidth(), height);
+            int height = (int) (displayValue * getImageHeight(context));
+            g.fillRect(0, getImageHeight(context) - height, image.getWidth(), height);
             drawDebugText(g, new DebugText().add("Loudness", loudness).add("Displayed", displayValue), Color.RED);
             return image;
         }
     }
 
     private static class Graph extends LineGraphDrawer {
-        public Graph(boolean forceFullAudio) {
-            super(forceFullAudio);
+        public Graph(DrawContext context) {
+            super(context);
         }
 
         @Override
         protected BufferedImage precomputeImage() {
-            double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), Waveform.WIDTH);
-            double[] loudnessData = new double[Waveform.WIDTH];
+            double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth());
+            double[] loudnessData = new double[getImageWidth()];
             for (int x = 0; x < frequencyData.length; x++)
                 loudnessData[x] = LoudnessDrawer.calculateLoudness(frequencyData[x], playingAudio.sampleRate());
             return drawData(Util.normalize(loudnessData));

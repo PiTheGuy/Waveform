@@ -2,6 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettings;
@@ -15,13 +16,13 @@ import java.io.File;
 import java.io.IOException;
 
 public abstract class AudioDrawer {
-    protected final boolean forceFullAudio;
+    protected final DrawContext context;
     protected AudioData playingAudio;
     protected short[] left;
     protected short[] right;
 
-    public AudioDrawer(boolean forceFullAudio) {
-        this.forceFullAudio = forceFullAudio;
+    public AudioDrawer(DrawContext context) {
+        this.context = context;
     }
 
     public Visualizer getVisualizer() {
@@ -52,7 +53,7 @@ public abstract class AudioDrawer {
     }
 
     public void updatePlayed(BufferedImage image, double seconds, double duration) {
-        int maxX = (int) (seconds / duration * Waveform.WIDTH);
+        int maxX = (int) (seconds / duration * getImageWidth());
         maxX = Math.min(maxX, image.getWidth());
         replacePixels(image, Config.foregroundColor, Config.playedColor, maxX);
     }
@@ -99,25 +100,29 @@ public abstract class AudioDrawer {
         right = frameAudio.right();
     }
 
-    protected static BufferedImage createBlankImage() {
+    protected BufferedImage createBlankImage() {
+        return createBlankImage(context);
+    }
+
+    protected static BufferedImage createBlankImage(DrawContext context) {
         BufferedImage image = new BufferedImage(Waveform.WIDTH, Waveform.HEIGHT, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
         g.setColor(Config.backgroundColor);
-        g.fillRect(0, 0, Waveform.WIDTH, Waveform.HEIGHT);
+        g.fillRect(0, 0, getImageWidth(context), getImageHeight(context));
         g.dispose();
         return image;
     }
 
-    protected static void drawDebugText(Graphics2D g, DebugText text) {
+    protected void drawDebugText(Graphics2D g, DebugText text) {
         drawDebugText(g, text, null);
     }
 
-    protected static void drawDebugText(Graphics2D g, DebugText text, Color color) {
+    protected void drawDebugText(Graphics2D g, DebugText text, Color color) {
         if (!Config.debug) return;
         if (color != null) g.setColor(color);
         String[] lines = text.getText().split("\n");
         int numLines = lines.length;
-        int startY = Waveform.HEIGHT - 80 - (numLines - 1) * 20;
+        int startY = getImageHeight(context) - 80 - (numLines - 1) * 20;
         for (int i = 0; i < numLines; i++) {
             int y = startY + 20 * i;
             g.drawString(lines[i], 50, y);
@@ -133,7 +138,7 @@ public abstract class AudioDrawer {
     }
 
     protected boolean playerMode() {
-        return forceFullAudio || Config.playerMode;
+        return context == DrawContext.EXPORT_FULL || Config.playerMode;
     }
 
     protected void initializeDataArrays() {
@@ -141,6 +146,22 @@ public abstract class AudioDrawer {
         int arraySize = (int) (frameDuration * playingAudio.sampleRate());
         left = new short[arraySize];
         right = new short[arraySize];
+    }
+
+    protected int getImageWidth() {
+        return getImageWidth(context);
+    }
+
+    protected int getImageHeight() {
+        return getImageHeight(context);
+    }
+
+    protected static int getImageWidth(DrawContext context) {
+        return context.isExport() ? Waveform.WIDTH : Waveform.getInstance().getContentPane().getWidth();
+    }
+
+    protected static int getImageHeight(DrawContext context) {
+        return context.isExport() ? Waveform.HEIGHT : Waveform.getInstance().getContentPane().getHeight();
     }
 
     public VisualizerSettingsInstance.Builder constructSettings() {

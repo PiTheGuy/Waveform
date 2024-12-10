@@ -1,5 +1,6 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.drawers.LineGraphDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -10,13 +11,13 @@ import java.util.Arrays;
 
 public class SpectralFlatnessDrawer extends LineGraphDrawer {
 
-    public SpectralFlatnessDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public SpectralFlatnessDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), Waveform.WIDTH);
+        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth());
         double[] flatnessData = Arrays.stream(frequencyData).mapToDouble(SpectralFlatnessDrawer::calculateFlatness).toArray();
         return drawData(Util.normalize(flatnessData));
     }

@@ -1,7 +1,7 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.util.BeatDetectionHelper;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -15,10 +15,10 @@ import java.util.Arrays;
 public class BeatDetectionRingsDrawer extends AudioDrawer {
     private static final int HISTORY_SIZE = 200;
     private final RollingList<Double> history = new RollingList<>(HISTORY_SIZE);
-    private final RollingList<Boolean> pastPeaks = new DynamicRollingList<>(BeatDetectionRingsDrawer::getNumRings);
+    private final RollingList<Boolean> pastPeaks = new DynamicRollingList<>(this::getNumRings);
 
-    public BeatDetectionRingsDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public BeatDetectionRingsDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
@@ -34,13 +34,13 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
         Graphics2D g = image.createGraphics();
         for (int i = 0; i < pastPeaks.size(); i++) {
             if (pastPeaks.get(pastPeaks.size() - 1 - i)) {
-                CircularDrawer.drawRing(g, i, 1);
+                CircularDrawer.drawRing(context, g, i, 1);
             }
         }
         return image;
     }
 
-    private static int getNumRings() {
-        return Math.min(Waveform.WIDTH, Waveform.HEIGHT) / 2;
+    private int getNumRings() {
+        return Math.min(getImageWidth(), getImageHeight(context)) / 2;
     }
 }

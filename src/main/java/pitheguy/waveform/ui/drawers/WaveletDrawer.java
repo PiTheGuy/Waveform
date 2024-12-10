@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers;
 import jwave.Transform;
 import jwave.transforms.FastWaveletTransform;
 import jwave.transforms.wavelets.haar.Haar1;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.util.Util;
 
 import java.awt.*;
@@ -13,8 +13,8 @@ import java.util.Arrays;
 
 public class WaveletDrawer extends HeatmapDrawer {
 
-    public WaveletDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public WaveletDrawer(DrawContext context) {
+        super(context);
     }
 
     
@@ -22,15 +22,15 @@ public class WaveletDrawer extends HeatmapDrawer {
     protected BufferedImage precomputeImage() {
         BufferedImage heatmap = createBlankImage();
         short[] monoData = playingAudio.getMonoData();
-        double samplesPerPixel = (double) monoData.length / Waveform.WIDTH;
-        for (int x = 0; x < Waveform.WIDTH; x++) {
+        double samplesPerPixel = (double) monoData.length / getImageWidth();
+        for (int x = 0; x < getImageWidth(); x++) {
             int start = (int) (x * samplesPerPixel);
             int sampleLength = (int) samplesPerPixel;
             short[] audioData = new short[sampleLength];
             System.arraycopy(monoData, start, audioData, 0, Math.min(sampleLength, monoData.length - start));
             double[] coefficients = transform(Util.normalize(audioData));
-            double scale = (double) coefficients.length / Waveform.HEIGHT;
-            for (int y = 0; y < Waveform.HEIGHT; y++) {
+            double scale = (double) coefficients.length / getImageHeight(context);
+            for (int y = 0; y < getImageHeight(context); y++) {
                 int index = (int) (y * scale);
                 Color color = getColor(coefficients[index]);
                 heatmap.setRGB(x, y, color.getRGB());

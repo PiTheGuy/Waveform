@@ -1,7 +1,7 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.ui.drawers.LoudnessDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -11,14 +11,14 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class LoudnessSpectrogramDrawer extends HeatmapDrawer {
-    public LoudnessSpectrogramDrawer(boolean forceFullAudio) {
-        super(forceFullAudio);
+    public LoudnessSpectrogramDrawer(DrawContext context) {
+        super(context);
     }
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), Waveform.WIDTH);
-        double[][] spectrogramData = new double[Waveform.WIDTH][];
+        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth());
+        double[][] spectrogramData = new double[getImageWidth()][];
         for (int i = 0; i < frequencyData.length; i++) {
             double[] scaledFrequencyData = new double[frequencyData[i].length];
             double frequencyResolution = playingAudio.sampleRate() / frequencyData[i].length;
@@ -31,12 +31,12 @@ public class LoudnessSpectrogramDrawer extends HeatmapDrawer {
                 double magnitude = frequencyData[i][j];
                 scaledFrequencyData[j] = magnitude * LoudnessDrawer.frequencyMagnitude(frequency);
             }
-            spectrogramData[i] = FftAnalyser.resampleMagnitudesToBands(scaledFrequencyData, Waveform.HEIGHT);
+            spectrogramData[i] = FftAnalyser.resampleMagnitudesToBands(scaledFrequencyData, getImageHeight(context));
         }
         double[][] displayData = Util.normalize(spectrogramData);
         int scaleFactor = Config.highContrast ? 20 : 10;
         Arrays.setAll(displayData, i -> Arrays.stream(displayData[i]).map(v -> v * scaleFactor).toArray());
-        return drawData(displayData);
+        return drawData(context, displayData);
     }
 
 
