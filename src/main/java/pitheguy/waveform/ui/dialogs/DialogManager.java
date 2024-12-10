@@ -67,12 +67,14 @@ public class DialogManager {
         String text = "<html>" + message.replace("\n", " <br>") + "</html>";
         JLabel messageLabel = new JLabel(text);
         JCheckBox doNotShowAgainCheckbox = new JCheckBox("Do not show this message again");
+        doNotShowAgainCheckbox.setMnemonic('D');
         panel.add(messageLabel, BorderLayout.CENTER);
         panel.add(doNotShowAgainCheckbox, BorderLayout.SOUTH);
         int choice = JOptionPane.showConfirmDialog(parent, panel,
                 title, JOptionPane.YES_NO_OPTION);
-        if (doNotShowAgainCheckbox.isSelected()) SessionManager.getInstance().suppressWarning(key);
-        return choice == JOptionPane.YES_OPTION;
+        boolean confirmed = choice == JOptionPane.YES_OPTION;
+        if (confirmed && doNotShowAgainCheckbox.isSelected()) SessionManager.getInstance().suppressWarning(key);
+        return confirmed;
     }
 
     public record YoutubeImportInfo(String url, boolean addToQueue) {
