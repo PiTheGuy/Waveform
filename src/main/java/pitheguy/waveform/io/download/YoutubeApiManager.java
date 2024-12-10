@@ -1,6 +1,7 @@
 package pitheguy.waveform.io.download;
 
 import com.google.gson.*;
+import pitheguy.waveform.util.HttpUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,16 +62,7 @@ public class YoutubeApiManager {
     }
 
     private static String sendRequest(String url) throws IOException {
-        try {
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
-            HttpResponse<InputStream> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofInputStream());
-            try (InputStream body = response.body()) {
-                return new String(body.readAllBytes());
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IOException("Request was interrupted", e);
-        }
+        return HttpUtil.sendRequest(url);
     }
 
     public record PlaylistItem(String url, String title) {}

@@ -1,4 +1,4 @@
-package pitheguy.waveform.io.download;
+package pitheguy.waveform.util;
 
 import java.io.*;
 import java.net.URI;
@@ -7,8 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 
-public class FileDownloader {
-
+public class HttpUtil {
     private static final HttpClient CLIENT = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
     public static File downloadFile(String url, String extension) throws IOException, InterruptedException {
@@ -20,5 +19,18 @@ public class FileDownloader {
             Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         return file;
+    }
+
+    public static String sendRequest(String url) throws IOException {
+        try {
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+            HttpResponse<InputStream> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofInputStream());
+            try (InputStream body = response.body()) {
+                return new String(body.readAllBytes());
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Request was interrupted", e);
+        }
     }
 }
