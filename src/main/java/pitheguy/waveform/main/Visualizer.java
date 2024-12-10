@@ -64,7 +64,7 @@ public enum Visualizer {
     CHANNEL_BIAS(ChannelBiasDrawer::new, "channel_bias", false, Category.MISC),
     POLARITY(PolarityDrawer::new, "polarity", false, Category.MISC),
     ENERGY_DYNAMICS(EnergyDynamicsDrawer::new, "energy_dynamics", false, Category.MISC),
-    BEAT_DETECTION_RINGS_DRAWER(BeatDetectionRingsDrawer::new, "beat_rings", false, Category.MISC);
+    BEAT_DETECTION_RINGS(BeatDetectionRingsDrawer::new, "beat_rings", false, Category.MISC);
 
 
     private final String key;
