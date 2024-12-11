@@ -61,12 +61,17 @@ public class VisualizerImageCollector {
                 System.out.println("Skipped image for " + visualizer.getName() + "; already exists");
                 continue;
             }
-            Main.processInput("-visualizer", visualizer.getKey(), "-size", "150", "100");
-            Waveform waveform = new Waveform(false);
-            waveform.play(inputFile);
-            waveform.exportManager.exportFullImage(outputFile, true);
-            System.out.println("Exported image for " + visualizer.getName());
-            waveform.destroy();
+            try {
+                Main.processInput("-visualizer", visualizer.getKey(), "-size", "150", "100");
+                Waveform waveform = new Waveform(false);
+                waveform.play(inputFile);
+                waveform.exportManager.exportFullImage(outputFile, true);
+                System.out.println("Exported image for " + visualizer.getName());
+                waveform.destroy();
+            } catch (Exception e) {
+                System.err.println("Error creating image for " + visualizer.getName());
+                e.printStackTrace();
+            }
         }
     }
 
