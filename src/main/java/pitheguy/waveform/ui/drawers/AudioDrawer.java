@@ -157,11 +157,11 @@ public abstract class AudioDrawer {
     }
 
     protected static int getImageWidth(DrawContext context) {
-        return context.isExport() ? Waveform.WIDTH : Waveform.getInstance().getContentPane().getWidth();
+        return context.isExport() || !Waveform.getInstance().isVisible() ? Waveform.WIDTH : Waveform.getInstance().getContentPane().getWidth();
     }
 
     protected static int getImageHeight(DrawContext context) {
-        return context.isExport() ? Waveform.HEIGHT : Waveform.getInstance().getContentPane().getHeight();
+        return context.isExport() || !Waveform.getInstance().isVisible() ? Waveform.HEIGHT : Waveform.getInstance().getContentPane().getHeight();
     }
 
     public VisualizerSettingsInstance.Builder constructSettings() {

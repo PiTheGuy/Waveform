@@ -1,6 +1,5 @@
 package pitheguy.waveform.ui.drawers.spectrum;
 
-import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
@@ -31,10 +30,5 @@ public class FrequencyRingsDrawer extends AudioDrawer {
     @Override
     public boolean shouldShowEpilepsyWarning() {
         return true;
-    }
-
-    @Override
-    public boolean isSeekingAllowed() {
-        return Config.playerMode;
     }
 }
