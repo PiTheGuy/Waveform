@@ -72,4 +72,9 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
     public boolean isResizable() {
         return false;
     }
+
+    @Override
+    public boolean isSeekingAllowed() {
+        return true;
+    }
 }

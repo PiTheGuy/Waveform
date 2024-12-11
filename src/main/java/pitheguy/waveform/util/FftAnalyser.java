@@ -109,6 +109,11 @@ public class FftAnalyser {
         return batchFFT(audioData);
     }
 
+    public static double[][] getResampledFrequencyData(short[] sampleData, int width, int height) {
+        double[][] frequencyData = getFrequencyData(sampleData, width);
+        return Arrays.stream(frequencyData).map(arr -> resampleMagnitudesToBands(arr, height)).toArray(double[][]::new);
+    }
+
     public static Complex[][] getComplexFrequencyData(short[] sampleData, int width) {
         double samplesPerPixel = (double) sampleData.length / width;
         double[][] audioData = new double[width][];

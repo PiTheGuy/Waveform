@@ -28,11 +28,6 @@ public abstract class MappedPlotDrawer extends AudioDrawer {
     }
 
     @Override
-    public boolean isSeekingAllowed() {
-        return Config.playerMode;
-    }
-
-    @Override
     public VisualizerSettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("relative", "Relative scaling", SettingType.bool(), false);

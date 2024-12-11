@@ -10,12 +10,10 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class OnsetEnvelopeDrawer extends SlicedImageDrawer {
-
     public OnsetEnvelopeDrawer(DrawContext context) {
         super(context);
     }
 
-    
     @Override
     public BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
@@ -37,11 +35,6 @@ public class OnsetEnvelopeDrawer extends SlicedImageDrawer {
         int[] pixelHeights = new int[data.length];
         for (int i = 0; i < data.length; i++) pixelHeights[i] = (int) (data[i] / maxValue * getImageHeight(context));
         return pixelHeights;
-    }
-
-    @Override
-    public boolean isSeekingAllowed() {
-        return Config.playerMode;
     }
 
     @Override

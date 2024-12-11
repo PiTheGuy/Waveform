@@ -50,6 +50,18 @@ public abstract class CircularDrawer extends AudioDrawer {
         return new Point(x, y);
     }
 
+    public static PolarCoordinates getPolarCoordinates(DrawContext context, int x, int y) {
+        int circleDiameter = Math.min(getImageWidth(context), getImageHeight(context));
+        int centerX = getImageWidth(context) / 2;
+        int centerY = getImageHeight(context) / 2;
+        double deltaX = x - centerX;
+        double deltaY = y - centerY;
+        double r = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / ((double) circleDiameter / 2);
+        double theta = Math.atan2(deltaY, deltaX) + Math.PI / 2;
+        if (theta < 0) theta += 2 * Math.PI;
+        return new PolarCoordinates(r, theta);
+    }
+
     protected static void drawData(DrawContext context, Graphics2D g, double[] data) {
         int numBars = data.length > MAX_DOUBLE_UP_LENGTH ? data.length : data.length * 2;
         double radiansPerBar = Math.PI * 2 / numBars;
@@ -77,5 +89,8 @@ public abstract class CircularDrawer extends AudioDrawer {
     @Override
     public boolean isSeekingAllowed() {
         return false;
+    }
+
+    public record PolarCoordinates(double r, double theta) {
     }
 }

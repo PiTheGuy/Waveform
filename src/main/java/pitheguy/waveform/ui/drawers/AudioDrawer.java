@@ -173,7 +173,7 @@ public abstract class AudioDrawer {
     }
 
     public boolean isSeekingAllowed() {
-        return true;
+        return Config.playerMode;
     }
 
     public boolean usesDynamicIcon() {

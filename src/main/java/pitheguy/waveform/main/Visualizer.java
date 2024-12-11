@@ -28,6 +28,7 @@ public enum Visualizer {
     SPECTROGRAM(SpectrogramDrawer::new, "spectrogram", false, Category.SPECTROGRAM),
     PHASE_SPECTROGRAM(PhaseSpectrogramDrawer::new, "phase_spectrogram", false, Category.SPECTROGRAM),
     DOUBLE_SPECTROGRAM(DoubleSpectrogramDrawer::new, "double_spectrogram", false, Category.SPECTROGRAM),
+    CIRCULAR_SPECTROGRAM(CircularSpectrogramDrawer::new, "circular_spectrogram", false, Category.SPECTROGRAM),
     DIFFERENCE_SPECTROGRAM(DifferenceSpectrogramDrawer::new, "diff_spectrogram", false, Category.SPECTROGRAM),
     MODULATION_SPECTROGRAM(ModulationSpectrogramDrawer::new, "modulation", false, Category.SPECTROGRAM),
     DIRECTIONAL_SPECTROGRAM(DirectionalSpectrogramDrawer::new, "directional_spectrogram", false, Category.SPECTROGRAM),
