@@ -22,8 +22,25 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
     }
 
     @Override
-    protected BufferedImage drawAudio(double sec, double length) {
-        super.drawAudio(sec, length);
+    public BufferedImage drawFullAudio() {
+        int numRings = getNumRings();
+        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), numRings);
+        double[] energy = Arrays.stream(frequencyData).mapToDouble(arr -> Arrays.stream(arr).sum()).toArray();
+        int historySize = (int) (numRings * 0.2);
+        RollingList<Double> history = new RollingList<>(historySize);
+        BufferedImage image = createBlankImage();
+        Graphics2D g = image.createGraphics();
+        for (int ring = 0; ring < numRings; ring++) {
+            history.add(energy[ring]);
+            double cutoff = BeatDetectionHelper.getCutoff(history, false);
+            if (energy[ring] > cutoff) CircularDrawer.drawRing(context, g, ring, 1);
+        }
+        return image;
+    }
+
+    @Override
+    public BufferedImage drawFrame(double sec) {
+        super.drawFrame(sec);
         short[] data = AudioData.averageChannels(left, right);
         double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
         double energy = Arrays.stream(magnitudes).sum();
@@ -32,15 +49,18 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
         pastPeaks.add(energy > cutoff);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
-        for (int i = 0; i < pastPeaks.size(); i++) {
-            if (pastPeaks.get(pastPeaks.size() - 1 - i)) {
-                CircularDrawer.drawRing(context, g, i, 1);
-            }
-        }
+        for (int i = 0; i < pastPeaks.size(); i++)
+            if (pastPeaks.get(pastPeaks.size() - 1 - i)) CircularDrawer.drawRing(context, g, i, 1);
         return image;
     }
 
     private int getNumRings() {
         return Math.min(getImageWidth(), getImageHeight(context)) / 2;
+    }
+
+    @Override
+    public void setPlayingAudio(AudioData playingAudio) {
+        super.setPlayingAudio(playingAudio);
+        history.clear();
     }
 }
