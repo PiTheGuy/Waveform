@@ -45,7 +45,7 @@ public record Session(SavedPreferences savedPreferences, List<Visualizer> previo
             List<Visualizer> previousVisualizers = new ArrayList<>();
             List<String> suppressedWarnings = new ArrayList<>();
             if (json.has("previousVisualizers"))
-                json.getAsJsonArray("previousVisualizers").forEach(visualizer -> previousVisualizers.add(Visualizer.valueOf(visualizer.getAsString())));
+                json.getAsJsonArray("previousVisualizers").forEach(visualizer -> addVisualizer(previousVisualizers, visualizer.getAsString()));
             if (json.has("suppressedWarnings"))
                 json.getAsJsonArray("suppressedWarnings").forEach(warning -> suppressedWarnings.add(warning.getAsString()));
             if (json.has("visualizerSettings")) VisualizerSettings.loadFromJson(json.getAsJsonObject("visualizerSettings"));
@@ -53,6 +53,13 @@ public record Session(SavedPreferences savedPreferences, List<Visualizer> previo
         } catch (Exception e) {
             e.printStackTrace();
             return EMPTY;
+        }
+    }
+
+    private static void addVisualizer(List<Visualizer> visualizers, String visualizer) {
+        try {
+            visualizers.add(Visualizer.valueOf(visualizer));
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
