@@ -24,10 +24,11 @@ public class VisualizerImageCollector {
         Path outputPath = Path.of(commandLine.getOptionValue("output"));
         List<Visualizer> visualizers = collectVisualizers(commandLine);
         boolean overwrite = commandLine.hasOption("overwrite");
+        boolean verbose = commandLine.hasOption("verbose");
         if (commandLine.hasOption("clean")) clean(outputPath);
         if (commandLine.hasOption("input")) {
             File inputFile = new File(commandLine.getOptionValue("input"));
-            createImages(inputFile, outputPath, visualizers, overwrite);
+            createImages(inputFile, outputPath, visualizers, overwrite, verbose);
         }
         System.exit(0);
     }
@@ -54,11 +55,11 @@ public class VisualizerImageCollector {
         scanner.close();
     }
 
-    private static void createImages(File inputFile, Path outputPath, List<Visualizer> visualizers, boolean overwrite) throws Exception {
+    private static void createImages(File inputFile, Path outputPath, List<Visualizer> visualizers, boolean overwrite, boolean verbose) {
         for (Visualizer visualizer : visualizers) {
             File outputFile = outputPath.resolve(visualizer.getKey() + ".png").toFile();
             if (!overwrite && outputFile.exists()) {
-                System.out.println("Skipped image for " + visualizer.getName() + "; already exists");
+                if (verbose) System.out.println("Skipped image for " + visualizer.getName() + "; already exists");
                 continue;
             }
             try {
@@ -95,6 +96,7 @@ public class VisualizerImageCollector {
         options.addOption("visualizers", true, "Comma separated list of visualizers to process. If absent, will process all visualizers");
         options.addOption("clean", "Remove images that don't correspond to a visualizer");
         options.addOption("overwrite", "Overwrite existing images with newly created ones");
+        options.addOption("verbose", "Enable verbose output");
         return options;
     }
 }
