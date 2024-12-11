@@ -99,6 +99,7 @@ public class FftAnalyser {
     }
 
     public static double[][] getFrequencyData(short[] sampleData, int numSamples) {
+        if (numSamples <= 0) throw new IllegalArgumentException("numSamples must be greater than 0");
         double samplesPerPixel = (double) sampleData.length / numSamples;
         double[][] audioData = new double[numSamples][];
         int minFFTSize = Waveform.HEIGHT * 2;
