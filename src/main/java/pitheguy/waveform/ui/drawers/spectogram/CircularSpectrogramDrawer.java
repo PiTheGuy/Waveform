@@ -25,6 +25,7 @@ public class CircularSpectrogramDrawer extends AudioDrawer {
 
     @Override
     public BufferedImage drawFrame(double sec) {
+        if (image == null) return createBlankImage();
         super.drawFrame(sec);
         BufferedImage result = createBlankImage();
         for (int x = 0; x < result.getWidth(); x++) {
@@ -40,17 +41,9 @@ public class CircularSpectrogramDrawer extends AudioDrawer {
 
     private boolean shouldDrawPixel(double sec, int x, int y) {
         double percentPlayed = sec / playingAudio.duration();
-        if (invertAxes) {
-            CircularDrawer.PolarCoordinates polarCoordinates = CircularDrawer.getPolarCoordinates(context, x, y);
-            return polarCoordinates.theta() < percentPlayed * 2 * Math.PI;
-        } else {
-            int centerX = getImageWidth() / 2;
-            int centerY = getImageHeight() / 2;
-            double dx = x - centerX;
-            double dy = y - centerY;
-            double distance = Math.sqrt(dx * dx + dy * dy);
-            return distance < percentPlayed * getImageSize() / 2;
-        }
+        CircularDrawer.PolarCoordinates polarCoordinates = CircularDrawer.getPolarCoordinates(context, x, y);
+        if (invertAxes) return polarCoordinates.theta() < percentPlayed * 2 * Math.PI;
+        else return polarCoordinates.r() < percentPlayed;
     }
 
     private BufferedImage makeImage() {
@@ -78,8 +71,7 @@ public class CircularSpectrogramDrawer extends AudioDrawer {
     @Override
     public void setPlayingAudio(AudioData playingAudio) {
         super.setPlayingAudio(playingAudio);
-        invertAxes = getSetting("invert_axes", Boolean.class);
-        image = makeImage();
+        regenerateIfNeeded();
     }
 
     @Override
