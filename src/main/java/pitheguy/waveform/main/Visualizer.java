@@ -19,6 +19,7 @@ public enum Visualizer {
     EDGE_WAVEFORM(EdgeWaveformDrawer::new, "edge", false, Category.WAVEFORM),
     CIRCULAR_WAVEFORM(CircularWaveformDrawer::new, "circle", false, Category.WAVEFORM),
     DIFFERENCE_WAVEFORM(DifferenceWaveformDrawer::new, "diff", false, Category.WAVEFORM),
+    DUAL_WAVEFORM(DualWaveformDrawer::new, "dual", false, Category.WAVEFORM),
     ROLLING_AVERAGE_WAVEFORM(RollingAverageWaveformDrawer::new, "rolling", false, Category.WAVEFORM),
     SPECTRUM(SpectrumDrawer::new, "spectrum", false, Category.SPECTRUM),
     SMOOTH_SPECTRUM(SmoothSpectrumDrawer::new, "smooth_spectrum", false, Category.SPECTRUM),

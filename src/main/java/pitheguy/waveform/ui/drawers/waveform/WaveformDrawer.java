@@ -32,9 +32,9 @@ public class WaveformDrawer extends MappedPlotDrawer {
         return image;
     }
 
-    void mapArrayToPixelHeight(short[] input, int[] output) {
+    protected void mapArrayToPixelHeight(short[] input, int[] output) {
         for (int i = 0; i < input.length; i++)
-            output[i] = (int) Math.abs(((double) input[i] / maxValue * getImageHeight(context)));
+            output[i] = (int) Math.abs(((double) input[i] / maxValue * getImageHeight()));
     }
 
     @Override
