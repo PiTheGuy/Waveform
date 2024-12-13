@@ -10,6 +10,7 @@ import pitheguy.waveform.main.validator.CommandLineValidator;
 import pitheguy.waveform.main.validator.ValidationRule;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.ForcedPreferences;
+import pitheguy.waveform.util.HttpUtil;
 import pitheguy.waveform.util.Util;
 
 import javax.swing.*;
@@ -43,6 +44,7 @@ public class Main {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         waveform.populateMenuBar();
         restoreSession();
+        Util.runInBackground(HttpUtil::checkInternetConnection);
         if (Config.exportFile != null) export(waveform);
         else if (hasInput()) playInput(waveform);
     }

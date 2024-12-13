@@ -34,9 +34,9 @@ public class HttpUtil {
 
     public static boolean checkInternetConnection() {
         try {
-            HttpRequest request = HttpRequest.newBuilder().HEAD().uri(URI.create("https://www.google.com")).build();
-            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200;
+            HttpRequest request = HttpRequest.newBuilder().HEAD().uri(URI.create("http://clients3.google.com/generate_204")).build();
+            HttpResponse<Void> response = CLIENT.send(request, HttpResponse.BodyHandlers.discarding());
+            return response.statusCode() == 204;
         } catch (IOException | InterruptedException e) {
             return false;
         }
