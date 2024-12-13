@@ -71,16 +71,14 @@ public class ExportManager {
     }
 
     public void exportVideo(File file, boolean waitUntilFinished) {
-        if (!ResourceGetter.isFfmpegAvailable()) {
-            Waveform.getInstance().showError("FFmpeg Not Found", "FFmpeg is required for video and GIF exports.");
-        }
+        if (!ResourceGetter.isFfmpegAvailable())
+            parent.showError("FFmpeg Not Found", "FFmpeg is required for video and GIF exports.");
         export(file, new VideoExportStrategy(), "video", ExportType.VIDEO, true, waitUntilFinished);
     }
 
     public void exportGif(File file, boolean waitUntilFinished) {
-        if (!ResourceGetter.isFfmpegAvailable()) {
-            Waveform.getInstance().showError("FFmpeg Not Found", "FFmpeg is required for video and GIF exports.");
-        }
+        if (!ResourceGetter.isFfmpegAvailable())
+            parent.showError("FFmpeg Not Found", "FFmpeg is required for video and GIF exports.");
         export(file, new GifExportStrategy(), "gif", ExportType.GIF, true, waitUntilFinished);
     }
 

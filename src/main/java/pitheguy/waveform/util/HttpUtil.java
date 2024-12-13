@@ -33,4 +33,14 @@ public class HttpUtil {
             throw new IOException("Request was interrupted", e);
         }
     }
+
+    public static boolean checkInternetConnection() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://www.google.com")).build();
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode() == 200;
+        } catch (IOException | InterruptedException e) {
+            return false;
+        }
+    }
 }

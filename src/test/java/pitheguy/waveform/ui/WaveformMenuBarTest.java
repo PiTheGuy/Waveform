@@ -54,14 +54,6 @@ class WaveformMenuBarTest {
     }
 
     @Test
-    void testFileMenu_importFromYoutubeHiddenWithoutDependencies() {
-        mockStatic(YoutubeAudioGetter.class);
-        when(YoutubeAudioGetter.hasRequiredDependencies()).thenReturn(false);
-        menuBar.updateState();
-        assertFalse(menuBar.importFromYoutubeItem.isVisible(), "Import from YouTube item should not be visible when required dependencies aren't present");
-    }
-
-    @Test
     void testExportMenu_disableExports() {
         Config.disableExports = true;
         waveform.hasAudio = true;
@@ -79,17 +71,6 @@ class WaveformMenuBarTest {
         waveform.hasAudio = true;
         menuBar.updateState();
         assertTrue(menuBar.exportMenu.isVisible(), "Export menu should be visible when a track is playing");
-    }
-
-    @Test
-    void testExportMenu_hidesVideoAndGifWithoutFFmpeg() {
-        mockStatic(ResourceGetter.class);
-        when(ResourceGetter.isFfmpegAvailable()).thenReturn(false);
-        menuBar.updateState();
-        assertAll(
-                () -> assertFalse(menuBar.exportVideoItem.isVisible(), "Video export should be hidden if FFmpeg is unavailable"),
-                () -> assertFalse(menuBar.exportGifItem.isVisible(), "GIF export should be hidden if FFmpeg is unavailable")
-        );
     }
 
 

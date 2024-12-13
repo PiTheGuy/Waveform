@@ -598,6 +598,14 @@ public class Waveform extends JFrame {
     }
 
     public void importFromYoutube() {
+        if (!HttpUtil.checkInternetConnection()) {
+            showError("No Internet Connection", "Please check your internet connection.");
+            return;
+        }
+        if (!YoutubeAudioGetter.hasRequiredDependencies()) {
+            showError("Missing Required Dependencies", "yt-dlp is required for YouTube imports.");
+            return;
+        }
         DialogManager.YoutubeImportInfo importInfo = dialogManager.promptForYoutubeUrl();
         if (importInfo == null) return;
         String newUrl = validateImport(importInfo.url(), error -> showError("Invalid URL", error));

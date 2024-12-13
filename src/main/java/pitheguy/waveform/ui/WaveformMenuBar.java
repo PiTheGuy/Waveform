@@ -124,11 +124,11 @@ public class WaveformMenuBar extends JMenuBar {
         add(helpMenu);
     }
 
-    private static void reportBugs() {
+    private void reportBugs() {
         try {
             Desktop.getDesktop().browse(new URI("https://github.com/PiTheGuy/Waveform/issues"));
         } catch (IOException | URISyntaxException ex) {
-            throw new RuntimeException(ex);
+            parent.showError("Error", "Failed to open bug report page. Please check your internet connection.");
         }
     }
 
@@ -136,13 +136,10 @@ public class WaveformMenuBar extends JMenuBar {
         if (!initialized) return;
         clearQueueItem.setVisible(!Config.microphoneMode && parent.hasAudio);
         manageQueueItem.setVisible(!Config.microphoneMode && !Config.disableQueueManagement && parent.hasAudio);
-        importFromYoutubeItem.setVisible(YoutubeAudioGetter.hasRequiredDependencies());
         useMicrophoneItem.setVisible(!Config.microphoneMode);
         preferencesItem.setVisible(!Config.disablePreferences);
         exitItem.setText(getExitItemText());
         exportMenu.setVisible(parent.hasAudio && !Config.disableExports && !Config.microphoneMode);
-        exportVideoItem.setVisible(ResourceGetter.isFfmpegAvailable());
-        exportGifItem.setVisible(ResourceGetter.isFfmpegAvailable());
         visualizerMenu.setVisible(parent.hasAudio && !Config.disableVisualizerSelection);
         trackMenu.setVisible(!Config.hideControls && parent.hasAudio && !Config.microphoneMode);
         previousTrackItem.setEnabled(parent.hasPreviousTrack());
