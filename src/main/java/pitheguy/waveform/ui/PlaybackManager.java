@@ -135,10 +135,12 @@ public class PlaybackManager {
     }
 
     public long getMicrosecondPosition() {
+        if (audioPlayer == null) throw new IllegalStateException("No audio player present");
         return audioPlayer.getMicrosecondPosition();
     }
 
     public void setMicrosecondPosition(long microsecondPosition) {
+        if (audioPlayer == null) throw new IllegalStateException("No audio player present");
         audioPlayer.setMicrosecondPosition(microsecondPosition);
     }
 

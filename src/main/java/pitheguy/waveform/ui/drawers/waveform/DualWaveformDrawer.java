@@ -11,6 +11,7 @@ import pitheguy.waveform.ui.drawers.MappedPlotDrawer;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.BitSet;
+import java.util.Random;
 
 public class DualWaveformDrawer extends MappedPlotDrawer {
     private ColorChannel leftChannel;
@@ -60,13 +61,6 @@ public class DualWaveformDrawer extends MappedPlotDrawer {
         return new Color(l | r);
     }
 
-    @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
-        return super.constructSettings()
-                .addSetting("left", SettingType.forEnum(ColorChannel.class), ColorChannel.RED)
-                .addSetting("right", SettingType.forEnum(ColorChannel.class), ColorChannel.GREEN);
-    }
-
     private BitSet2D getWaveformBitSet(int[] data, int width, int height) {
         BitSet2D bitSet = new BitSet2D(width, height);
         int halfHeight = height / 2;
@@ -90,6 +84,13 @@ public class DualWaveformDrawer extends MappedPlotDrawer {
     public void regenerateIfNeeded() {
         leftChannel = getSetting("left", ColorChannel.class);
         rightChannel = getSetting("right", ColorChannel.class);
+    }
+
+    @Override
+    public VisualizerSettingsInstance.Builder constructSettings() {
+        return super.constructSettings()
+                .addSetting("left", SettingType.forEnum(ColorChannel.class), ColorChannel.RED)
+                .addSetting("right", SettingType.forEnum(ColorChannel.class), ColorChannel.GREEN);
     }
 
     private static class BitSet2D {
