@@ -75,6 +75,7 @@ public class FrameUpdater implements Runnable {
     }
 
     public void silentShutdown() {
+        paused = true; // Pause to prevent updates while shutting down
         scheduler.shutdownNow();
         parent.playbackManager.closeAudioPlayer();
     }

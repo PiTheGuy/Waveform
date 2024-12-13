@@ -15,8 +15,8 @@ public class EdgeWaveformDrawer extends WaveformDrawer {
 
     protected BufferedImage drawAudio(double sec, double length) {
         updateAudioData(sec, length);
-        mapArrayToPixelHeight(left, leftMapped);
-        mapArrayToPixelHeight(right, rightMapped);
+        int[] leftMapped = mapArrayToPixelHeight(left);
+        int[] rightMapped = mapArrayToPixelHeight(right);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

@@ -8,9 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class WaveformDrawer extends MappedPlotDrawer {
-    protected int[] leftMapped;
-    protected int[] rightMapped;
-
     public WaveformDrawer(DrawContext context) {
         super(context);
     }
@@ -32,25 +29,19 @@ public class WaveformDrawer extends MappedPlotDrawer {
         return image;
     }
 
-    protected void mapArrayToPixelHeight(short[] input, int[] output) {
+    protected int[] mapArrayToPixelHeight(short[] input) {
+        int[] output = new int[input.length];
         for (int i = 0; i < input.length; i++)
             output[i] = (int) Math.abs(((double) input[i] / maxValue * getImageHeight()));
+        return output;
     }
 
     @Override
     protected BufferedImage drawAudio(double sec, double length) {
         super.drawAudio(sec, length);
-        mapArrayToPixelHeight(left, leftMapped);
-        mapArrayToPixelHeight(right, rightMapped);
+        int[] leftMapped = mapArrayToPixelHeight(left);
+        int[] rightMapped = mapArrayToPixelHeight(right);
         return drawData(context, createBlankImage(), leftMapped, rightMapped);
-    }
-
-    protected void initializeDataArrays() {
-        super.initializeDataArrays();
-        double frameDuration = playerMode() ? playingAudio.duration() : Config.getFrameLength();
-        int arraySize = (int) (frameDuration * playingAudio.sampleRate());
-        leftMapped = new int[arraySize];
-        rightMapped = new int[arraySize];
     }
 
     @Override
