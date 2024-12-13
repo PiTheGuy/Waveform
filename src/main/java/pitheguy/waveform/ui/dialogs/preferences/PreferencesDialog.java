@@ -105,12 +105,14 @@ public class PreferencesDialog extends JDialog {
         JPanel monoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         mono = createCheckBox("Force mono", "Convert stereo audio to mono before visualization", 'F', Config.mono);
         monoPanel.add(mono);
+        monoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, monoPanel.getPreferredSize().height));
         advancedPanel.add(monoPanel);
 
         //Disable smoothing
         JPanel disableSmoothingPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         disableSmoothing = createCheckBox("Disable smoothing", "Some visualizers apply smoothing to their data. This disables this, but may cause flashing images", 'D', Config.disableSmoothing);
         disableSmoothingPanel.add(disableSmoothing);
+        disableSmoothingPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, disableSmoothingPanel.getPreferredSize().height));
         advancedPanel.add(disableSmoothingPanel);
 
         return advancedPanel;
