@@ -6,6 +6,7 @@ import pitheguy.waveform.util.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,7 +58,7 @@ public class YoutubeAudioGetter {
 
     public TrackInfo getVideoAudio(String url, String title, Consumer<String> statusOutput) throws IOException, InterruptedException {
         if (cache.containsKey(url)) return cache.get(url);
-        statusOutput.accept("Processing...");
+        statusOutput.accept("Downloading...");
         File audioFile = extractVideoAudio(url);
         if (title == null) {
             statusOutput.accept("Getting metadata...");
@@ -71,7 +72,7 @@ public class YoutubeAudioGetter {
     private File extractVideoAudio(String videoUrl) throws IOException, InterruptedException {
         String resourcePath = ResourceGetter.getYtdlpPath();
         String tempDir = System.getProperty("java.io.tmpdir");
-        String audioPath = tempDir + File.separator + "audio" + new Random().nextInt() + ".wav";
+        String audioPath = tempDir + File.separator + "audio-" + UUID.randomUUID() + ".wav";
         Process process = Util.runProcess(resourcePath, "--extract-audio", "--audio-format", "wav", "-o", audioPath, videoUrl);
         int exitCode = process.waitFor();
         if (exitCode != 0) throw new IOException("Failed to extract audio: " + videoUrl);
@@ -79,4 +80,25 @@ public class YoutubeAudioGetter {
         TempFileManager.registerTempFile(audioFile);
         return audioFile;
     }
+
+    public static String validateUrl(String url, Consumer<String> onError) {
+        if (url == null) return null;
+        url = url.trim();
+        if (url.isEmpty()) {
+            onError.accept("Please enter a URL.");
+            return null;
+        }
+        String normalizedUrl = Util.normalizeUrl(url);
+        if (normalizedUrl == null) {
+            onError.accept("Invalid URL.");
+            return null;
+        }
+        if (normalizedUrl.startsWith("https://www.youtube.com") || normalizedUrl.startsWith("https://youtu.be"))
+            return normalizedUrl;
+        else {
+            onError.accept("Only YouTube URLs are supported.");
+            return null;
+        }
+    }
+
 }

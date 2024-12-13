@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.cli.*;
 import pitheguy.waveform.config.*;
 import pitheguy.waveform.io.TrackInfo;
+import pitheguy.waveform.io.download.YoutubeAudioGetter;
 import pitheguy.waveform.io.session.Session;
 import pitheguy.waveform.main.validator.CommandLineValidator;
 import pitheguy.waveform.main.validator.ValidationRule;
@@ -133,7 +134,7 @@ public class Main {
         if (commandLine.hasOption("input")) INPUT_FILE = new File(commandLine.getOptionValue("input"));
         if (commandLine.hasOption("url")) {
             String url = commandLine.getOptionValue("url");
-            Waveform.validateImport(url, Util::printError);
+            YoutubeAudioGetter.validateUrl(url, Util::printError);
             IMPORT_URL = url;
         }
         if (commandLine.hasOption("fullScreen")) {

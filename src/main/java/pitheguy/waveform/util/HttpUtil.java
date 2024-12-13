@@ -24,10 +24,8 @@ public class HttpUtil {
     public static String sendRequest(String url) throws IOException {
         try {
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
-            HttpResponse<InputStream> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofInputStream());
-            try (InputStream body = response.body()) {
-                return new String(body.readAllBytes());
-            }
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("Request was interrupted", e);

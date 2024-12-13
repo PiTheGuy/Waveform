@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 
 public class Waveform extends JFrame {
     public static final String DRAG_AND_DROP_TEXT = "Drag and drop an audio file to start playing";
@@ -608,28 +607,9 @@ public class Waveform extends JFrame {
         }
         DialogManager.YoutubeImportInfo importInfo = dialogManager.promptForYoutubeUrl();
         if (importInfo == null) return;
-        String newUrl = validateImport(importInfo.url(), error -> showError("Invalid URL", error));
+        String newUrl = YoutubeAudioGetter.validateUrl(importInfo.url(), error -> showError("Invalid URL", error));
         if (newUrl == null) return;
         importUrl(newUrl, importInfo.addToQueue());
-    }
-
-    public static String validateImport(String url, Consumer<String> onError) {
-        if (url == null) return null;
-        if (url.isEmpty()) {
-            onError.accept("Please enter a URL.");
-            return null;
-        }
-        if (url.startsWith("http://")) url = "https://" + url.substring("http://".length());
-        else if (!url.startsWith("https://")) url = "https://" + url;
-        if (!Util.isValidUrl(url)) {
-            onError.accept("Invalid URL");
-            return null;
-        }
-        if (!url.startsWith("https://www.youtube.com") && !url.startsWith("https://youtu.be")) {
-            onError.accept("Only YouTube URLs are supported.");
-            return null;
-        }
-        return url;
     }
 
     public void importUrl(String url, boolean addToQueue) {

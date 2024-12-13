@@ -2,6 +2,7 @@ package pitheguy.waveform.ui;
 
 import org.junit.jupiter.api.Test;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.io.download.YoutubeAudioGetter;
 import pitheguy.waveform.main.Visualizer;
 
 import java.io.File;
@@ -118,24 +119,24 @@ class WaveformTest {
     @Test
     public void testValidateImport_withInvalidUrl() {
         String invalidUrl = "invalid";
-        assertNull(Waveform.validateImport(invalidUrl, error -> {}));
+        assertNull(YoutubeAudioGetter.validateUrl(invalidUrl, error -> {}));
     }
 
     @Test
     public void testValidateImport_withOutsideUrl() {
         String invalidUrl = "https://www.invalid-url.com";
-        assertNull(Waveform.validateImport(invalidUrl, error -> {}));
+        assertNull(YoutubeAudioGetter.validateUrl(invalidUrl, error -> {}));
     }
 
     @Test
     public void testValidateImport_withValidYoutubeUrl() {
         String youtubeUrl = "https://www.youtube.com/watch?v=example";
-        assertNotNull(Waveform.validateImport(youtubeUrl, error -> {}));
+        assertNotNull(YoutubeAudioGetter.validateUrl(youtubeUrl, error -> {}));
     }
 
     @Test
     public void testValidateImport_withShortYoutubeUrl() {
         String youtubeUrl = "https://youtu.be/example";
-        assertNotNull(Waveform.validateImport(youtubeUrl, error -> {}));
+        assertNotNull(YoutubeAudioGetter.validateUrl(youtubeUrl, error -> {}));
     }
 }

@@ -8,10 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class Util {
@@ -40,13 +40,19 @@ public class Util {
         System.err.println(error);
         System.exit(1);
     }
-
-    public static boolean isValidUrl(String url) {
+    public static String normalizeUrl(String url) {
         try {
-            new URL(url);
-            return true;
-        } catch (MalformedURLException e) {
-            return false;
+            URI uri = new URI(url);
+            String scheme = uri.getScheme();
+            if (scheme == null || scheme.equalsIgnoreCase("http")) scheme = "https";
+            String host = uri.getHost();
+            if (host == null) return null;
+            if (!host.contains(".")) return null;
+            if (host.indexOf('.') == host.lastIndexOf('.')) host = "www." + host;
+            URI normalizedUri = new URI(scheme, uri.getUserInfo(), host, uri.getPort(), uri.getPath(), uri.getQuery(), uri.getFragment());
+            return normalizedUri.toString();
+        } catch (URISyntaxException e) {
+            return null;
         }
     }
 
@@ -171,7 +177,6 @@ public class Util {
         if (Config.debug) processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT);
         return processBuilder.start();
     }
-
 
     public interface ThrowingRunnable {
         void run() throws Exception;
