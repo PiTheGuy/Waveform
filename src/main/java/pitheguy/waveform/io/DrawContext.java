@@ -13,6 +13,7 @@ public class DrawContext {
     private DrawContext(IntSupplier imageWidth, IntSupplier imageHeight) {
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
+        updateDimensions();
     }
 
     private DrawContext(int imageWidth, int imageHeight) {
