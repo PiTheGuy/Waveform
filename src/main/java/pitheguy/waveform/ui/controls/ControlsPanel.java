@@ -20,9 +20,11 @@ public class ControlsPanel extends JPanel {
     private final PauseButton pauseButton;
     private final NextTrackButton nextTrackButton;
     private final JLabel label;
+    private final Waveform parent;
 
     public ControlsPanel(Waveform parent) {
-        previousTrackButton = new PreviousTrackButton(parent);
+        this.parent = parent;
+        previousTrackButton = new PreviousTrackButton(this.parent);
         previousTrackButton.setBounds(PREVIOUS_TRACK_X, 0, PreviousTrackButton.BUTTON_WIDTH, PreviousTrackButton.BUTTON_HEIGHT);
         pauseButton = new PauseButton(parent);
         pauseButton.setBounds(PAUSE_X, 0, PauseButton.BUTTON_WIDTH, PauseButton.BUTTON_HEIGHT);
@@ -46,8 +48,8 @@ public class ControlsPanel extends JPanel {
     }
 
     public void reposition() {
-        int x = Waveform.WIDTH / 2 - WIDTH / 2;
-        int y = (Waveform.HEIGHT * 3) / 4 - WIDTH / 2;
+        int x = parent.getContentPane().getWidth() / 2 - WIDTH / 2;
+        int y = (parent.getContentPane().getHeight() * 3) / 4 - HEIGHT / 2;
         setBounds(x, y, WIDTH, HEIGHT);
     }
 

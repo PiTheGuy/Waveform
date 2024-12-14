@@ -12,18 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ExportStrategy {
-    default void export(ExportContext context, ProgressTracker tracker) throws IOException {
-        ExportManager.tempSetSize(() -> doExport(context, tracker), context.width(), context.height());
-    }
-
-    void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException;
+    void export(ExportContext context, ProgressTracker progressTracker) throws IOException;
 
     default void runFfmpeg(List<String> args, ExportContext context, ProgressTracker progressTracker) throws IOException {
         List<String> command = new ArrayList<>(args);
         command.addFirst(ResourceGetter.getFFmpegPath());
         Process ffmpeg = Util.runProcess(command.toArray(new String[0]));
         AudioDrawer drawer = Config.visualizer.getExportDrawer(context.width(), context.height());
-        ImageWriter imageWriter = new ImageWriter();
+        ImageWriter imageWriter = new ImageWriter(context.width(), context.height());
         try (OutputStream ffmpegInput = ffmpeg.getOutputStream()) {
             drawer.setPlayingAudio(context.audioData());
             for (double sec = 0; sec < context.audioData().duration(); sec += Config.getFrameLength()) {

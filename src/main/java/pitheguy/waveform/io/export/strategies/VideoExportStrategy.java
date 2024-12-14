@@ -9,7 +9,7 @@ import java.util.*;
 
 public class VideoExportStrategy implements ExportStrategy {
     @Override
-    public void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
         List<String> args = new ArrayList<>(List.of(
                 "-y", // Overwrite output if it exists
                 "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", context.width() + "x" + context.height(),  // Input frame format

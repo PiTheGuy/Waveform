@@ -14,7 +14,7 @@ public class FrameExportStrategy implements ExportStrategy {
     }
 
     @Override
-    public void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
         Waveform.getInstance().audioDrawer.exportFrame(context.outputFile(), sec);
     }
 }

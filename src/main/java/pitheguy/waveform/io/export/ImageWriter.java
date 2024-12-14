@@ -9,8 +9,8 @@ import java.io.OutputStream;
 public class ImageWriter {
     byte[] pixels;
 
-    public ImageWriter() {
-        pixels = new byte[Waveform.WIDTH * Waveform.HEIGHT * 3];
+    public ImageWriter(int width, int height) {
+        pixels = new byte[width * height * 3];
     }
 
     public void writeImageToStream(BufferedImage image, OutputStream outputStream) throws IOException {

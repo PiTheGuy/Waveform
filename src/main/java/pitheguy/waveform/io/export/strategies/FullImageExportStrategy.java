@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class FullImageExportStrategy implements ExportStrategy {
     @Override
-    public void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
         AudioDrawer drawer = Config.visualizer.getExportDrawer(context.width(), context.height());
         drawer.setPlayingAudio(context.audioData());
         drawer.exportFullImage(context.outputFile());

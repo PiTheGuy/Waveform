@@ -106,7 +106,7 @@ public abstract class AudioDrawer {
     }
 
     protected static BufferedImage createBlankImage(DrawContext context) {
-        BufferedImage image = new BufferedImage(Waveform.WIDTH, Waveform.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(context.getWidth(), context.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
         g.setColor(Config.backgroundColor);
         g.fillRect(0, 0, context.getWidth(), context.getHeight());

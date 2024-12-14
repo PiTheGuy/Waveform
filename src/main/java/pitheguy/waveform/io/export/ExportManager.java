@@ -81,22 +81,4 @@ public class ExportManager {
             parent.showError("FFmpeg Not Found", "FFmpeg is required for video and GIF exports.");
         export(file, new GifExportStrategy(), "gif", ExportType.GIF, true, waitUntilFinished);
     }
-
-    public static void tempSetSize(Exporter exporter, int width, int height) throws IOException {
-        int oldWidth = Waveform.WIDTH;
-        int oldHeight = Waveform.HEIGHT;
-        Waveform.WIDTH = width;
-        Waveform.HEIGHT = height;
-        try {
-            exporter.export();
-        } finally {
-            Waveform.WIDTH = oldWidth;
-            Waveform.HEIGHT = oldHeight;
-        }
-    }
-
-    @FunctionalInterface
-    public interface Exporter {
-        void export() throws IOException;
-    }
 }

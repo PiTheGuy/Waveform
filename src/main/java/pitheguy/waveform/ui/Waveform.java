@@ -80,7 +80,6 @@ public class Waveform extends JFrame {
         menuBar = new WaveformMenuBar(this);
         setJMenuBar(menuBar);
         this.imgLabel = new JLabel(LOADING_TEXT, JLabel.CENTER);
-        imgLabel.setSize(WIDTH, HEIGHT);
         imgLabel.setOpaque(true);
         imgLabel.setBackground(Config.backgroundColor);
         imgLabel.setForeground(Config.foregroundColor);
@@ -117,6 +116,7 @@ public class Waveform extends JFrame {
         revalidate();
         repaint();
         menuBar.updateState();
+        imgLabel.setSize(getContentPane().getWidth(), getContentPane().getHeight()); // Needs to be done after menu population
     }
 
     public static Waveform getInstance() {
@@ -453,7 +453,7 @@ public class Waveform extends JFrame {
 
     private void handleSeeking(MouseEvent e) {
         if (!hasAudio) return;
-        double percent = (double) e.getX() / WIDTH;
+        double percent = (double) e.getX() / getContentPane().getWidth();
         long clipPosition = (long) (percent * duration * 1000000);
         long oldClipPosition = playbackManager.getMicrosecondPosition();
         playbackManager.setMicrosecondPosition(clipPosition);
@@ -507,9 +507,7 @@ public class Waveform extends JFrame {
 
     private void handleResize() {
         if (frameUpdater != null) frameUpdater.pause();
-        WIDTH = getWidth();
-        HEIGHT = getHeight();
-        imgLabel.setSize(WIDTH, HEIGHT);
+        imgLabel.setSize(getContentPane().getWidth(), getContentPane().getHeight());
         imgLabel.revalidate();
         controls.reposition();
         queuePanel.reposition();

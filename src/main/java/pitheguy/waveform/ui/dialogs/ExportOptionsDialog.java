@@ -211,7 +211,7 @@ public class ExportOptionsDialog extends JDialog {
                 new ResolutionPreset("3840 x 2160 (4K UHD)", 3840, 2160),
                 new ResolutionPreset("1080 x 1080 (Square - Instagram Post)", 1080, 1080),
                 new ResolutionPreset("1080 x 1920 (Portrait - Instagram/TikTok)", 1080, 1920),
-                new ResolutionPreset("Current Window Size", () -> Waveform.WIDTH, () -> Waveform.HEIGHT),
+                new ResolutionPreset("Current Window Size", () -> parent.getContentPane().getWidth(), () -> parent.getContentPane().getHeight()),
                 custom
         };
     }

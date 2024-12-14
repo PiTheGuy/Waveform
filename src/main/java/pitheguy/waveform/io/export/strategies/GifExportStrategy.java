@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GifExportStrategy implements ExportStrategy {
     @Override
-    public void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
         List<String> args = List.of(
                 "-y", // Overwrite existing files
                 "-f", "rawvideo", // Raw video format from stdin
