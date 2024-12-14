@@ -27,11 +27,17 @@ public abstract class BarGraphDrawer extends AudioDrawer {
         int[] pixelHeights = mapArrayToPixelHeight(context, data);
         Graphics2D g = image.createGraphics();
         g.setColor(color);
-        double scale = (double) data.length / getImageWidth();
-        for (int x = 0; x < getImageWidth(); x++) {
+        double scale = (double) data.length / context.getWidth();
+        for (int x = 0; x < context.getWidth(); x++) {
             int index = (int) (x * scale);
-            int startY = reverseDirection ? 0 : getImageHeight(context) - 1;
-            int endY = reverseDirection ? pixelHeights[index] : getImageHeight(context) - 1 - pixelHeights[index];
+            int startY;
+            if (reverseDirection) {
+                startY = reverseDirection ? 0 : context.getHeight() - 1;
+            } else {
+                startY = context.getHeight() - 1;
+            }
+            int endY;
+            endY = reverseDirection ? pixelHeights[index] : context.getHeight() - 1 - pixelHeights[index];
             g.drawLine(x, startY, x, endY);
         }
         g.dispose();
@@ -40,7 +46,7 @@ public abstract class BarGraphDrawer extends AudioDrawer {
 
     public static int[] mapArrayToPixelHeight(DrawContext context, double[] data) {
         int[] pixelHeights = new int[data.length];
-        for (int i = 0; i < data.length; i++) pixelHeights[i] = (int) (data[i] * getImageHeight(context));
+        for (int i = 0; i < data.length; i++) pixelHeights[i] = (int) (data[i] * context.getHeight());
         return pixelHeights;
     }
 }

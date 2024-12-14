@@ -14,8 +14,8 @@ public abstract class CircularDrawer extends AudioDrawer {
     }
 
     public void updatePlayed(BufferedImage image, double seconds, double duration) {
-        int centerX = getImageWidth() / 2;
-        int centerY = getImageHeight(context) / 2;
+        int centerX = context.getWidth() / 2;
+        int centerY = context.getHeight() / 2;
         double progress = seconds / duration;
         int fromRGB = Config.foregroundColor.getRGB();
         int toRGB = Config.playedColor.getRGB();
@@ -27,33 +27,33 @@ public abstract class CircularDrawer extends AudioDrawer {
             for (double r = 0; r < maxRadius; r += 0.5) {
                 int x = (int) (centerX + r * cos);
                 int y = (int) (centerY + r * sin);
-                if (x >= 0 && x < getImageWidth() && y >= 0 && y < getImageHeight(context) && image.getRGB(x, y) == fromRGB)
+                if (x >= 0 && x < context.getWidth() && y >= 0 && y < context.getHeight() && image.getRGB(x, y) == fromRGB)
                     image.setRGB(x, y, toRGB);
             }
         }
     }
 
     protected static void drawLinePolar(DrawContext context, Graphics2D g, double r, double theta) {
-        int centerX = getImageWidth(context) / 2;
-        int centerY = getImageHeight(context) / 2;
+        int centerX = context.getWidth() / 2;
+        int centerY = context.getHeight() / 2;
         Point point = getDrawPoint(context, r, theta);
         g.drawLine(centerX, centerY, point.x, point.y);
     }
 
     public static Point getDrawPoint(DrawContext context, double r, double theta) {
         theta -= Math.PI / 2;
-        int circleDiameter = Math.min(getImageWidth(context), getImageHeight(context));
-        int centerX = getImageWidth(context) / 2;
-        int centerY = getImageHeight(context) / 2;
+        int circleDiameter = Math.min(context.getWidth(), context.getHeight());
+        int centerX = context.getWidth() / 2;
+        int centerY = context.getHeight() / 2;
         int x = centerX + (int) (r * Math.cos(theta) * circleDiameter / 2);
         int y = centerY + (int) (r * Math.sin(theta) * circleDiameter / 2);
         return new Point(x, y);
     }
 
     public static PolarCoordinates getPolarCoordinates(DrawContext context, int x, int y) {
-        int circleDiameter = Math.min(getImageWidth(context), getImageHeight(context));
-        int centerX = getImageWidth(context) / 2;
-        int centerY = getImageHeight(context) / 2;
+        int circleDiameter = Math.min(context.getWidth(), context.getHeight());
+        int centerX = context.getWidth() / 2;
+        int centerY = context.getHeight() / 2;
         double deltaX = x - centerX;
         double deltaY = y - centerY;
         double r = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / ((double) circleDiameter / 2);
@@ -80,8 +80,8 @@ public abstract class CircularDrawer extends AudioDrawer {
 
     public static void drawRing(DrawContext context, Graphics2D g, int radius, double brightness) {
         Color color = HeatmapDrawer.getColor(brightness);
-        int centerX = getImageWidth(context) / 2;
-        int centerY = getImageHeight(context) / 2;
+        int centerX = context.getWidth() / 2;
+        int centerY = context.getHeight() / 2;
         g.setColor(color);
         g.drawOval(centerX - radius, centerY - radius, 2 * radius + 1, 2 * radius + 1);
     }

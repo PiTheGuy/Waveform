@@ -18,7 +18,7 @@ public class DoubleSpectrogramDrawer extends AbstractSpectrogramDrawer {
 
     @Override
     protected BufferedImage precomputeImage() {
-        Complex[][] fftData = FftAnalyser.getComplexFrequencyData(playingAudio.getMonoData(), getImageWidth());
+        Complex[][] fftData = FftAnalyser.getComplexFrequencyData(playingAudio.getMonoData(), context.getWidth());
         double[][] magnitudes = new double[fftData.length][];
         double[][] phases = new double[fftData.length][];
         for (int i = 0; i < fftData.length; i++) {
@@ -31,12 +31,12 @@ public class DoubleSpectrogramDrawer extends AbstractSpectrogramDrawer {
         }
         phases = Util.normalize(phases);
         BufferedImage spectrogram = createBlankImage();
-        for (int x = 0; x < getImageWidth(); x++) {
-            for (int y = 0; y < getImageHeight(context); y++) {
+        for (int x = 0; x < context.getWidth(); x++) {
+            for (int y = 0; y < context.getHeight(); y++) {
                 float magnitude = (float) Math.min(magnitudes[x][y], 1);
                 float phase = (float) Math.min(phases[x][y], 1);
                 Color color = getColor(magnitude, phase);
-                spectrogram.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
+                spectrogram.setRGB(x, context.getHeight() - 1 - y, color.getRGB());
             }
         }
         return spectrogram;

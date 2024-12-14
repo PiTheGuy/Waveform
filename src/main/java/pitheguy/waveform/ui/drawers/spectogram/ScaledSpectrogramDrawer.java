@@ -15,9 +15,9 @@ public abstract class ScaledSpectrogramDrawer extends AbstractSpectrogramDrawer 
 
     protected double[] resample(double[] data, double sampleRate, DoubleUnaryOperator rescaler) {
         double maxScaled = rescaler.applyAsDouble(sampleRate);
-        double scalePerPixel = maxScaled / getImageHeight(context);
-        double[] finalData = new double[getImageHeight(context)];
-        double[] weightCounter = new double[getImageHeight(context)];
+        double scalePerPixel = maxScaled / context.getHeight();
+        double[] finalData = new double[context.getHeight()];
+        double[] weightCounter = new double[context.getHeight()];
         for (int i = 0; i < data.length - 1; i++) {
             double frequencyStart = i * sampleRate / (double) data.length;
             double frequencyEnd = (i + 1) * sampleRate / (double) data.length;

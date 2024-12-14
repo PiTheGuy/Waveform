@@ -18,11 +18,11 @@ public class SpectralContrastDrawer extends LineGraphDrawer {
     @Override
     protected BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, getImageWidth());
-        double[][] contrasts = new double[NUM_BANDS][getImageWidth()];
+        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, context.getWidth());
+        double[][] contrasts = new double[NUM_BANDS][context.getWidth()];
         for (int band = 0; band < NUM_BANDS; band++) {
             double[][] bandData = getBandData(frequencyData, band);
-            for (int i = 0; i < getImageWidth(); i++) {
+            for (int i = 0; i < context.getWidth(); i++) {
                 int minIndex = getBestIndex(bandData[i], false);
                 int maxIndex = getBestIndex(bandData[i], true);
                 int contrast = maxIndex - minIndex + 1;
@@ -30,11 +30,11 @@ public class SpectralContrastDrawer extends LineGraphDrawer {
             }
         }
         for (int i = 0; i < NUM_BANDS; i++)
-            for (int j = 0; j < getImageWidth(); j++) contrasts[i][j] /= playingAudio.sampleRate() / NUM_BANDS;
+            for (int j = 0; j < context.getWidth(); j++) contrasts[i][j] /= playingAudio.sampleRate() / NUM_BANDS;
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         for (int band = 0; band < NUM_BANDS; band++)
-            drawData(g, contrasts[band], getImageHeight(context) / NUM_BANDS, getImageHeight(context) - 1 - (band * getImageHeight(context) / NUM_BANDS), true);
+            drawData(g, contrasts[band], context.getHeight() / NUM_BANDS, context.getHeight() - 1 - (band * context.getHeight() / NUM_BANDS), true);
         g.dispose();
         return image;
     }
@@ -55,8 +55,8 @@ public class SpectralContrastDrawer extends LineGraphDrawer {
     private double[][] getBandData(double[][] frequencyData, int bandIndex) {
         int numFrequencies = frequencyData[0].length;
         int frequenciesPerBand = numFrequencies / NUM_BANDS;
-        double[][] bandData = new double[getImageWidth()][frequenciesPerBand];
-        for (int i = 0; i < getImageWidth(); i++)
+        double[][] bandData = new double[context.getWidth()][frequenciesPerBand];
+        for (int i = 0; i < context.getWidth(); i++)
             System.arraycopy(frequencyData[i], bandIndex * frequenciesPerBand, bandData[i], 0, frequenciesPerBand);
         return bandData;
     }

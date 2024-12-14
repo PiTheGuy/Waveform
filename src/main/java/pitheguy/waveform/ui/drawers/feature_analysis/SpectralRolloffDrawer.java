@@ -1,7 +1,6 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.LineGraphDrawer;
@@ -21,7 +20,7 @@ public class SpectralRolloffDrawer extends LineGraphDrawer {
     @Override
     protected BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, getImageWidth());
+        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, context.getWidth());
         double[] cutoffFrequencies = Arrays.stream(frequencyData).mapToDouble(this::getCutoffFrequency).toArray();
         double[] displayData = Arrays.stream(cutoffFrequencies).map(value -> value / playingAudio.sampleRate()).toArray();
         return drawData(displayData);

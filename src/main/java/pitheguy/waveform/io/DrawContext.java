@@ -1,11 +1,43 @@
 package pitheguy.waveform.io;
 
-public enum DrawContext {
-    REALTIME,
-    EXPORT_FRAME,
-    EXPORT_FULL;
+import pitheguy.waveform.ui.Waveform;
 
-    public boolean isExport() {
-        return this == EXPORT_FRAME || this == EXPORT_FULL;
+import java.util.function.IntSupplier;
+
+public class DrawContext {
+    private final IntSupplier imageWidth;
+    private final IntSupplier imageHeight;
+    private int cachedWidth;
+    private int cachedHeight;
+
+    private DrawContext(IntSupplier imageWidth, IntSupplier imageHeight) {
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
+    }
+
+    private DrawContext(int imageWidth, int imageHeight) {
+        this(() -> imageWidth, () -> imageHeight);
+    }
+
+    public static DrawContext realtime() {
+        return new DrawContext(() -> Waveform.getInstance().getContentPane().getWidth(),
+                () -> Waveform.getInstance().getContentPane().getHeight());
+    }
+
+    public static DrawContext forExport(int width, int height) {
+        return new DrawContext(width, height);
+    }
+
+    public void updateDimensions() {
+        cachedWidth = imageWidth.getAsInt();
+        cachedHeight = imageHeight.getAsInt();
+    }
+
+    public int getWidth() {
+        return cachedWidth;
+    }
+
+    public int getHeight() {
+        return cachedHeight;
     }
 }

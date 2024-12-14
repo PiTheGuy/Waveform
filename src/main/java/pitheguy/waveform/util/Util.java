@@ -132,7 +132,7 @@ public class Util {
     }
 
     public static Color blendColor(double delta, Color start, Color end) {
-        delta = Math.max(0, Math.min(1, delta));
+        delta = Math.clamp(delta, 0, 1);
         int red = (int) ((1 - delta) * start.getRed() + delta * end.getRed());
         int green = (int) ((1 - delta) * start.getGreen() + delta * end.getGreen());
         int blue = (int) ((1 - delta) * start.getBlue() + delta * end.getBlue());

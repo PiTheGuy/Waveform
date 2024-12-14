@@ -14,7 +14,7 @@ public abstract class LineGraphDrawer extends SlicedImageDrawer {
     }
 
     protected BufferedImage drawData(double[] data) {
-        return drawData(data, getImageHeight(context), 0, false);
+        return drawData(data, context.getHeight(), 0, false);
     }
 
     protected BufferedImage drawData(double[] data, int height, int x, boolean reverse) {
@@ -27,11 +27,11 @@ public abstract class LineGraphDrawer extends SlicedImageDrawer {
 
 
     protected void drawData(Graphics2D g, double[] data) {
-        drawData(g, data, getImageHeight(context), 0, false, Config.foregroundColor);
+        drawData(g, data, context.getHeight(), 0, false, Config.foregroundColor);
     }
 
     protected void drawData(Graphics2D g, double[] data, Color color) {
-        drawData(g, data, getImageHeight(context), 0, false, color);
+        drawData(g, data, context.getHeight(), 0, false, color);
     }
 
     protected void drawData(Graphics2D g, double[] data, int height, int x, boolean reverse) {
@@ -43,7 +43,7 @@ public abstract class LineGraphDrawer extends SlicedImageDrawer {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(getSetting("line_thickness", Float.class)));
         double previousValue = 0;
-        for (int currentX = 0; currentX < getImageWidth(); currentX++) {
+        for (int currentX = 0; currentX < context.getWidth(); currentX++) {
             double value = data[currentX];
             if (currentX != 0) g.drawLine(currentX, mapToPixelHeight(value, height, x, reverse), currentX - 1, mapToPixelHeight(previousValue, height, x, reverse));
             previousValue = value;
@@ -52,7 +52,7 @@ public abstract class LineGraphDrawer extends SlicedImageDrawer {
 
     private int mapToPixelHeight(double value, int height, int x, boolean reverse) {
         int y = (int) (value * height) + x;
-        return reverse ? getImageHeight(context) - 1 - y : y;
+        return reverse ? context.getHeight() - 1 - y : y;
     }
 
     @Override

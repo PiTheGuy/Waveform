@@ -44,13 +44,13 @@ public class ChannelBiasDrawer extends CompoundDrawer {
             double rightRMS = VolumeDrawer.calculateRMS(Util.normalize(right));
             double bias = getBias(leftRMS, rightRMS);
             double displayValue = getDisplayValue(bias);
-            int ballSize = (int) (Math.min(getImageWidth(), getImageHeight(context)) * 0.2);
+            int ballSize = (int) (Math.min(context.getWidth(), context.getHeight()) * 0.2);
             BufferedImage image = createBlankImage();
             Graphics2D g = image.createGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(Config.foregroundColor);
-            int ballX = (int) ((displayValue + 1) / 2 * getImageWidth());
-            int ballY = getImageHeight(context) / 2;
+            int ballX = (int) ((displayValue + 1) / 2 * context.getWidth());
+            int ballY = context.getHeight() / 2;
             drawBall(g, ballX, ballY, ballSize);
             drawDebugText(g, new DebugText().add("Left", leftRMS).add("Right", rightRMS).add("Bias", bias).add("Displayed", displayValue));
             return image;

@@ -19,7 +19,7 @@ public class FrequencyRingsDrawer extends AudioDrawer {
     protected BufferedImage drawAudio(double sec, double length) {
         super.drawAudio(sec, length);
         double[] frequencyData = FftAnalyser.performFFT(Util.normalize(AudioData.averageChannels(left, right)));
-        int numRings = Math.min(getImageWidth(), getImageHeight(context));
+        int numRings = Math.min(context.getWidth(), context.getHeight());
         double[] magnitudes = FftAnalyser.resampleMagnitudesToBands(frequencyData, numRings);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();

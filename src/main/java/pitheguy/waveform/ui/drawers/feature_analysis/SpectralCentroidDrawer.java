@@ -1,7 +1,6 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.drawers.RangeLineGraphDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 
@@ -15,7 +14,7 @@ public class SpectralCentroidDrawer extends RangeLineGraphDrawer {
     @Override
     protected BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, getImageWidth());
+        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, context.getWidth());
         SpectralData spectralData = computeSpectralData(frequencyData);
         return drawData(spectralData.centroids(), spectralData.bandwidths());
     }

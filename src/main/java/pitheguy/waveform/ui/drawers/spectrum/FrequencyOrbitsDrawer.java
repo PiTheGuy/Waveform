@@ -27,7 +27,7 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
     @Override
     public BufferedImage drawFullAudio() {
         double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), FULL_AUDIO_ITERATIONS);
-        double[][] magnitudes = new double[getImageWidth()][];
+        double[][] magnitudes = new double[context.getWidth()][];
         Arrays.setAll(magnitudes, i -> FftAnalyser.resampleMagnitudesToBands(frequencyData[i], positions.length));
         double speed = getSetting("speed", Double.class);
         for (int time = 0; time < frequencyData.length; time++)
@@ -73,8 +73,8 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
 
     private Point convertToDisplayPoint(int index, double position) {
         return switch (getSetting("orbit_path", OrbitPath.class)) {
-            case HORIZONTAL -> new Point((int) (position * getImageWidth()), index);
-            case VERTICAL -> new Point(index, (int) (position * getImageHeight()));
+            case HORIZONTAL -> new Point((int) (position * context.getWidth()), index);
+            case VERTICAL -> new Point(index, (int) (position * context.getHeight()));
             case CIRCULAR -> CircularDrawer.getDrawPoint(context, (double) index / positions.length, position * 2 * Math.PI);
         };
     }
@@ -110,9 +110,9 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
 
     private int getNumBands() {
         return switch (getSetting("orbit_path", OrbitPath.class)) {
-            case HORIZONTAL -> getImageHeight();
-            case VERTICAL -> getImageWidth();
-            case CIRCULAR -> Math.min(getImageWidth(), getImageHeight());
+            case HORIZONTAL -> context.getHeight();
+            case VERTICAL -> context.getWidth();
+            case CIRCULAR -> Math.min(context.getWidth(), context.getHeight());
         };
     }
 

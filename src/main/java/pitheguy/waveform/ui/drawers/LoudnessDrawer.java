@@ -43,8 +43,8 @@ public class LoudnessDrawer extends CompoundDrawer {
             Graphics2D g = image.createGraphics();
             g.setColor(Config.foregroundColor);
             double displayValue = Math.min(getDisplayValue(loudness / 3), 1);
-            int height = (int) (displayValue * getImageHeight(context));
-            g.fillRect(0, getImageHeight(context) - height, image.getWidth(), height);
+            int height = (int) (displayValue * context.getHeight());
+            g.fillRect(0, context.getHeight() - height, image.getWidth(), height);
             drawDebugText(g, new DebugText().add("Loudness", loudness).add("Displayed", displayValue), Color.RED);
             return image;
         }
@@ -57,8 +57,8 @@ public class LoudnessDrawer extends CompoundDrawer {
 
         @Override
         protected BufferedImage precomputeImage() {
-            double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth());
-            double[] loudnessData = new double[getImageWidth()];
+            double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth());
+            double[] loudnessData = new double[context.getWidth()];
             for (int x = 0; x < frequencyData.length; x++)
                 loudnessData[x] = LoudnessDrawer.calculateLoudness(frequencyData[x], playingAudio.sampleRate());
             return drawData(Util.normalize(loudnessData));

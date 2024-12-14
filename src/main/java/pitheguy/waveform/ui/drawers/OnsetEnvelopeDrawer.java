@@ -17,7 +17,7 @@ public class OnsetEnvelopeDrawer extends SlicedImageDrawer {
     @Override
     public BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, getImageWidth());
+        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, context.getWidth());
         return drawOnsetEnvelope(frequencyData, createBlankImage());
     }
 
@@ -27,13 +27,14 @@ public class OnsetEnvelopeDrawer extends SlicedImageDrawer {
         int[] pixelHeights = mapArrayToPixelHeight(energy, maxValue);
         Graphics2D g = image.createGraphics();
         g.setColor(Config.foregroundColor);
-        for (int x = 0; x < pixelHeights.length; x++) g.drawLine(x, getImageHeight(context) - 1, x, getImageHeight(context) - 1 - pixelHeights[x]);
+        for (int x = 0; x < pixelHeights.length; x++)
+            g.drawLine(x, context.getHeight() - 1, x, context.getHeight() - 1 - pixelHeights[x]);
         return image;
     }
 
     public int[] mapArrayToPixelHeight(double[] data, double maxValue) {
         int[] pixelHeights = new int[data.length];
-        for (int i = 0; i < data.length; i++) pixelHeights[i] = (int) (data[i] / maxValue * getImageHeight(context));
+        for (int i = 0; i < data.length; i++) pixelHeights[i] = (int) (data[i] / maxValue * context.getHeight());
         return pixelHeights;
     }
 

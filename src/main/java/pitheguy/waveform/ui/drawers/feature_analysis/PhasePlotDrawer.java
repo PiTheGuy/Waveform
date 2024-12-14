@@ -23,12 +23,12 @@ public class PhasePlotDrawer extends DotPlotDrawer {
     @Override
     public BufferedImage drawFullAudio() {
         short[] monoData = playingAudio.getMonoData();
-        int[] mappedCurrentData = mapArrayToPixelCoords(monoData, getImageWidth());
-        int[] mappedPhaseData = mapArrayToPixelCoords(monoData, getImageHeight(context));
+        int[] mappedCurrentData = mapArrayToPixelCoords(monoData, context.getWidth());
+        int[] mappedPhaseData = mapArrayToPixelCoords(monoData, context.getHeight());
         BufferedImage image = createBlankImage();
         for (int i = phaseFrames; i < mappedCurrentData.length; i++) {
-            int x = Math.min(Math.abs(mappedCurrentData[i]), getImageWidth() - 1);
-            int y = Math.min(Math.abs(mappedPhaseData[i]), getImageHeight(context) - 1);
+            int x = Math.min(Math.abs(mappedCurrentData[i]), context.getWidth() - 1);
+            int y = Math.min(Math.abs(mappedPhaseData[i]), context.getHeight() - 1);
             image.setRGB(x, y, Config.foregroundColor.getRGB());
         }
         return image;

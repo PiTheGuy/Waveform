@@ -1,8 +1,7 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.drawers.BarGraphDrawer;
-import pitheguy.waveform.ui.drawers.HeatmapDrawer;
+import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 
@@ -20,10 +19,10 @@ public class PitchContourDrawer extends HeatmapDrawer {
     protected BufferedImage precomputeImage() {
         BufferedImage image = createBlankImage();
         short[] monoData = playingAudio.getMonoData();
-        double[] pitchContour = new double[getImageWidth()];
-        double[] pitchSalience = new double[getImageWidth()];
-        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, getImageWidth());
-        for (int x = 0; x < getImageWidth(); x++) {
+        double[] pitchContour = new double[context.getWidth()];
+        double[] pitchSalience = new double[context.getWidth()];
+        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, context.getWidth());
+        for (int x = 0; x < context.getWidth(); x++) {
             Result result = calculatePitch(frequencyData[x]);
             pitchContour[x] = result.pitch;
             pitchSalience[x] = result.salience;
@@ -34,7 +33,7 @@ public class PitchContourDrawer extends HeatmapDrawer {
         int[] pixelHeights = BarGraphDrawer.mapArrayToPixelHeight(context, pitchContour);
         for (int x = 0; x < pixelHeights.length; x++) {
             g.setColor(getSecondaryColor(pitchSalience[x]));
-            g.drawLine(x, getImageHeight() - 1, x, getImageHeight() - 1 - pixelHeights[x]);
+            g.drawLine(x, context.getHeight() - 1, x, context.getHeight() - 1 - pixelHeights[x]);
         }
         return image;
     }

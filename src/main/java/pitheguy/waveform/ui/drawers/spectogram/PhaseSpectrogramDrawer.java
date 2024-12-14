@@ -17,13 +17,15 @@ public class PhaseSpectrogramDrawer extends HeatmapDrawer {
     @Override
     protected BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        Complex[][] fftData = FftAnalyser.getComplexFrequencyData(monoData, getImageWidth());
-        double[][] phases = new double[getImageWidth()][];
+        Complex[][] fftData = FftAnalyser.getComplexFrequencyData(monoData, context.getWidth());
+        double[][] phases = new double[context.getWidth()][];
         for (int i = 0; i < fftData.length; i++)
             for (int j = 0; j < fftData[i].length; j++)
                 phases[i][j] = getPhase(fftData[i][j].getReal(), fftData[i][j].getImaginary());
-        double[][] resampledPhases = new double[getImageWidth()][];
-        Arrays.setAll(resampledPhases, i -> FftAnalyser.resampleMagnitudesToBands(phases[i], getImageHeight(context)));
+        double[][] resampledPhases = new double[context.getWidth()][];
+        Arrays.setAll(resampledPhases, i -> {
+            return FftAnalyser.resampleMagnitudesToBands(phases[i], context.getHeight());
+        });
         resampledPhases = Util.normalize(resampledPhases);
         return drawData(context, resampledPhases);
     }

@@ -17,7 +17,7 @@ public abstract class RangeLineGraphDrawer extends SlicedImageDrawer {
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(HeatmapDrawer.getColor(0.5));
-        for (int x = 0; x < getImageWidth(); x++) {
+        for (int x = 0; x < context.getWidth(); x++) {
             double deviation = deviations[x];
             double center = centers[x];
             if (x == 0) g.drawLine(x, mapToPixelHeight(center - deviation), x, mapToPixelHeight(center + deviation));
@@ -33,7 +33,7 @@ public abstract class RangeLineGraphDrawer extends SlicedImageDrawer {
             previousDeviation = deviation;
         }
         g.setColor(Config.foregroundColor);
-        for (int x = 0; x < getImageWidth(); x++) {
+        for (int x = 0; x < context.getWidth(); x++) {
             double center = centers[x];
             int y = mapToPixelHeight(center);
             if (x != 0) g.drawLine(x, y, x - 1, mapToPixelHeight(previousCenter));
@@ -44,6 +44,6 @@ public abstract class RangeLineGraphDrawer extends SlicedImageDrawer {
     }
 
     private int mapToPixelHeight(double value) {
-        return (int) (value * getImageHeight(context));
+        return (int) (value * context.getHeight());
     }
 }

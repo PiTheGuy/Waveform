@@ -16,25 +16,25 @@ public class SelfSimilarityDrawer extends HeatmapDrawer {
     @Override
     protected BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        double[][] chromaDataWidth = new double[getImageWidth()][];
-        double[][] chromaDataHeight = new double[getImageHeight(context)][];
-        double[][] frequencyDataWidth = FftAnalyser.getFrequencyData(monoData, getImageWidth());
-        double[][] frequencyDataHeight = FftAnalyser.getFrequencyData(monoData, getImageHeight(context));
-        for (int x = 0; x < getImageWidth(); x++)
+        double[][] chromaDataWidth = new double[context.getWidth()][];
+        double[][] chromaDataHeight = new double[context.getHeight()][];
+        double[][] frequencyDataWidth = FftAnalyser.getFrequencyData(monoData, context.getWidth());
+        double[][] frequencyDataHeight = FftAnalyser.getFrequencyData(monoData, context.getHeight());
+        for (int x = 0; x < context.getWidth(); x++)
             chromaDataWidth[x] = ChromagramDrawer.getChromaData(frequencyDataWidth[x], playingAudio.sampleRate());
-        for (int y = 0; y < getImageHeight(context); y++)
+        for (int y = 0; y < context.getHeight(); y++)
             chromaDataHeight[y] = ChromagramDrawer.getChromaData(frequencyDataHeight[y], playingAudio.sampleRate());
-        double[][] similarityMatrix = new double[getImageWidth()][getImageHeight(context)];
-        for (int i = 0; i < getImageWidth(); i++) {
-            for (int j = 0; j < getImageHeight(context); j++) {
+        double[][] similarityMatrix = new double[context.getWidth()][context.getHeight()];
+        for (int i = 0; i < context.getWidth(); i++) {
+            for (int j = 0; j < context.getHeight(); j++) {
                 double similarity = cosineSimilarity(chromaDataWidth[i], chromaDataHeight[j]);
                 similarityMatrix[i][j] = similarity;
             }
         }
-        double[][] normalizedMatrix = new double[getImageWidth()][getImageHeight(context)];
+        double[][] normalizedMatrix = new double[context.getWidth()][context.getHeight()];
         int power = Config.highContrast ? 4 : 2;
-        for (int x = 0; x < getImageWidth(); x++)
-            for (int y = 0; y < getImageHeight(context); y++) normalizedMatrix[x][y] = Math.pow((similarityMatrix[x][y] + 1) / 2, power);
+        for (int x = 0; x < context.getWidth(); x++)
+            for (int y = 0; y < context.getHeight(); y++) normalizedMatrix[x][y] = Math.pow((similarityMatrix[x][y] + 1) / 2, power);
         return drawData(context, normalizedMatrix);
     }
 

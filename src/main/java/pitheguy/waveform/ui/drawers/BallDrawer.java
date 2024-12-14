@@ -43,13 +43,13 @@ public class BallDrawer extends AudioDrawer {
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(Config.foregroundColor);
-        int imageSize = Math.min(getImageWidth(), getImageHeight(context));
+        int imageSize = Math.min(context.getWidth(), context.getHeight());
         int smallRadius = (int) (imageSize * getSetting("small_radius", Double.class));
         int bigRadius = (int) (imageSize * getSetting("big_radius", Double.class));
         double delta = getDelta(energy > cutoff);
         int radius = (int) Util.lerp(delta, smallRadius, bigRadius);
-        int startX = getImageWidth() / 2 - radius;
-        int startY = getImageHeight(context) / 2 - radius;
+        int startX = context.getWidth() / 2 - radius;
+        int startY = context.getHeight() / 2 - radius;
         g.fillOval(startX, startY, radius * 2, radius * 2);
         drawDebugText(g, new DebugText().add("Energy", energy).add("Cutoff", cutoff).add("Delta", delta));
         return image;

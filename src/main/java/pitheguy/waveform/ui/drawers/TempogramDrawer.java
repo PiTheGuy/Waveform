@@ -18,9 +18,9 @@ public class TempogramDrawer extends HeatmapDrawer {
     
     protected BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        double samplesPerPixel = (double) monoData.length / getImageWidth();
-        double[][] lagData = new double[getImageWidth()][];
-        IntStream.range(0, getImageWidth()).parallel().forEach(x -> {
+        double samplesPerPixel = (double) monoData.length / context.getWidth();
+        double[][] lagData = new double[context.getWidth()][];
+        IntStream.range(0, context.getWidth()).parallel().forEach(x -> {
             int start = (int) (x * samplesPerPixel);
             int end = (int) ((x + 5) * samplesPerPixel);
             short[] columnSampleData = Arrays.copyOfRange(monoData, start, end);
@@ -28,7 +28,7 @@ public class TempogramDrawer extends HeatmapDrawer {
             lagData[x] = autocorrelation(frequencyData, (int) (playingAudio.sampleRate() * 60 / MAX_BPM));
         });
         double[][] normalizedLagData = Util.normalize(lagData);
-        double[][] tempogramData = new double[getImageWidth()][getImageHeight(context)];
+        double[][] tempogramData = new double[context.getWidth()][context.getHeight()];
         for (int i = 0; i < tempogramData.length; i++) {
             double[] columnData = resample(normalizedLagData[i]);
             System.arraycopy(columnData, 0, tempogramData[i], 0, columnData.length);
@@ -38,9 +38,9 @@ public class TempogramDrawer extends HeatmapDrawer {
 
     private double[] resample(double[] data) {
         if (data.length == 0) return data;
-        double scale = (double) data.length / getImageHeight(context);
-        double[] resampled = new double[getImageHeight(context)];
-        for (int i = 0; i < getImageHeight(context); i++) {
+        double scale = (double) data.length / context.getHeight();
+        double[] resampled = new double[context.getHeight()];
+        for (int i = 0; i < context.getHeight(); i++) {
             int index = (int) (i * scale);
             resampled[i] = data[index];
         }

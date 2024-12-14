@@ -15,14 +15,16 @@ public class DirectionalDifferenceSpectrogramDrawer extends HeatmapDrawer {
     
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] leftMagnitudes = FftAnalyser.getFrequencyData(playingAudio.left(), getImageWidth());
-        double[][] rightMagnitudes = FftAnalyser.getFrequencyData(playingAudio.right(), getImageWidth());
+        double[][] leftMagnitudes = FftAnalyser.getFrequencyData(playingAudio.left(), context.getWidth());
+        double[][] rightMagnitudes = FftAnalyser.getFrequencyData(playingAudio.right(), context.getWidth());
         double[][] difference = new double[leftMagnitudes.length][leftMagnitudes[0].length];
         for (int i = 0; i < leftMagnitudes.length; i++)
             for (int j = 0; j < leftMagnitudes[0].length; j++)
                 difference[i][j] = leftMagnitudes[i][j] - rightMagnitudes[i][j];
         double[][] displayData = Arrays.stream(difference)
-                .map(data -> FftAnalyser.resampleMagnitudesToBands(data, getImageHeight(context)))
+                .map(data -> {
+                    return FftAnalyser.resampleMagnitudesToBands(data, context.getHeight());
+                })
                 .toArray(double[][]::new);
         return drawData(context, displayData);
     }

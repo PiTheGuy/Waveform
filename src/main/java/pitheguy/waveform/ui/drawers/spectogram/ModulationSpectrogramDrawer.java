@@ -1,7 +1,6 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -17,13 +16,13 @@ public class ModulationSpectrogramDrawer extends AbstractSpectrogramDrawer {
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth() * 2);
+        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth() * 2);
         Arrays.stream(spectrogramData).forEach(array -> Arrays.setAll(array, i -> array[i] * array[i]));
         double[][] transposedData = Util.transpose(spectrogramData);
         double[][] modulationData = Util.transpose(FftAnalyser.batchFFT(transposedData));
         double[][] filteredData = applyFilters(modulationData);
-        double[][] resampledData = new double[getImageWidth()][];
-        for (int i = 0; i < getImageWidth(); i++) resampledData[i] = resample(filteredData[i]);
+        double[][] resampledData = new double[context.getWidth()][];
+        for (int i = 0; i < context.getWidth(); i++) resampledData[i] = resample(filteredData[i]);
         return HeatmapDrawer.drawData(context, Util.normalize(resampledData));
     }
 

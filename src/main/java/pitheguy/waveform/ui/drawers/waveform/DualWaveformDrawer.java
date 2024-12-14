@@ -11,7 +11,6 @@ import pitheguy.waveform.ui.drawers.MappedPlotDrawer;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.BitSet;
-import java.util.Random;
 
 public class DualWaveformDrawer extends MappedPlotDrawer {
     private ColorChannel leftChannel;
@@ -24,8 +23,8 @@ public class DualWaveformDrawer extends MappedPlotDrawer {
     @Override
     protected BufferedImage drawAudio(double sec, double length) {
         super.drawAudio(sec, length);
-        int width = getImageWidth();
-        int height = getImageHeight();
+        int width = context.getWidth();
+        int height = context.getHeight();
         int[] leftMapped = mapArrayToPixelHeight(left, height);
         int[] rightMapped = mapArrayToPixelHeight(right, height);
         BitSet2D leftBitSet = getWaveformBitSet(leftMapped, width, height);

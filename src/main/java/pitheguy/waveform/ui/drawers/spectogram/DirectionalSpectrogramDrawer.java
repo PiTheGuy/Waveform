@@ -16,21 +16,25 @@ public class DirectionalSpectrogramDrawer extends HeatmapDrawer {
     
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] leftMagnitudes = FftAnalyser.getFrequencyData(playingAudio.left(), getImageWidth());
-        double[][] rightMagnitudes = FftAnalyser.getFrequencyData(playingAudio.right(), getImageWidth());
+        double[][] leftMagnitudes = FftAnalyser.getFrequencyData(playingAudio.left(), context.getWidth());
+        double[][] rightMagnitudes = FftAnalyser.getFrequencyData(playingAudio.right(), context.getWidth());
         double[][] leftDisplayData = Arrays.stream(leftMagnitudes)
-                .map(data -> FftAnalyser.resampleMagnitudesToBands(data, getImageHeight(context)))
+                .map(data -> {
+                    return FftAnalyser.resampleMagnitudesToBands(data, context.getHeight());
+                })
                 .toArray(double[][]::new);
         double[][] rightDisplayData = Arrays.stream(rightMagnitudes)
-                .map(data -> FftAnalyser.resampleMagnitudesToBands(data, getImageHeight(context)))
+                .map(data -> {
+                    return FftAnalyser.resampleMagnitudesToBands(data, context.getHeight());
+                })
                 .toArray(double[][]::new);
         BufferedImage image = createBlankImage();
-        for (int x = 0; x < getImageWidth(); x++) {
-            for (int y = 0; y < getImageHeight(context); y++) {
+        for (int x = 0; x < context.getWidth(); x++) {
+            for (int y = 0; y < context.getHeight(); y++) {
                 double left = Math.min(leftDisplayData[x][y], 1);
                 double right = Math.min(rightDisplayData[x][y], 1);
                 Color color = new Color((float) left, (float) right, 0);
-                image.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
+                image.setRGB(x, context.getHeight() - 1 - y, color.getRGB());
             }
         }
         return image;

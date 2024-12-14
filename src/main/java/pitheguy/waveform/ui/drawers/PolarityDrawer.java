@@ -49,9 +49,9 @@ public class PolarityDrawer extends CompoundDrawer {
             Graphics2D g = image.createGraphics();
             g.setColor(Config.foregroundColor);
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            int ballSize = (int) (Math.min(getImageWidth(), getImageHeight(context)) * 0.2);
-            int ballX = getImageWidth() / 2;
-            int ballY = (int) (polarity.percentPositive() * getImageHeight(context));
+            int ballSize = (int) (Math.min(context.getWidth(), context.getHeight()) * 0.2);
+            int ballX = context.getWidth() / 2;
+            int ballY = (int) (polarity.percentPositive() * context.getHeight());
             drawBall(g, ballX, ballY, ballSize);
             drawDebugText(g, new DebugText().add("Positive", polarity.positive()).add("Negative", polarity.negative()).add("Displayed", polarity.percentPositive()));
             return image;

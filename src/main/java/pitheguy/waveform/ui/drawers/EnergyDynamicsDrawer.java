@@ -1,7 +1,6 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 
@@ -18,9 +17,9 @@ public class EnergyDynamicsDrawer extends LineGraphDrawer {
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] frequencyData = Util.normalize(FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth()));
-        int numBands = getImageWidth();
-        double[][] bandEnergies = new double[getImageWidth()][numBands];
+        double[][] frequencyData = Util.normalize(FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth()));
+        int numBands = context.getWidth();
+        double[][] bandEnergies = new double[context.getWidth()][numBands];
         double scale = (double) frequencyData.length / numBands;
         for (int time = 0; time < frequencyData.length; time++) {
             for (int band = 0; band < numBands; band++) {

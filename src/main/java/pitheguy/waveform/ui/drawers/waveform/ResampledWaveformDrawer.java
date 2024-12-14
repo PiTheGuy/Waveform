@@ -22,7 +22,6 @@ public abstract class ResampledWaveformDrawer extends WaveformDrawer {
     @Override
     public void setPlayingAudio(AudioData playingAudio) {
         this.playingAudio = playingAudio;
-        initializeDataArrays();
         leftResampled = resample(playingAudio.left());
         rightResampled = resample(playingAudio.right());
         updateMaxValue();

@@ -17,8 +17,8 @@ public class ZeroCrossingDrawer extends SlicedImageDrawer {
     
     @Override
     protected BufferedImage precomputeImage() {
-        int[] topData = getZeroCrossingData(playingAudio.left(), getImageWidth());
-        int[] bottomData = getZeroCrossingData(playingAudio.right(), getImageWidth());
+        int[] topData = getZeroCrossingData(playingAudio.left(), context.getWidth());
+        int[] bottomData = getZeroCrossingData(playingAudio.right(), context.getWidth());
         return WaveformDrawer.drawData(context, createBlankImage(), topData, bottomData);
     }
 
@@ -48,8 +48,8 @@ public class ZeroCrossingDrawer extends SlicedImageDrawer {
     }
 
     private int mapValue(int value, double maxValue) {
-        int mappedValue = (int) (value / maxValue * getImageHeight(context));
-        return Math.min(mappedValue, getImageHeight(context));
+        int mappedValue = (int) (value / maxValue * context.getHeight());
+        return Math.min(mappedValue, context.getHeight());
     }
 
     @Override

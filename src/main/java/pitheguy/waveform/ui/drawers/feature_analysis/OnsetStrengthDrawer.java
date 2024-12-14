@@ -3,7 +3,6 @@ package pitheguy.waveform.ui.drawers.feature_analysis;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.BarGraphDrawer;
@@ -23,7 +22,7 @@ public class OnsetStrengthDrawer extends BarGraphDrawer {
 
     @Override
     public BufferedImage drawFullAudio() {
-        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth() + 1);
+        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth() + 1);
         double[] frequencyContributions = getFrequencyContributions(frequencyData);
         return drawArray(Util.normalize(frequencyContributions), createBlankImage());
     }

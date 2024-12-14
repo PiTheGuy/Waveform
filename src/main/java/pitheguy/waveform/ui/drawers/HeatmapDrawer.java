@@ -25,19 +25,19 @@ public abstract class HeatmapDrawer extends SlicedImageDrawer {
 
     protected static BufferedImage drawData(DrawContext context, double[][] data) {
         BufferedImage image = createBlankImage(context);
-        for (int x = 0; x < getImageWidth(context); x++) {
-            for (int y = 0; y < getImageHeight(context); y++) {
+        for (int x = 0; x < context.getWidth(); x++) {
+            for (int y = 0; y < context.getHeight(); y++) {
                 Color color = getColor(data[x][y]);
-                image.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
+                image.setRGB(x, context.getHeight() - 1 - y, color.getRGB());
             }
         }
         return image;
     }
 
     public static short[][] getSlicedAudioData(DrawContext context, short[] sampleData) {
-        double samplesPerPixel = (double) sampleData.length / getImageWidth(context);
-        short[][] audioData = new short[getImageWidth(context)][];
-        for (int x = 0; x < getImageWidth(context); x++) {
+        double samplesPerPixel = (double) sampleData.length / context.getWidth();
+        short[][] audioData = new short[context.getWidth()][];
+        for (int x = 0; x < context.getWidth(); x++) {
             final int start = (int) (x * samplesPerPixel);
             int sampleLength = (int) samplesPerPixel;
             short[] stripData = new short[sampleLength];
@@ -76,7 +76,7 @@ public abstract class HeatmapDrawer extends SlicedImageDrawer {
 
     @Override
     public void updatePlayed(BufferedImage image, double seconds, double duration) {
-        int maxX = (int) (seconds / duration * getImageWidth());
+        int maxX = (int) (seconds / duration * context.getWidth());
         maxX = Math.min(maxX, image.getWidth());
         HeatmapDrawer.replaceGradientPixels(image, Config.backgroundColor, Config.foregroundColor, Config.playedColor, maxX, 0.1);
     }

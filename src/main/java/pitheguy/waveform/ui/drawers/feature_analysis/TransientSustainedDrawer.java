@@ -20,7 +20,7 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth() + 1);
+        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth() + 1);
         double[][] diffData = new double[frequencyData.length - 1][frequencyData[0].length];
         for (int time = 1; time < frequencyData.length; time++)
             for (int band = 0; band < frequencyData[0].length; band++)
@@ -31,9 +31,9 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
     }
 
     private BufferedImage drawSpectrogram(double[][] transientData, double[][] sustainedData) {
-        for (int x = 0; x < getImageWidth(); x++) {
-            transientData[x] = FftAnalyser.resampleMagnitudesToBands(transientData[x], getImageWidth());
-            sustainedData[x] = FftAnalyser.resampleMagnitudesToBands(sustainedData[x], getImageWidth());
+        for (int x = 0; x < context.getWidth(); x++) {
+            transientData[x] = FftAnalyser.resampleMagnitudesToBands(transientData[x], context.getWidth());
+            sustainedData[x] = FftAnalyser.resampleMagnitudesToBands(sustainedData[x], context.getWidth());
         }
         if (getSetting("normalize", Boolean.class)) {
             int scaleFactor = Config.highContrast ? 15 : 10;
@@ -43,12 +43,12 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
 
     private BufferedImage drawData(double[][] transientData, double[][] sustainedData, double scaleFactor) {
         BufferedImage image = createBlankImage();
-        for (int x = 0; x < getImageWidth(); x++) {
-            for (int y = 0; y < getImageHeight(context); y++) {
+        for (int x = 0; x < context.getWidth(); x++) {
+            for (int y = 0; y < context.getHeight(); y++) {
                 float trans = (float) Math.min(transientData[x][y] * scaleFactor, 1);
                 float sustained = (float) Math.min(sustainedData[x][y] * scaleFactor, 1);
                 Color color = getColor(trans, sustained);
-                image.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
+                image.setRGB(x, context.getHeight() - 1 - y, color.getRGB());
             }
         }
         return image;
@@ -64,7 +64,7 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
     }
 
     private double[][] computeSustainedData(double[][] frequencyData, double[][] transientData) {
-        double[][] data = Arrays.copyOf(frequencyData, getImageWidth());
+        double[][] data = Arrays.copyOf(frequencyData, context.getWidth());
         return switch (getSetting("calculation_mode", CalculationMode.class)) {
             case LOW_PASS -> {
                 int windowSize = getSetting("sustained_window_size", Integer.class);

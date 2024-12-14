@@ -27,10 +27,10 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
         if (!initialized) return createBlankImage();
         double duration = playingAudio.duration();
         double percentPlayed = Math.min(sec / duration, 1);
-        int maxX = (int) (percentPlayed * getImageWidth());
+        int maxX = (int) (percentPlayed * context.getWidth());
         Graphics2D g = image.createGraphics();
         if (maxX > 0) {
-            BufferedImage subimage = precomputedImage.getSubimage(0, 0, maxX, getImageHeight(context));
+            BufferedImage subimage = precomputedImage.getSubimage(0, 0, maxX, context.getHeight());
             g.drawImage(subimage, 0, 0, null);
             return image;
         }
@@ -53,7 +53,7 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
         if (Config.playerMode) g.drawImage(precomputedImage, 0, 0, null);
         else {
             g.setColor(Config.backgroundColor);
-            g.fillRect(0, 0, getImageWidth(), getImageHeight(context));
+            g.fillRect(0, 0, context.getWidth(), context.getHeight());
         }
         g.dispose();
     }

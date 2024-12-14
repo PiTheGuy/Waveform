@@ -1,7 +1,6 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.drawers.RangeLineGraphDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 
@@ -18,10 +17,10 @@ public class SpectralDistributionDrawer extends RangeLineGraphDrawer {
     @Override
     protected BufferedImage precomputeImage() {
         short[] monoData = playingAudio.getMonoData();
-        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, getImageWidth());
-        double[] averages = new double[getImageWidth()];
-        double[] deviations = new double[getImageWidth()];
-        for (int x = 0; x < getImageWidth(); x++) {
+        double[][] frequencyData = FftAnalyser.getFrequencyData(monoData, context.getWidth());
+        double[] averages = new double[context.getWidth()];
+        double[] deviations = new double[context.getWidth()];
+        for (int x = 0; x < context.getWidth(); x++) {
             double[] magnitudes = frequencyData[x];
             double average = calculateWeightedAverage(magnitudes);
             averages[x] = normalizeFrequency(average);

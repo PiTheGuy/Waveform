@@ -18,18 +18,20 @@ public class SpectralTemporalContrastDrawer extends HeatmapDrawer {
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth() + 1);
-        double[][] spectrogram = new double[getImageWidth() + 1][];
-        Arrays.setAll(spectrogram, i -> FftAnalyser.resampleMagnitudesToBands(frequencyData[i], getImageHeight(context) + 1));
-        double[][] temporalContrast = new double[getImageWidth()][getImageHeight(context)];
+        double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth() + 1);
+        double[][] spectrogram = new double[context.getWidth() + 1][];
+        Arrays.setAll(spectrogram, i -> {
+            return FftAnalyser.resampleMagnitudesToBands(frequencyData[i], context.getHeight() + 1);
+        });
+        double[][] temporalContrast = new double[context.getWidth()][context.getHeight()];
         for (int time = 1; time < spectrogram.length; time++)
             for (int band = 0; band < spectrogram[time].length - 1; band++)
                 temporalContrast[time - 1][band] = Math.abs(spectrogram[time][band] - spectrogram[time - 1][band]);
-        double[][] spectralContrast = new double[getImageWidth()][getImageHeight(context)];
+        double[][] spectralContrast = new double[context.getWidth()][context.getHeight()];
         for (int time = 0; time < spectrogram.length - 1; time++)
             for (int band = 1; band < spectrogram[time].length; band++)
                 spectralContrast[time][band - 1] = Math.abs(spectrogram[time][band] - spectrogram[time][band - 1]);
-        double[][] contrast = new double[getImageWidth()][getImageHeight(context)];
+        double[][] contrast = new double[context.getWidth()][context.getHeight()];
         for (int time = 0; time < contrast.length - 1; time++)
             for (int band = 0; band < contrast[time].length; band++)
                 contrast[time][band] = geomMean(temporalContrast[time][band], spectralContrast[time][band]);

@@ -14,7 +14,7 @@ public abstract class ReferenceLineGraphDrawer extends LineGraphDrawer {
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         g.setColor(HeatmapDrawer.getColor(0.5));
-        g.drawLine(0, getImageHeight(context) / 2, getImageWidth(), getImageHeight(context) / 2);
+        g.drawLine(0, context.getHeight() / 2, context.getWidth(), context.getHeight() / 2);
         drawData(g, data);
         return image;
     }
@@ -24,8 +24,8 @@ public abstract class ReferenceLineGraphDrawer extends LineGraphDrawer {
         BufferedImage image = super.drawFrame(sec);
         Graphics2D g = image.createGraphics();
         g.setColor(HeatmapDrawer.getColor(0.5));
-        int startX = (int) (sec / playingAudio.duration() * getImageWidth());
-        g.drawLine(startX, getImageHeight(context) / 2, getImageWidth(), getImageHeight(context) / 2);
+        int startX = (int) (sec / playingAudio.duration() * context.getWidth());
+        g.drawLine(startX, context.getHeight() / 2, context.getWidth(), context.getHeight() / 2);
         return image;
     }
 
@@ -34,7 +34,7 @@ public abstract class ReferenceLineGraphDrawer extends LineGraphDrawer {
         BufferedImage image = super.drawFullAudio();
         Graphics2D g = image.createGraphics();
         g.setColor(HeatmapDrawer.getColor(0.5));
-        g.drawLine(0, getImageHeight(context) / 2, getImageWidth(), getImageHeight(context) / 2);
+        g.drawLine(0, context.getHeight() / 2, context.getWidth(), context.getHeight() / 2);
         return image;
     }
 

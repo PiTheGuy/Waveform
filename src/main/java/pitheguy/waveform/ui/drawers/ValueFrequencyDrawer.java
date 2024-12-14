@@ -1,7 +1,6 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.Util;
 
 import java.awt.image.BufferedImage;
@@ -14,7 +13,7 @@ public class ValueFrequencyDrawer extends BarGraphDrawer {
     @Override
     protected BufferedImage drawAudio(double sec, double length) {
         super.drawAudio(sec, length);
-        double[] counts = new double[getImageWidth()];
+        double[] counts = new double[context.getWidth()];
         for (short sample : left) {
             int bin = getBin(sample);
             counts[bin]++;
@@ -24,6 +23,6 @@ public class ValueFrequencyDrawer extends BarGraphDrawer {
     }
 
     private int getBin(short sample) {
-        return Math.min(Math.abs(sample) * getImageWidth() / Short.MAX_VALUE, getImageWidth() - 1);
+        return Math.min(Math.abs(sample) * context.getWidth() / Short.MAX_VALUE, context.getWidth() - 1);
     }
 }

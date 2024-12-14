@@ -21,20 +21,20 @@ public class HarmonicPercussiveDecompDrawer extends HeatmapDrawer {
 
     @Override
     protected BufferedImage precomputeImage() {
-        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), getImageWidth());
+        double[][] spectrogramData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth());
         double[][] harmonicSpectrogramData = applyHorizontalMedianFilter(spectrogramData);
         double[][] percussiveSpectrogramData = applyVerticalMedianFilter(spectrogramData);
         double[][] harmonicSignal = FftAnalyser.batchInverseFFT(harmonicSpectrogramData);
         double[][] percussiveSignal = FftAnalyser.batchInverseFFT(percussiveSpectrogramData);
         Signals signals = normalize(harmonicSignal, percussiveSignal);
         BufferedImage image = createBlankImage();
-        for (int x = 0; x < getImageWidth(); x++) {
-            for (int y = 0; y < getImageHeight(context); y++) {
+        for (int x = 0; x < context.getWidth(); x++) {
+            for (int y = 0; y < context.getHeight(); y++) {
                 int scaleFactor = Config.highContrast ? 6 : 4;
                 float harmonicIntensity = (float) Math.min(signals.harmonic[x][y] * scaleFactor, 1);
                 float percussiveIntensity = (float) Math.min(signals.percussive[x][y] * scaleFactor, 1);
                 Color color = getColor(harmonicIntensity, percussiveIntensity);
-                image.setRGB(x, getImageHeight(context) - 1 - y, color.getRGB());
+                image.setRGB(x, context.getHeight() - 1 - y, color.getRGB());
             }
         }
         return image;
@@ -43,10 +43,10 @@ public class HarmonicPercussiveDecompDrawer extends HeatmapDrawer {
     private Signals normalize(double[][] harmonic, double[][] percussive) {
         double max = Arrays.stream(harmonic).flatMapToDouble(Arrays::stream).max().orElseThrow();
         max = Math.max(max, Arrays.stream(percussive).flatMapToDouble(Arrays::stream).max().orElseThrow());
-        double[][] newHarmonic = new double[getImageWidth()][getImageHeight(context)];
-        double[][] newPercussive = new double[getImageWidth()][getImageHeight(context)];
-        for (int x = 0; x < getImageWidth(); x++) {
-            for (int y = 0; y < getImageHeight(context); y++) {
+        double[][] newHarmonic = new double[context.getWidth()][context.getHeight()];
+        double[][] newPercussive = new double[context.getWidth()][context.getHeight()];
+        for (int x = 0; x < context.getWidth(); x++) {
+            for (int y = 0; y < context.getHeight(); y++) {
                 newHarmonic[x][y] = Math.abs(harmonic[x][y] / max);
                 newPercussive[x][y] = Math.abs(percussive[x][y] / max);
             }

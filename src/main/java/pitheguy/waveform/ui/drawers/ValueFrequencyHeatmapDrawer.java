@@ -16,8 +16,8 @@ public class ValueFrequencyHeatmapDrawer extends HeatmapDrawer {
     protected BufferedImage precomputeImage() {
         short[][] leftData = getSlicedAudioData(context, playingAudio.left());
         short[][] rightData = getSlicedAudioData(context, playingAudio.right());
-        double[][] counts = new double[getImageWidth()][getImageHeight(context)];
-        for (int x = 0; x < getImageWidth(); x++) {
+        double[][] counts = new double[context.getWidth()][context.getHeight()];
+        for (int x = 0; x < context.getWidth(); x++) {
             for (short sample : leftData[x]) counts[x][getBin(sample)]++;
             for (short sample : rightData[x]) counts[x][getBin(sample)]++;
         }
@@ -26,6 +26,6 @@ public class ValueFrequencyHeatmapDrawer extends HeatmapDrawer {
     }
 
     private int getBin(short sample) {
-        return Math.min(Math.abs(sample) * getImageHeight(context) / Short.MAX_VALUE, getImageHeight(context) - 1);
+        return Math.min(Math.abs(sample) * context.getHeight() / Short.MAX_VALUE, context.getHeight() - 1);
     }
 }

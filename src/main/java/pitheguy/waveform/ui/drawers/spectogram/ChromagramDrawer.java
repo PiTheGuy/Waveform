@@ -30,19 +30,19 @@ public class ChromagramDrawer extends AbstractSpectrogramDrawer {
         BufferedImage image = createBlankImage();
         short[] currentFrameData = AudioData.averageChannels(left, right);
         double rollingWindow = getSetting("window", Double.class);
-        int samplesPerPixel = (int) (rollingWindow * playingAudio.sampleRate() / getImageWidth());
+        int samplesPerPixel = (int) (rollingWindow * playingAudio.sampleRate() / context.getWidth());
         for (short sample : currentFrameData) frameData.addLast(sample);
         while (frameData.size() > samplesPerPixel) {
             short[] sliceData = new short[samplesPerPixel];
             for (int i = 0; i < samplesPerPixel; i++) sliceData[i] = frameData.removeFirst();
-            int minFFTSize = getImageHeight(context) * 2;
+            int minFFTSize = context.getHeight() * 2;
             sliceData = Arrays.copyOf(sliceData, minFFTSize);
             double[] magnitudes = FftAnalyser.performFFT(Util.normalize(sliceData));
             visualData.add(resample(magnitudes));
         }
         for (int x = 0; x < visualData.size(); x++) {
             double[] data = visualData.get(x);
-            for (int y = 0; y < getImageHeight(context); y++) {
+            for (int y = 0; y < context.getHeight(); y++) {
                 Color color = getColor(data[y]);
                 image.setRGB(x, y, color.getRGB());
             }
@@ -53,8 +53,8 @@ public class ChromagramDrawer extends AbstractSpectrogramDrawer {
     @Override
     protected double[] resample(double[] data) {
         double[] chromaBins = getChromaData(data, playingAudio.sampleRate());
-        double[] finalData = new double[getImageHeight(context)];
-        double pixelsPerBin = (double) getImageHeight(context) / NUM_CHROMA_BINS;
+        double[] finalData = new double[context.getHeight()];
+        double pixelsPerBin = (double) context.getHeight() / NUM_CHROMA_BINS;
         for (int i = 0; i < NUM_CHROMA_BINS; i++) {
             int start = (int) (i * pixelsPerBin);
             int end = (int) ((i + 1) * pixelsPerBin);
@@ -76,11 +76,10 @@ public class ChromagramDrawer extends AbstractSpectrogramDrawer {
         return chromaBins;
     }
 
-
     @Override
-    protected void initializeDataArrays() {
-        super.initializeDataArrays();
-        visualData = new RollingList<>(getImageWidth());
+    public void setPlayingAudio(AudioData playingAudio) {
+        super.setPlayingAudio(playingAudio);
+        visualData = new RollingList<>(context.getWidth());
         frameData = new ArrayDeque<>();
     }
 

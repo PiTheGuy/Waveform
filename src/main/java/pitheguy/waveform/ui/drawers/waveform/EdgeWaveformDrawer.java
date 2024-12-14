@@ -20,11 +20,11 @@ public class EdgeWaveformDrawer extends WaveformDrawer {
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        int halfHeight = getImageHeight(context) / 2;
-        double scale = (double) left.length / getImageWidth();
+        int halfHeight = context.getHeight() / 2;
+        double scale = (double) left.length / context.getWidth();
         g.setColor(Config.foregroundColor);
         g.setStroke(new BasicStroke(getSetting("line_thickness", Float.class)));
-        for (int x = 0; x < getImageWidth(); x++) {
+        for (int x = 0; x < context.getWidth(); x++) {
             int i = (int) (x * scale);
             int prevIndex = x == 0 ? 0 : (int) ((x - 1) * scale);
             int prevLeftY = halfHeight - leftMapped[prevIndex] / 2;

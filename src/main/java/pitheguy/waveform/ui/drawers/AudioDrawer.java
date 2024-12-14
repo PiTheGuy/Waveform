@@ -53,7 +53,7 @@ public abstract class AudioDrawer {
     }
 
     public void updatePlayed(BufferedImage image, double seconds, double duration) {
-        int maxX = (int) (seconds / duration * getImageWidth());
+        int maxX = (int) (seconds / duration * context.getWidth());
         maxX = Math.min(maxX, image.getWidth());
         replacePixels(image, Config.foregroundColor, Config.playedColor, maxX);
     }
@@ -80,6 +80,7 @@ public abstract class AudioDrawer {
 
     protected BufferedImage drawAudio(double sec, double length) {
         updateAudioData(sec, length);
+        context.updateDimensions();
         return null;
     }
 
@@ -108,7 +109,7 @@ public abstract class AudioDrawer {
         BufferedImage image = new BufferedImage(Waveform.WIDTH, Waveform.HEIGHT, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
         g.setColor(Config.backgroundColor);
-        g.fillRect(0, 0, getImageWidth(context), getImageHeight(context));
+        g.fillRect(0, 0, context.getWidth(), context.getHeight());
         g.dispose();
         return image;
     }
@@ -122,7 +123,7 @@ public abstract class AudioDrawer {
         if (color != null) g.setColor(color);
         String[] lines = text.getText().split("\n");
         int numLines = lines.length;
-        int startY = getImageHeight(context) - 80 - (numLines - 1) * 20;
+        int startY = context.getHeight() - 80 - (numLines - 1) * 20;
         for (int i = 0; i < numLines; i++) {
             int y = startY + 20 * i;
             g.drawString(lines[i], 50, y);
@@ -134,34 +135,6 @@ public abstract class AudioDrawer {
 
     public void setPlayingAudio(AudioData playingAudio) {
         this.playingAudio = playingAudio;
-        initializeDataArrays();
-    }
-
-    protected boolean playerMode() {
-        return context == DrawContext.EXPORT_FULL || Config.playerMode;
-    }
-
-    protected void initializeDataArrays() {
-        double frameDuration = playerMode() ? playingAudio.duration() : Config.getFrameLength();
-        int arraySize = (int) (frameDuration * playingAudio.sampleRate());
-        left = new short[arraySize];
-        right = new short[arraySize];
-    }
-
-    protected int getImageWidth() {
-        return getImageWidth(context);
-    }
-
-    protected int getImageHeight() {
-        return getImageHeight(context);
-    }
-
-    protected static int getImageWidth(DrawContext context) {
-        return context.isExport() || !Waveform.getInstance().isVisible() ? Waveform.WIDTH : Waveform.getInstance().getContentPane().getWidth();
-    }
-
-    protected static int getImageHeight(DrawContext context) {
-        return context.isExport() || !Waveform.getInstance().isVisible() ? Waveform.HEIGHT : Waveform.getInstance().getContentPane().getHeight();
     }
 
     public VisualizerSettingsInstance.Builder constructSettings() {

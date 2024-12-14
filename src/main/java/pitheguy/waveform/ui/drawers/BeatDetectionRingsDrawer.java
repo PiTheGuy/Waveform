@@ -55,7 +55,7 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
     }
 
     private int getNumRings() {
-        return Math.min(getImageWidth(), getImageHeight(context)) / 2;
+        return Math.min(context.getWidth(), context.getHeight()) / 2;
     }
 
     @Override

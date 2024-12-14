@@ -81,7 +81,7 @@ public class CircularSpectrogramDrawer extends AudioDrawer {
     }
 
     private int getImageSize() {
-        return Math.min(getImageWidth(), getImageHeight());
+        return Math.min(context.getWidth(), context.getHeight());
     }
 
     @Override

@@ -15,11 +15,9 @@ public class WaveformDrawer extends MappedPlotDrawer {
     public static BufferedImage drawData(DrawContext context, BufferedImage image, int[] top, int[] bottom) {
         Graphics2D g = image.createGraphics();
         g.setColor(Config.foregroundColor);
-        int width = getImageWidth(context); // Store width and height in case it changes
-        int height = getImageHeight(context);
-        int halfHeight = height / 2;
-        double scale = (double) top.length / width;
-        for (int x = 0; x < width; x++) {
+        int halfHeight = context.getHeight() / 2;
+        double scale = (double) top.length / context.getWidth();
+        for (int x = 0; x < context.getWidth(); x++) {
             int i = (int) (x * scale);
             int y1 = (int) (halfHeight - (double) top[i] / 2);
             int y2 = (int) (halfHeight + (double) bottom[i] / 2);
@@ -32,7 +30,7 @@ public class WaveformDrawer extends MappedPlotDrawer {
     protected int[] mapArrayToPixelHeight(short[] input) {
         int[] output = new int[input.length];
         for (int i = 0; i < input.length; i++)
-            output[i] = (int) Math.abs(((double) input[i] / maxValue * getImageHeight()));
+            output[i] = (int) Math.abs(((double) input[i] / maxValue * context.getHeight()));
         return output;
     }
 
