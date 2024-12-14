@@ -84,6 +84,7 @@ public class FftAnalyser {
     }
 
     public static double[] resampleMagnitudesToBands(double[] magnitudes, int numBands) {
+        if (numBands > magnitudes.length) return magnitudes;
         double[] bandMagnitudes = new double[numBands];
         double magnitudesPerBand = (double) magnitudes.length / numBands;
 

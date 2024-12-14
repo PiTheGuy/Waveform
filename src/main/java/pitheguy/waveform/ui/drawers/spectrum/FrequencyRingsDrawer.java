@@ -27,7 +27,7 @@ public class FrequencyRingsDrawer extends AudioDrawer {
         double[] magnitudes = FftAnalyser.resampleMagnitudesToBands(frequencyData, numRings);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
-        for (int ring = 0; ring < numRings; ring++) CircularDrawer.drawRing(context, g, ring, magnitudes[ring]);
+        for (int ring = 0; ring < magnitudes.length; ring++) CircularDrawer.drawRing(context, g, ring, magnitudes[ring]);
         return image;
     }
 
