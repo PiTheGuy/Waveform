@@ -17,6 +17,7 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
     }
 
     public BufferedImage drawFullAudio() {
+        super.drawFullAudio();
         Graphics2D g = image.createGraphics();
         g.drawImage(precomputedImage, 0, 0, null);
         g.dispose();
@@ -24,6 +25,7 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
     }
 
     public BufferedImage drawFrame(double sec) {
+        super.drawFrame(sec);
         if (!initialized) return createBlankImage();
         double duration = playingAudio.duration();
         double percentPlayed = Math.min(sec / duration, 1);

@@ -10,9 +10,9 @@ public class DifferenceWaveformDrawer extends ResampledWaveformDrawer {
 
     @Override
     protected void updateMaxValue() {
-        maxValue = leftResampled[0];
-        for (short value : leftResampled) maxValue = (short) Math.max(maxValue, value);
-        for (short value : rightResampled) maxValue = (short) Math.max(maxValue, value);
+        maxValue = left[0];
+        for (short value : left) maxValue = (short) Math.max(maxValue, value);
+        for (short value : right) maxValue = (short) Math.max(maxValue, value);
     }
 
     public short[] resample(short[] data) {

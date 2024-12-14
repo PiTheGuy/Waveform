@@ -1,11 +1,11 @@
 package pitheguy.waveform.ui.drawers.waveform;
 
+import org.jcodec.audio.Audio;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 
 public abstract class ResampledWaveformDrawer extends WaveformDrawer {
-    protected short[] leftResampled;
-    protected short[] rightResampled;
+    protected AudioData resampledData;
 
     public ResampledWaveformDrawer(DrawContext context) {
         super(context);
@@ -13,17 +13,18 @@ public abstract class ResampledWaveformDrawer extends WaveformDrawer {
 
     @Override
     protected void updateAudioData(double sec, double length) {
-        if (leftResampled == null || rightResampled == null) return;
-        int framesThisSample = (int) Math.min(length * playingAudio.sampleRate(), (playingAudio.duration() - sec) * playingAudio.sampleRate());
-        System.arraycopy(leftResampled, (int) (sec * playingAudio.sampleRate()), left, 0, framesThisSample);
-        System.arraycopy(rightResampled, (int) (sec * playingAudio.sampleRate()), right, 0, framesThisSample);
+        if (resampledData == null) return;
+        AudioData frameData = resampledData.clip(sec, length);
+        left = frameData.left();
+        right = frameData.right();
     }
 
     @Override
     public void setPlayingAudio(AudioData playingAudio) {
         this.playingAudio = playingAudio;
-        leftResampled = resample(playingAudio.left());
-        rightResampled = resample(playingAudio.right());
+        short[] left = resample(playingAudio.left());
+        short[] right = resample(playingAudio.right());
+        resampledData = new AudioData(left, right, playingAudio.sampleRate(), playingAudio.duration());
         updateMaxValue();
     }
 

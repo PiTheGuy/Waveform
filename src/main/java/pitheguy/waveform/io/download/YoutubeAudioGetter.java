@@ -93,8 +93,9 @@ public class YoutubeAudioGetter {
             onError.accept("Invalid URL.");
             return null;
         }
-        if (normalizedUrl.startsWith("https://www.youtube.com") || normalizedUrl.startsWith("https://youtu.be"))
-            return normalizedUrl;
+        if (normalizedUrl.startsWith("https://www.youtube.com")) return normalizedUrl;
+        else if (normalizedUrl.startsWith("https://www.youtu.be"))
+            return "https://" + normalizedUrl.substring("https://www.".length()); // Remove the subdomain
         else {
             onError.accept("Only YouTube URLs are supported.");
             return null;

@@ -37,6 +37,7 @@ public class WaveformDrawer extends MappedPlotDrawer {
     @Override
     protected BufferedImage drawAudio(double sec, double length) {
         super.drawAudio(sec, length);
+        if (left == null || right == null) return createBlankImage();
         int[] leftMapped = mapArrayToPixelHeight(left);
         int[] rightMapped = mapArrayToPixelHeight(right);
         return drawData(context, createBlankImage(), leftMapped, rightMapped);
