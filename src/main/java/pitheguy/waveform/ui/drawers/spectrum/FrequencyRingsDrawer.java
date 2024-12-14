@@ -2,6 +2,8 @@ package pitheguy.waveform.ui.drawers.spectrum;
 
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
+import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.ui.drawers.CircularDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -11,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class FrequencyRingsDrawer extends AudioDrawer {
+
     public FrequencyRingsDrawer(DrawContext context) {
         super(context);
     }
@@ -19,7 +22,8 @@ public class FrequencyRingsDrawer extends AudioDrawer {
     protected BufferedImage drawAudio(double sec, double length) {
         super.drawAudio(sec, length);
         double[] frequencyData = FftAnalyser.performFFT(Util.normalize(AudioData.averageChannels(left, right)));
-        int numRings = Math.min(context.getWidth(), context.getHeight());
+        int imageSize = Math.min(context.getWidth(), context.getHeight());
+        int numRings = getSetting("extend_rings", Boolean.class) ? imageSize : imageSize / 2;
         double[] magnitudes = FftAnalyser.resampleMagnitudesToBands(frequencyData, numRings);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
@@ -30,5 +34,11 @@ public class FrequencyRingsDrawer extends AudioDrawer {
     @Override
     public boolean shouldShowEpilepsyWarning() {
         return true;
+    }
+
+    @Override
+    public VisualizerSettingsInstance.Builder constructSettings() {
+        return super.constructSettings()
+                .addSetting("extend_rings", SettingType.bool(), false);
     }
 }
