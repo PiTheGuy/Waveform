@@ -14,8 +14,8 @@ public abstract class BarGraphDrawer extends AudioDrawer {
         this.reverseDirection = reverseDirection;
     }
 
-    protected BufferedImage drawArray(double[] data, BufferedImage image) {
-        return drawArray(data, image, Config.foregroundColor);
+    protected BufferedImage drawArray(double[] data) {
+        return drawArray(data, createBlankImage(), Config.foregroundColor);
     }
 
 
@@ -30,12 +30,7 @@ public abstract class BarGraphDrawer extends AudioDrawer {
         double scale = (double) data.length / context.getWidth();
         for (int x = 0; x < context.getWidth(); x++) {
             int index = (int) (x * scale);
-            int startY;
-            if (reverseDirection) {
-                startY = reverseDirection ? 0 : context.getHeight() - 1;
-            } else {
-                startY = context.getHeight() - 1;
-            }
+            int startY = reverseDirection ? 0 : context.getHeight() - 1;
             int endY;
             endY = reverseDirection ? pixelHeights[index] : context.getHeight() - 1 - pixelHeights[index];
             g.drawLine(x, startY, x, endY);

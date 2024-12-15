@@ -19,14 +19,13 @@ public class SmoothSpectrumDrawer extends SpectrumDrawer {
         super(context);
     }
 
-    @Override
-    protected BufferedImage drawAudio(double sec, double length) {
+    protected double[] getDisplayData(double sec, double length) {
         updateAudioData(sec, length);
-        short[] data = AudioData.averageChannels(left, right);
-        double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
+        short[] audioData = AudioData.averageChannels(left, right);
+        double[] magnitudes = FftAnalyser.performFFT(Util.normalize(audioData));
         tracker.add(magnitudes);
         double[] displayData = tracker.getAverage();
-        return drawArray(Util.normalize(displayData), createBlankImage());
+        return Util.normalize(displayData);
     }
 
     @Override

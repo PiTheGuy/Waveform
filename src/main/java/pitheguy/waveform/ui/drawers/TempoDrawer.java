@@ -17,7 +17,7 @@ public class TempoDrawer extends BarGraphDrawer {
     protected BufferedImage drawAudio(double sec, double length) {
         updateAudioData(sec, length);
         double[] lagData = getLagData();
-        return drawArray(lagData, createBlankImage());
+        return drawArray(lagData);
     }
 
     protected double[] getLagData() {

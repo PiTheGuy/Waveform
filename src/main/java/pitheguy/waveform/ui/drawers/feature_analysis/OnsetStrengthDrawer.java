@@ -24,7 +24,7 @@ public class OnsetStrengthDrawer extends BarGraphDrawer {
     public BufferedImage drawFullAudio() {
         double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), context.getWidth() + 1);
         double[] frequencyContributions = getFrequencyContributions(frequencyData);
-        return drawArray(Util.normalize(frequencyContributions), createBlankImage());
+        return drawArray(Util.normalize(frequencyContributions));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class OnsetStrengthDrawer extends BarGraphDrawer {
         if (previousMagnitudes.size() == 1) return createBlankImage();
         double[][] previousFrequencyData = previousMagnitudes.toArray(double[][]::new);
         double[] frequencyContributions = getFrequencyContributions(previousFrequencyData);
-        return drawArray(Util.normalize(frequencyContributions), createBlankImage());
+        return drawArray(Util.normalize(frequencyContributions));
     }
 
     private static double[] getFrequencyContributions(double[][] frequencyData) {

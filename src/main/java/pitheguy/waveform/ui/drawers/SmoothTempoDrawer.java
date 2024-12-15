@@ -27,7 +27,7 @@ public class SmoothTempoDrawer extends TempoDrawer {
         double[] displayData = tracker.getAverage();
         double max = Arrays.stream(displayData).max().orElseThrow();
         for (int i = 0; i < displayData.length; i++) displayData[i] /= max;
-        return drawArray(displayData, createBlankImage());
+        return drawArray(displayData);
     }
 
     @Override

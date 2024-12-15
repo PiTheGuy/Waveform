@@ -19,7 +19,7 @@ public class ValueFrequencyDrawer extends BarGraphDrawer {
             counts[bin]++;
         }
         for (short sample : right) counts[getBin(sample)]++;
-        return drawArray(Util.normalize(counts), createBlankImage());
+        return drawArray(Util.normalize(counts));
     }
 
     private int getBin(short sample) {
