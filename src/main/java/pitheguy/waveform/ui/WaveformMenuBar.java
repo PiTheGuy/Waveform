@@ -152,9 +152,9 @@ public class WaveformMenuBar extends JMenuBar {
 
     private void repopulateVisualizerMenu() {
         visualizerMenu.removeAll();
-        if (previousVisualizers.size() > 1) {
-            for (int i = previousVisualizers.size() - 2; i >= 0; i--) {
-                Visualizer visualizer = previousVisualizers.get(i);
+        List<Visualizer> recentVisualizers = getRecentVisualizers();
+        if (!recentVisualizers.isEmpty()) {
+            for (Visualizer visualizer : recentVisualizers) {
                 String name = visualizer.getName();
                 JMenuItem menuItem = MenuHelper.createMenuItem(name, name.charAt(0), null, e -> parent.switchVisualizer(visualizer));
                 visualizerMenu.add(menuItem);
@@ -173,6 +173,13 @@ public class WaveformMenuBar extends JMenuBar {
 
     public List<Visualizer> getPreviousVisualizers() {
         return previousVisualizers.stream().toList();
+    }
+
+    public List<Visualizer> getRecentVisualizers() {
+        List<Visualizer> previousVisualizers = getPreviousVisualizers();
+        if (previousVisualizers.isEmpty()) return new ArrayList<>();
+        List<Visualizer> recentVisualizers = previousVisualizers.subList(1, previousVisualizers.size()).reversed();
+        return new ArrayList<>(recentVisualizers);
     }
 
     public void registerVisualizerSwitch(Visualizer visualizer) {

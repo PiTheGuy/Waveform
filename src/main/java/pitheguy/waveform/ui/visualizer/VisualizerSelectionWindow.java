@@ -48,7 +48,16 @@ public class VisualizerSelectionWindow extends JWindow {
         resumeOnClick = true;
     }
 
+    private void addRecentlyUsedCategory() {
+        List<Visualizer> recentVisualizers = parent.menuBar.getRecentVisualizers();
+        if (recentVisualizers.isEmpty()) return;
+        CategoryEntry recentEntry = new CategoryEntry("Recently Used", recentVisualizers.toArray(Visualizer[]::new));
+        mainPanel.add(recentEntry);
+        categoryEntries.add(recentEntry);
+    }
+
     private void addCategories() {
+        addRecentlyUsedCategory();
         for (Visualizer.Category category : Visualizer.Category.values()) {
             CategoryEntry entry = new CategoryEntry(category);
             mainPanel.add(entry);
@@ -57,10 +66,7 @@ public class VisualizerSelectionWindow extends JWindow {
     }
 
     private int getGlueHeight() {
-        int totalHeight;
-        if (searchResults.isEmpty())
-            totalHeight = categoryEntries.stream().mapToInt(entry -> entry.getHeight() + 10).sum();
-        else totalHeight = searchResults.stream().mapToInt(entry -> entry.getHeight() + 10).sum();
+        int totalHeight = (searchResults.isEmpty() ? categoryEntries : searchResults).stream().mapToInt(entry -> entry.getHeight() + 10).sum();
         return Math.max(400 - totalHeight, 0);
     }
 
@@ -143,9 +149,13 @@ public class VisualizerSelectionWindow extends JWindow {
         private final List<Row> rows = new ArrayList<>();
 
         public CategoryEntry(Visualizer.Category category) {
+            this (category.getName(), category.getVisualizers(false));
+        }
+
+        public CategoryEntry(String title, Visualizer[] visualizers) {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            add(new CategoryNamePanel(category.getName()));
-            Visualizer[] visualizers = category.getVisualizers(false);
+            CategoryNamePanel namePanel = new CategoryNamePanel(title);
+            add(namePanel);
             for (int index = 0; index < visualizers.length; index += 3) {
                 Visualizer[] rowVisualizers = Arrays.copyOfRange(visualizers, index, Math.min(index + 3, visualizers.length));
                 Row row = new Row(rowVisualizers);
