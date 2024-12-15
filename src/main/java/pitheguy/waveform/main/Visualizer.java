@@ -48,6 +48,7 @@ public enum Visualizer {
     SPECTRAL_DISTRIBUTION(SpectralDistributionDrawer::new, "distribution", false, Category.FEATURE_ANALYSIS),
     SPECTRAL_FLATNESS(SpectralFlatnessDrawer::new, "flatness", false, Category.FEATURE_ANALYSIS),
     SPECTRAL_CREST(SpectralCrestDrawer::new, "crest", false, Category.FEATURE_ANALYSIS),
+    SPECTRAL_SPARSITY(SpectralSparsityDrawer::new, "sparsity", false, Category.FEATURE_ANALYSIS),
     ONSET_STRENGTH(OnsetStrengthDrawer::new, "strength", false, Category.FEATURE_ANALYSIS),
     TRANSIENT_SUSTAINED(TransientSustainedDrawer::new, "transient_sustained", false, Category.FEATURE_ANALYSIS),
     SPECTRAL_TEMPORAL_CONTRAST(SpectralTemporalContrastDrawer::new, "spectral_temporal_contrast", false, Category.FEATURE_ANALYSIS),
