@@ -64,7 +64,7 @@ public class Waveform extends JFrame {
     public final PlaybackManager playbackManager = new PlaybackManager(this);
     public final YoutubeAudioGetter audioGetter = new YoutubeAudioGetter();
     public final MicrophoneCapture microphone = new MicrophoneCapture();
-    private VisualizerSelectionWindow visualizerSelectionWindow;
+    public VisualizerSelectionWindow visualizerSelectionWindow;
 
     public boolean isQueuePanelVisible = false;
 

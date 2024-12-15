@@ -48,8 +48,7 @@ public class DialogManager {
     public YoutubeImportInfo promptForYoutubeUrl() {
         String[] options = new String[]{"Add to Queue", "Play"};
         JOptionPane pane = new JOptionPane("Enter a video or playlist URL: ", JOptionPane.QUESTION_MESSAGE,
-                JOptionPane.YES_NO_OPTION, null,
-                options, options[0]);
+                JOptionPane.YES_NO_OPTION, null, options, options[0]);
 
         JDialog dialog = pane.createDialog(parent, "Import From YouTube");
         pane.selectInitialValue();
@@ -59,6 +58,24 @@ public class DialogManager {
         String url = pane.getInputValue().toString();
         if (pane.getValue() == null) return null;
         return new YoutubeImportInfo(url, pane.getValue().equals(options[0]));
+    }
+
+    public void showRenderErrorDialog() {
+        String[] options = new String[]{"Switch Visualizer", "Try Again"};
+        JOptionPane pane = new JOptionPane("An error occurred while rendering the visualization", JOptionPane.ERROR_MESSAGE,
+                JOptionPane.YES_NO_OPTION, null, options, options[0]);
+        JDialog dialog = pane.createDialog(parent, "Render Error");
+        pane.selectInitialValue();
+        dialog.setVisible(true);
+        dialog.dispose();
+        String value = pane.getValue() == null ? "Try Again" : pane.getValue().toString();
+        switch (value) {
+            case "Switch Visualizer" -> {
+                if (!parent.isVisualizerSelectionWindowOpen()) parent.toggleVisualizerSelectionWindow();
+                parent.visualizerSelectionWindow.resumeOnClick();
+            }
+            case "Try Again" -> parent.togglePlayback();
+        }
     }
 
     public boolean showConfirmDialog(String key, String title, String message) {

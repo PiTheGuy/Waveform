@@ -22,6 +22,7 @@ public class VisualizerSelectionWindow extends JWindow {
     private final JPanel mainPanel;
     private Component glue;
     private final List<Row> searchResults = new ArrayList<>();
+    private boolean resumeOnClick = false;
 
     public VisualizerSelectionWindow(Waveform parent) {
         super(parent);
@@ -41,6 +42,10 @@ public class VisualizerSelectionWindow extends JWindow {
         setSize(new Dimension(550, mainPanel.getPreferredSize().height + 2));
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    public void resumeOnClick() {
+        resumeOnClick = true;
     }
 
     private void addCategories() {
@@ -254,6 +259,7 @@ public class VisualizerSelectionWindow extends JWindow {
         private void onClick() {
             parent.switchVisualizer(visualizer);
             parent.toggleVisualizerSelectionWindow();
+            if (resumeOnClick && parent.isPaused()) parent.togglePlayback();
         }
 
     }

@@ -52,8 +52,8 @@ public class FrameUpdater implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            parent.showError("Rendering Error", "An error occurred while rendering the visualization");
-            shutdown();
+            parent.togglePlayback();
+            parent.dialogManager.showRenderErrorDialog();
         }
     }
 
