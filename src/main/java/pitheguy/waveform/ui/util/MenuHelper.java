@@ -31,8 +31,6 @@ public class MenuHelper {
     }
 
     public static Border createTextFieldBorder(boolean valid) {
-        Border outsideBorder = valid ? UIManager.getBorder("TextField.border") : new LineBorder(Color.RED);
-        return outsideBorder;
-        //return BorderFactory.createCompoundBorder(outsideBorder, new EmptyBorder(2,2,2,2));
+        return valid ? UIManager.getBorder("TextField.border") : new LineBorder(Color.RED);
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.*;
 
 public class VisualizerSelectionWindow extends JWindow {
-
+    public static final int HEIGHT = 400;
     private final Waveform parent;
     private final List<CategoryEntry> categoryEntries = new ArrayList<>();
     private final JPanel mainPanel;
@@ -33,11 +33,11 @@ public class VisualizerSelectionWindow extends JWindow {
         mainPanel.add(new TitlePanel("Visualizers", 24));
         mainPanel.add(new SearchBar());
         addCategories();
-        glue = Box.createVerticalStrut(400 - 60 * categoryEntries.size());
+        glue = Box.createVerticalStrut(HEIGHT - 60 * categoryEntries.size());
         mainPanel.add(glue);
         add(scrollPane);
-        scrollPane.setPreferredSize(new Dimension(500, 400));
-        scrollPane.setMaximumSize(new Dimension(500, 400));
+        scrollPane.setPreferredSize(new Dimension(500, HEIGHT));
+        scrollPane.setMaximumSize(new Dimension(500, HEIGHT));
         scrollPane.getVerticalScrollBar().setUnitIncrement(5);
         setSize(new Dimension(550, mainPanel.getPreferredSize().height + 2));
         setLocationRelativeTo(parent);
@@ -67,7 +67,7 @@ public class VisualizerSelectionWindow extends JWindow {
 
     private int getGlueHeight() {
         int totalHeight = (searchResults.isEmpty() ? categoryEntries : searchResults).stream().mapToInt(entry -> entry.getHeight() + 10).sum();
-        return Math.max(400 - totalHeight, 0);
+        return Math.max(HEIGHT - totalHeight, 0);
     }
 
     private void updateGlue() {

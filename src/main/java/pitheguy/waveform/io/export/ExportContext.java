@@ -9,7 +9,7 @@ import java.io.File;
 public record ExportContext(File audioFile, AudioData audioData, File outputFile, int width, int height,
                             boolean includeAudio) {
     public ExportContext(File audioFile, AudioData audioData, ExportOptionsDialog.ExportOptions exportOptions) {
-        this(audioFile, audioData, new File(exportOptions.path()), exportOptions.width(), exportOptions.height(), exportOptions.includeAudio());
+        this(audioFile, audioData, exportOptions.file(), exportOptions.width(), exportOptions.height(), exportOptions.includeAudio());
     }
 
     public ExportContext(Waveform waveform, ExportOptionsDialog.ExportOptions exportOptions) {

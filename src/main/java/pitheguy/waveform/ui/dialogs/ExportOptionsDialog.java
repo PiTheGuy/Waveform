@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -30,6 +31,7 @@ public class ExportOptionsDialog extends JDialog {
     private JCheckBox includeAudioCheckbox;
     private JComboBox<ResolutionPreset> resolutionDropdown;
     private final ResolutionPreset custom = new ResolutionPreset("Custom", () -> Integer.parseInt(customWidthField.getText()), () -> Integer.parseInt(customHeightField.getText()));
+    private static String lastExportPath;
 
     private ExportOptionsDialog(Waveform parent, String name, ExportType exportType) {
         super(parent, true);
@@ -65,7 +67,7 @@ public class ExportOptionsDialog extends JDialog {
 
     public static ExportOptions showDialogIfNeeded(Waveform parent, String name, ExportType exportType, @Nullable File outputFile) {
         if (outputFile == null) return showDialog(parent, name, exportType);
-        else return new ExportOptions(outputFile.getAbsolutePath());
+        else return new ExportOptions(outputFile);
     }
 
     private void updateValidationState() {
@@ -135,7 +137,8 @@ public class ExportOptionsDialog extends JDialog {
     }
 
     private String getDefaultPath() {
-        return System.getProperty("user.home") + File.separator + parent.getTrackTitle() + exportType.getExtension();
+        String dir = lastExportPath == null ? FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath() : lastExportPath;
+        return dir + File.separator + parent.getTrackTitle() + exportType.getExtension();
     }
 
     private JPanel createResolutionPanel() {
@@ -195,11 +198,18 @@ public class ExportOptionsDialog extends JDialog {
     }
 
     private void submit() {
-        String path = pathField.getText().trim();
+        File exportFile = new File(pathField.getText().trim());
+        if (exportFile.exists() && !showOverrideWarning()) return;
+        lastExportPath = exportFile.getParent();
         ResolutionPreset selectedPreset = (ResolutionPreset) resolutionDropdown.getSelectedItem();
         boolean includeAudio = includeAudioCheckbox.isSelected();
         dispose();
-        exportOptions = new ExportOptions(path, selectedPreset, includeAudio);
+        exportOptions = new ExportOptions(exportFile, selectedPreset, includeAudio);
+    }
+
+    private boolean showOverrideWarning() {
+        return parent.dialogManager.showConfirmDialog("export_override", "File Already Exists",
+                "A file already exist at the specified path. Do you want to override it?");
     }
 
     private ResolutionPreset[] getResolutionPresets() {
@@ -257,13 +267,13 @@ public class ExportOptionsDialog extends JDialog {
         }
     }
 
-    public record ExportOptions(String path, int width, int height, boolean includeAudio) {
-        public ExportOptions(String path, ResolutionPreset preset, boolean includeAudio) {
-            this(path, preset.width().getAsInt(), preset.height().getAsInt(), includeAudio);
+    public record ExportOptions(File file, int width, int height, boolean includeAudio) {
+        public ExportOptions(File file, ResolutionPreset preset, boolean includeAudio) {
+            this(file, preset.width().getAsInt(), preset.height().getAsInt(), includeAudio);
         }
 
-        public ExportOptions(String path) {
-            this(path, Waveform.WIDTH, Waveform.HEIGHT, true);
+        public ExportOptions(File file) {
+            this(file, Waveform.WIDTH, Waveform.HEIGHT, true);
         }
     }
 }
