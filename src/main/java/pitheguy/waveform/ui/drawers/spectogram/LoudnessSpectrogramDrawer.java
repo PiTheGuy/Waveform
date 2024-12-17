@@ -2,7 +2,8 @@ package pitheguy.waveform.ui.drawers.spectogram;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.drawers.*;
+import pitheguy.waveform.ui.drawers.HeatmapDrawer;
+import pitheguy.waveform.ui.drawers.LoudnessDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 

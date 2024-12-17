@@ -4,10 +4,6 @@ import com.google.gson.*;
 import pitheguy.waveform.util.HttpUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.http.*;
-import java.time.Duration;
 import java.util.*;
 
 public class YoutubeApiManager {

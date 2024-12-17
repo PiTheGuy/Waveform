@@ -1,7 +1,8 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.drawers.*;
+import pitheguy.waveform.ui.drawers.BarGraphDrawer;
+import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 

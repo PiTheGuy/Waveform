@@ -3,7 +3,6 @@ package pitheguy.waveform.io.session;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.util.Util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

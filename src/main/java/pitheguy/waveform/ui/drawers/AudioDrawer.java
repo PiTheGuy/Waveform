@@ -4,7 +4,6 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
-import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettings;
 import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.util.DebugText;

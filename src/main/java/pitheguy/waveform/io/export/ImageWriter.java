@@ -1,7 +1,5 @@
 package pitheguy.waveform.io.export;
 
-import pitheguy.waveform.ui.Waveform;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;

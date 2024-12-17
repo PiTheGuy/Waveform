@@ -9,8 +9,6 @@ import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.rolling.RollingAverageTracker;
 
-import java.awt.image.BufferedImage;
-
 public class SmoothSpectrumDrawer extends SpectrumDrawer {
     public static final int DEFAULT_WINDOW = 20;
     private RollingAverageTracker.DoubleArrayTracker tracker;

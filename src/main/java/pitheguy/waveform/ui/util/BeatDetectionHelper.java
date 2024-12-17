@@ -1,6 +1,7 @@
 package pitheguy.waveform.ui.util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class BeatDetectionHelper {
     public static double getCutoff(Collection<Double> history, boolean increasedSensitivity) {

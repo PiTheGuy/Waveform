@@ -1,6 +1,5 @@
 package pitheguy.waveform.ui.drawers.waveform;
 
-import org.jcodec.audio.Audio;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 

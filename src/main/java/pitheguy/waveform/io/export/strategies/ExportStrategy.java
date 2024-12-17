@@ -1,7 +1,8 @@
 package pitheguy.waveform.io.export.strategies;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.io.export.*;
+import pitheguy.waveform.io.export.ExportContext;
+import pitheguy.waveform.io.export.ImageWriter;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.util.*;
 
