@@ -1,12 +1,9 @@
 package pitheguy.waveform.ui;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.io.download.YoutubeAudioGetter;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.util.MenuHelper;
-import pitheguy.waveform.util.ResourceGetter;
-import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.rolling.RollingList;
 
 import javax.swing.*;
@@ -178,7 +175,7 @@ public class WaveformMenuBar extends JMenuBar {
     public List<Visualizer> getRecentVisualizers() {
         List<Visualizer> previousVisualizers = getPreviousVisualizers();
         if (previousVisualizers.isEmpty()) return new ArrayList<>();
-        List<Visualizer> recentVisualizers = previousVisualizers.subList(1, previousVisualizers.size()).reversed();
+        List<Visualizer> recentVisualizers = previousVisualizers.reversed().subList(1, previousVisualizers.size());
         return new ArrayList<>(recentVisualizers);
     }
 
