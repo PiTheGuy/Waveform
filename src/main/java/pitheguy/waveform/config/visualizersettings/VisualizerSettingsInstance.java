@@ -1,11 +1,14 @@
 package pitheguy.waveform.config.visualizersettings;
 
 import com.google.gson.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class VisualizerSettingsInstance {
+    private static final Logger LOGGER = LogManager.getLogger();
     private final Map<String, Setting<?>> settings;
 
     private VisualizerSettingsInstance(Map<String, Setting<?>> settings) {
@@ -101,7 +104,7 @@ public class VisualizerSettingsInstance {
 
         public void setValue(T value) {
             if (value == null || !type.isValid(value)) {
-                System.out.println("WARNING: Attempted to set invalid value for setting: " + name);
+                LOGGER.warn("Attempted to set invalid value for setting: {}", name);
                 value = defaultValue;
             }
             this.value = value;

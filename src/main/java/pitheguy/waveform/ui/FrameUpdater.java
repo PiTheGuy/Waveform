@@ -1,5 +1,7 @@
 package pitheguy.waveform.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 
 import javax.swing.*;
@@ -7,6 +9,7 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class FrameUpdater implements Runnable {
+    private static final Logger LOGGER = LogManager.getLogger(FrameUpdater.class);
     protected final Waveform parent;
     private final Consumer<Double> task;
     private final ScheduledExecutorService scheduler;
@@ -51,7 +54,7 @@ public class FrameUpdater implements Runnable {
                 sec += Config.getFrameLength();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to render visualization", e);
             parent.togglePlayback();
             parent.dialogManager.showRenderErrorDialog();
         }

@@ -1,5 +1,7 @@
 package pitheguy.waveform.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.io.players.AudioPlayer;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaybackManager {
+    private static final Logger LOGGER = LogManager.getLogger();
     private final Waveform parent;
     private AudioPlayer audioPlayer;
     public final ArrayList<TrackInfo> queue = new ArrayList<>();
@@ -123,7 +126,7 @@ public class PlaybackManager {
 
     public void forcePlayIndex(int index) {
         queueIndex = index;
-        Util.showErrorOnException(() -> parent.play(queue.get(index)), "Failed to play the track");
+        Util.showErrorOnException(() -> parent.play(queue.get(index)), "Failed to play the track", LOGGER);
     }
 
     public void togglePlayback() {

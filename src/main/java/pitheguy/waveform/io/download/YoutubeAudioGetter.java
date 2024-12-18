@@ -1,5 +1,7 @@
 package pitheguy.waveform.io.download;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.util.*;
@@ -12,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class YoutubeAudioGetter {
+    private static final Logger LOGGER = LogManager.getLogger(YoutubeAudioGetter.class);
     public static final String PLAYLIST_PREFIX = "https://www.youtube.com/playlist?list=";
     private final Map<String, TrackInfo> cache = new HashMap<>();
 
@@ -43,7 +46,7 @@ public class YoutubeAudioGetter {
                 try {
                     tracks.add(getVideoAudio(playlistItem.url(), playlistItem.title(), status -> {})); // Don't need per video status updates
                 } catch (IOException | DownloadFailedException | InterruptedException e) {
-                    System.err.println("Failed to download video: " + playlistItem.url());
+                    LOGGER.warn("Failed to download video: {}", playlistItem.url(), e);
                     if (Config.debug) e.printStackTrace();
                 }
                 int processedCount = videosProcessed.incrementAndGet();

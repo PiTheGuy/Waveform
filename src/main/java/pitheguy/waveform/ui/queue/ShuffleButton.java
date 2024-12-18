@@ -1,6 +1,8 @@
 package pitheguy.waveform.ui.queue;
 
 import com.google.api.client.repackaged.com.google.common.annotations.VisibleForTesting;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.controls.ControlButton;
 import pitheguy.waveform.util.Util;
@@ -10,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.util.Collections;
 
 public class ShuffleButton extends ControlButton {
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final ImageIcon ICON = new ImageIcon(Waveform.class.getResource("/icons/shuffle.png"));
     public static final int WIDTH = ICON.getIconWidth();
     public static final int HEIGHT = ICON.getIconHeight();
@@ -38,7 +41,7 @@ public class ShuffleButton extends ControlButton {
         if (parent.queueSize() == 0) return;
         Collections.shuffle(parent.getQueue());
         parent.frameUpdater.silentShutdown();
-        Util.showErrorOnException(() -> parent.forcePlayIndex(0), "Failed to start playback after shuffling");
+        Util.showErrorOnException(() -> parent.forcePlayIndex(0), "Failed to start playback after shuffling", LOGGER);
         parent.queuePanel.repopulate();
     }
 }

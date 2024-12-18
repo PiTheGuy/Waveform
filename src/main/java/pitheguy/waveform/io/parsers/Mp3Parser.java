@@ -1,12 +1,16 @@
 package pitheguy.waveform.io.parsers;
 
 import javazoom.jl.decoder.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.io.AudioData;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class Mp3Parser implements AudioParser {
+    private static final Logger LOGGER = LogManager.getLogger(Mp3Parser.class);
+
     public AudioData parse(File audioFile) {
         try (InputStream inputStream = new FileInputStream(audioFile)) {
             Bitstream bitstream = new Bitstream(inputStream);
@@ -44,6 +48,7 @@ public class Mp3Parser implements AudioParser {
             }
 
         } catch (Exception e) {
+            LOGGER.error("Failed to parse audio file", e);
             return null;
         }
     }

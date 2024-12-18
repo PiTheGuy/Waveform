@@ -1,5 +1,7 @@
 package pitheguy.waveform.io.export;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.ExportType;
 import pitheguy.waveform.io.FileConverter;
@@ -14,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 public class ExportManager {
+    private static final Logger LOGGER = LogManager.getLogger(ExportManager.class);
     private final Waveform parent;
 
     public ExportManager(Waveform parent) {
@@ -29,6 +32,7 @@ public class ExportManager {
                 ProgressTracker tracker = useProgressTracker ? ProgressTracker.getProgressTracker(parent, "Exporting " + name, (int) (parent.duration / Config.getFrameLength())) : null;
                 strategy.export(context, tracker);
             } catch (IOException e) {
+                LOGGER.error("Failed to export {}", name, e);
                 parent.showError("Export Failed", "Failed to export " + name + ": " + e.getMessage());
             }
         }, waitUntilFinished);
@@ -65,6 +69,7 @@ public class ExportManager {
                 } else
                     parent.showError("FFmpeg Not Found", "FFmpeg is required to convert the audio file to a different format.");
             } catch (IOException | InterruptedException e) {
+                LOGGER.error("Failed to export audio file", e);
                 parent.showError("Export Failed", "Failed to export audio file.");
             }
         }, waitUntilFinished);

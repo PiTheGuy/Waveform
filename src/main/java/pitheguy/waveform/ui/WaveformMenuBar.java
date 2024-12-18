@@ -1,5 +1,7 @@
 package pitheguy.waveform.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.main.Visualizer;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WaveformMenuBar extends JMenuBar {
+    private static final Logger LOGGER = LogManager.getLogger(WaveformMenuBar.class);
     public static final int MAX_SAVED_VISUALIZERS = 3;
 
     private final Waveform parent;
@@ -125,6 +128,7 @@ public class WaveformMenuBar extends JMenuBar {
         try {
             Desktop.getDesktop().browse(new URI("https://github.com/PiTheGuy/Waveform/issues"));
         } catch (IOException | URISyntaxException ex) {
+            LOGGER.error("Failed to open bug report page", ex);
             parent.showError("Error", "Failed to open bug report page. Please check your internet connection.");
         }
     }
