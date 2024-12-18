@@ -1,7 +1,6 @@
-package pitheguy.waveform.ui.dialogs.preferences.visualizersettings;
+package pitheguy.waveform.config.visualizersettings;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,16 +36,8 @@ public class VisualizerSettingsInstance {
             if (!settings.containsKey(key)) continue;
             Setting<?> setting = settings.get(key);
             Object value = setting.getType().deserialize(json.get(key));
-            if (setting.getType().getClazz().isInstance(value)) {
-                Setting<Object> castSetting = (Setting<Object>) setting;
-                castSetting.setValue(value);
-            } else {
-                throw new IllegalArgumentException(
-                        "Type mismatch for setting key: " + key +
-                        ". Expected: " + setting.getType().getClazz().getName() +
-                        ", Found: " + value.getClass().getName()
-                );
-            }
+            Setting<Object> castSetting = (Setting<Object>) setting;
+            castSetting.setValue(value);
         }
     }
 
@@ -70,7 +61,7 @@ public class VisualizerSettingsInstance {
         }
 
         public <T> Builder addSetting(String key, String name, SettingType<T> type, T defaultValue) {
-            settings.put(key, new Setting<>(name, type, defaultValue));
+            settings.put(key, new Setting<>(name, type, defaultValue, defaultValue));
             return this;
         }
 
@@ -83,11 +74,13 @@ public class VisualizerSettingsInstance {
         private final String name;
         private final SettingType<T> type;
         private T value;
+        private final T defaultValue;
 
-        public Setting(String name, SettingType<T> type, T value) {
+        public Setting(String name, SettingType<T> type, T value, T defaultValue) {
             this.name = name;
             this.type = type;
             this.value = value;
+            this.defaultValue = defaultValue;
         }
 
         public String getName() {
@@ -107,9 +100,11 @@ public class VisualizerSettingsInstance {
         }
 
         public void setValue(T value) {
-            if (!isValid(value)) throw new IllegalArgumentException("Invalid value: " + value);
+            if (value == null || !type.isValid(value)) {
+                System.out.println("WARNING: Attempted to set invalid value for setting: " + name);
+                value = defaultValue;
+            }
             this.value = value;
         }
     }
-
 }

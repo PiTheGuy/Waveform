@@ -1,4 +1,4 @@
-package pitheguy.waveform.ui.dialogs.preferences.visualizersettings;
+package pitheguy.waveform.config.visualizersettings;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;

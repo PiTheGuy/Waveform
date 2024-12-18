@@ -2,9 +2,9 @@ package pitheguy.waveform.ui.drawers.spectogram;
 
 import org.apache.commons.math3.complex.Complex;
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options.ColorChannel;
+import pitheguy.waveform.config.visualizersettings.SettingType;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.options.ColorChannel;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 

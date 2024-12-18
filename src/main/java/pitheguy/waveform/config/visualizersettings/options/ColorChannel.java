@@ -1,4 +1,4 @@
-package pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options;
+package pitheguy.waveform.config.visualizersettings.options;
 
 public enum ColorChannel {
     RED("Red", 16),

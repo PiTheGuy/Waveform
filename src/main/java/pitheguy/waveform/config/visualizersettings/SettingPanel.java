@@ -1,4 +1,4 @@
-package pitheguy.waveform.ui.dialogs.preferences.visualizersettings;
+package pitheguy.waveform.config.visualizersettings;
 
 import pitheguy.waveform.ui.util.MenuHelper;
 import pitheguy.waveform.ui.util.NumericTextField;

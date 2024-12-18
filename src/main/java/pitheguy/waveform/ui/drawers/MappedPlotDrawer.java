@@ -2,8 +2,8 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingType;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
 
 public abstract class MappedPlotDrawer extends AudioDrawer {
     public short maxValue = Short.MAX_VALUE;

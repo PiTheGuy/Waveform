@@ -2,7 +2,7 @@ package pitheguy.waveform.main;
 
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.io.session.SessionManager;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.ui.drawers.feature_analysis.*;
 import pitheguy.waveform.ui.drawers.spectogram.*;

@@ -1,4 +1,4 @@
-package pitheguy.waveform.ui.dialogs.preferences.visualizersettings;
+package pitheguy.waveform.config.visualizersettings;
 
 import javax.swing.*;
 import java.util.ArrayList;

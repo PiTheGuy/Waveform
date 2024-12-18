@@ -6,7 +6,7 @@ import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.ButtonsPanel;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsPanel;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettingsPanel;
 import pitheguy.waveform.util.Util;
 
 import javax.swing.*;

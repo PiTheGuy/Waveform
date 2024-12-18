@@ -3,9 +3,9 @@ package pitheguy.waveform.ui.drawers.waveform;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.SettingType;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettingsInstance;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.options.ColorChannel;
+import pitheguy.waveform.config.visualizersettings.SettingType;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.options.ColorChannel;
 import pitheguy.waveform.ui.drawers.MappedPlotDrawer;
 
 import java.awt.*;

@@ -4,7 +4,7 @@ import com.google.gson.*;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.ui.dialogs.preferences.visualizersettings.VisualizerSettings;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettings;
 import pitheguy.waveform.util.OS;
 
 import java.io.*;
