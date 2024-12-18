@@ -1,6 +1,8 @@
 package pitheguy.waveform.ui;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.LoopState;
 import pitheguy.waveform.io.*;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Waveform extends JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(Waveform.class);
     public static final String DRAG_AND_DROP_TEXT = "Drag and drop an audio file to start playing";
     public static final String LOADING_TEXT = "Loading...";
     public static final List<String> NATIVE_FORMATS = List.of(".mp3", ".wav");
@@ -258,6 +261,13 @@ public class Waveform extends JFrame {
         addToQueue(audioFiles.stream().map(TrackInfo::new).toList());
     }
 
+    public void processTracks(List<TrackInfo> tracks, boolean addToQueue) {
+        Util.showErrorOnException(() -> {
+            if (addToQueue) addToQueue(tracks);
+            else play(tracks);
+        }, addToQueue ? "Failed to add selected files to the queue" : "Failed to play selected audio file", LOGGER);
+    }
+
     public void clearQueue() {
         playbackManager.clearQueue();
     }
@@ -326,10 +336,7 @@ public class Waveform extends JFrame {
     public void selectFileAndProcess(boolean addToQueue) {
         pauseUntilFinished(() -> {
             File file = selectAudioFile();
-            if (file != null) Util.runInBackground(() -> Util.showErrorOnException(() -> {
-                if (addToQueue) addFilesToQueue(List.of(file));
-                else play(file);
-            }, addToQueue ? "Failed to add selected files to the queue" : "Failed to play selected audio file"));
+            if (file != null) processTracks(List.of(new TrackInfo(file)), addToQueue);
         });
     }
 
@@ -405,9 +412,9 @@ public class Waveform extends JFrame {
 
     public void onAudioFinished() {
         if (Config.loop == LoopState.TRACk)
-            Util.showErrorOnException(() -> forcePlayIndex(queueIndex()), "Failed to replay the track");
+            Util.showErrorOnException(() -> forcePlayIndex(queueIndex()), "Failed to replay the track", LOGGER);
         else if (hasNextTrack()) nextTrack();
-        else if (Config.loop == LoopState.ALL) Util.showErrorOnException(() -> playIndex(0), "Failed to replay the queue");
+        else if (Config.loop == LoopState.ALL) Util.showErrorOnException(() -> playIndex(0), "Failed to replay the queue", LOGGER);
         else startup();
     }
 
@@ -618,18 +625,14 @@ public class Waveform extends JFrame {
                     if (frameUpdater != null) frameUpdater.silentShutdown();
                     startup();
                 }
-                List<TrackInfo> audioFiles = audioGetter.getAudio(url, addToQueue ? status -> controls.showText(status, ControlsPanel.NEVER_TIMEOUT) : this::setText);
-                Util.logExceptions(() -> {
-                    if (addToQueue) addToQueue(audioFiles);
-                    else play(audioFiles);
-                });
+                List<TrackInfo> tracks = audioGetter.getAudio(url, addToQueue ? status -> controls.showText(status, ControlsPanel.NEVER_TIMEOUT) : this::setText);
+                processTracks(tracks, addToQueue);
             } catch (IOException | DownloadFailedException | InterruptedException e) {
                 showError("Import Failed", "Failed to import " + (playlist ? "playlist" : "audio"));
                 if (!addToQueue) startup();
             }
         });
     }
-
     public void showError(String title, String message) {
         if (isVisible())
             JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);

@@ -1,5 +1,8 @@
 package pitheguy.waveform.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.net.URI;
 import java.net.http.*;
@@ -8,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 
 public class HttpUtil {
+    private static final Logger LOGGER = LogManager.getLogger(HttpUtil.class);
     private static final HttpClient CLIENT = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
     public static File downloadFile(String url, String extension) throws IOException, InterruptedException {
@@ -38,6 +42,7 @@ public class HttpUtil {
             HttpResponse<Void> response = CLIENT.send(request, HttpResponse.BodyHandlers.discarding());
             return response.statusCode() == 204;
         } catch (IOException | InterruptedException e) {
+            LOGGER.debug("Internet connectivity check failed", e);
             return false;
         }
     }

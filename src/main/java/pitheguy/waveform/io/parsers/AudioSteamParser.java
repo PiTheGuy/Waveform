@@ -1,5 +1,7 @@
 package pitheguy.waveform.io.parsers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 
@@ -10,6 +12,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public abstract class AudioSteamParser implements AudioParser {
+    private static final Logger LOGGER = LogManager.getLogger(AudioSteamParser.class);
+
     public abstract AudioInputStream getStream(File audioFile) throws IOException, UnsupportedAudioFileException;
 
     @Override
@@ -17,6 +21,7 @@ public abstract class AudioSteamParser implements AudioParser {
         try {
             return parseStream(getStream(audioFile));
         } catch (Exception e) {
+            LOGGER.error("Failed to parse audio file", e);
             return null;
         }
     }
@@ -49,7 +54,7 @@ public abstract class AudioSteamParser implements AudioParser {
             return new AudioData(left, right, format.getFrameRate(), duration);
         }
         else {
-            System.out.println("Warning: Multi-channel visualization not supported; too many channels");
+            LOGGER.warn("Disabling multi-channel visualization; too many channels");
             short[] data = AudioData.averageChannelsInterweaved(sampleData, numChannels);
             return new AudioData(data, data, format.getFrameRate(), duration);
         }

@@ -1,5 +1,6 @@
 package pitheguy.waveform.util;
 
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;
@@ -78,7 +79,13 @@ public class Util {
             }
         };
         worker.execute();
-        if (waitUntilFinished) logExceptions(worker::get);
+        if (waitUntilFinished) {
+            try {
+                worker.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static List<File> getAllFiles(File folder) {
@@ -155,19 +162,11 @@ public class Util {
         return min + delta * (max - min);
     }
 
-    public static void logExceptions(ThrowingRunnable task) {
+    public static void showErrorOnException(ThrowingRunnable task, String message, Logger logger) {
         try {
             task.run();
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void showErrorOnException(ThrowingRunnable task, String message) {
-        try {
-            task.run();
-        } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(message, e);
             Waveform.getInstance().showError("Error", message + ": " + e.getMessage());
         }
     }
