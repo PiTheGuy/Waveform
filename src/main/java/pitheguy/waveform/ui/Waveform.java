@@ -113,6 +113,18 @@ public class Waveform extends JFrame {
         toFront();
     }
 
+    public static int getImageWidth() {
+        Waveform waveform = instance;
+        if (waveform.isVisible()) return waveform.getContentPane().getWidth();
+        else return WIDTH;
+    }
+
+    public static int getImageHeight() {
+        Waveform waveform = instance;
+        if (waveform.isVisible()) return waveform.getContentPane().getHeight();
+        else return HEIGHT;
+    }
+
     public void populateMenuBar() {
         menuBar.populate();
         menuBar.setVisible(!Config.hideMenuBar);

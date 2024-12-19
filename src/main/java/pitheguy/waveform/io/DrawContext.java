@@ -21,8 +21,7 @@ public class DrawContext {
     }
 
     public static DrawContext realtime() {
-        return new DrawContext(() -> Waveform.getInstance().getContentPane().getWidth(),
-                () -> Waveform.getInstance().getContentPane().getHeight());
+        return new DrawContext(Waveform::getImageWidth, Waveform::getImageHeight);
     }
 
     public static DrawContext forExport(int width, int height) {
