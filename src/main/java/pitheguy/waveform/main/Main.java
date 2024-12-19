@@ -229,10 +229,10 @@ public class Main {
         options.addOption("visualizer", true, "Which visualizer to use");
         options.addOption(Option.builder("input").hasArg().argName("file").desc("An audio file to play, or a folder containing audio files").build());
         options.addOption("url", true, "Specify a url to import from YouTube");
-        options.addOption(Option.builder("size").numberOfArgs(2).desc("The width and height of the waveform. Takes 2 arguments.").build());
+        options.addOption(Option.builder("size").numberOfArgs(2).desc("The width and height of the visualization. Takes 2 arguments.").build());
         options.addOption("targetFrameRate", true, "The target frame rate (Default: " + DEFAULT_FRAME_RATE + ")");
         options.addOption("player", "Enable player mode");
-        options.addOption("silent", "Don't play the audio file, just show the waveform");
+        options.addOption("silent", "Don't play the audio file, just show the visualization");
         options.addOption("disableSeeking", "Disable seeking in player mode or when showing progress");
         options.addOption("disableVisualizerSelection", "Prevent the user from switching the visualizer");
         options.addOption("disableExports", "Prevent the user from exporting the visualisation");
@@ -245,7 +245,7 @@ public class Main {
         options.addOption("hideMenuBar", "Hides the menu bar");
         options.addOption("showProgress", "Show playback progress. Also enables seeking unless -disableSeeking is used");
         options.addOption("mono", "Disable multi-channel visualization");
-        options.addOption("exitOnFinish", "Exit when the audio is finished playing. Not currently supported on folders");
+        options.addOption("exitOnFinish", "Exit when the audio is finished playing.");
         options.addOption("loop", "Loop the audio file. Not compatible with -exitOnFinish");
         options.addOption("fullScreen", "Display waveform window in full screen");
         options.addOption("force", "Attempt to read all files as audio, will throw errors on non-audio files");
@@ -253,9 +253,9 @@ public class Main {
         options.addOption("shuffle", "Shuffles the input when multiple tracks are specified");
         options.addOption("raw", "Show raw data instead of using smoothing functions");
         options.addOption("highContrast", "Increases contrast on some visualizations. Setting this option from the command line prevents the user from disabling it in the preferences dialog");
-        options.addOption("backgroundColor", true, "The background color of the waveform (Default: " + DEFAULT_BACKGROUND_COLOR + ")");
-        options.addOption("foregroundColor", true, "The foreground color the of the waveform (Default: " + DEFAULT_FOREGROUND_COLOR + ")");
-        options.addOption("playedColor", true, "The color of the played portion of the waveform (Default: " + DEFAULT_PLAYED_COLOR + ")");
+        options.addOption("backgroundColor", true, "The background color of the visualization (Default: " + DEFAULT_BACKGROUND_COLOR + ")");
+        options.addOption("foregroundColor", true, "The foreground color the of the visualization (Default: " + DEFAULT_FOREGROUND_COLOR + ")");
+        options.addOption("playedColor", true, "The color of the played portion of the visualization (Default: " + DEFAULT_PLAYED_COLOR + ")");
         options.addOption("exportImage", true, "Export as an image to the specified .png file");
         options.addOption("exportVideo", true, "Export as a video to the specified .mp4 file");
         options.addOption("exportGif", true, "Export as a GIF to the specified .gif file");
