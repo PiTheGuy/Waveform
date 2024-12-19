@@ -9,7 +9,7 @@ import pitheguy.waveform.io.session.Session;
 import pitheguy.waveform.main.validator.CommandLineValidator;
 import pitheguy.waveform.main.validator.ValidationRule;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.ui.dialogs.preferences.ForcedPreferences;
+import pitheguy.waveform.ui.dialogs.preferences.CommandLinePreferences;
 import pitheguy.waveform.util.*;
 
 import javax.swing.*;
@@ -161,7 +161,7 @@ public class Main {
         Config.disableExports = commandLine.hasOption("disableExports");
         Config.disableUserImports = commandLine.hasOption("disableUserImports");
         Config.disableSkipping = commandLine.hasOption("disableSkipping");
-        Config.disableDynamicIcon = commandLine.hasOption("dynamicIcon");
+        Config.dynamicIcon = !commandLine.hasOption("dynamicIcon");
         Config.disablePreferences = commandLine.hasOption("disablePreferences");
         Config.hideControls = commandLine.hasOption("hideControls");
         Config.hideMenuBar = commandLine.hasOption("hideMenuBar");
@@ -181,12 +181,12 @@ public class Main {
         Config.visualizer = Visualizer.fromKey(commandLine.getOptionValue("visualizer", "waveform"));
         visualizerSpecified = commandLine.hasOption("visualizer");
         validateParameters(commandLine);
-        Config.forcedPreferences = ForcedPreferences.fromCommandLine(commandLine);
+        Config.commandLinePreferences = CommandLinePreferences.fromString(commandLine.getOptionValue("preferences"));
     }
 
     private static void restoreSession() {
         Session.load().apply(!visualizerSpecified);
-        Config.forcedPreferences.apply();
+        Config.commandLinePreferences.apply();
     }
 
     @VisibleForTesting
@@ -196,9 +196,6 @@ public class Main {
         validator.addError(Config.frameRate <= 0, "Invalid frame rate");
         validator.addError(Config.visualizer == null, "Invalid visualizer");
         validator.addError(Config.exportFile != null && !hasInput(), "You can't export nothing");
-        validator.addError(Config.backgroundColor == null, "Invalid background color. Must be one of: " + WaveColor.getAvailableColors() + ", or a hex color code");
-        validator.addError(Config.foregroundColor == null, "Invalid foreground color. Must be one of: " + WaveColor.getAvailableColors() + ", or a hex color code");
-        validator.addError(Config.playedColor == null, "Invalid played color. Must be one of: " + WaveColor.getAvailableColors() + ", or a hex color code");
         validator.addRule(ValidationRule.createError(Config.exportFile != null).requires("microphone").message("You can't export microphone input"));
         validator.addRule(ValidationRule.createError(!hasInput()).requires("disableUserImports").message("An input must be specified when user imports are disabled"));
         validator.addRule(ValidationRule.createWarning().requires("showProgress").requires("player").message("-showProgress was ignored because player mode already shows progress"));
@@ -238,7 +235,6 @@ public class Main {
         options.addOption("disableExports", "Prevent the user from exporting the visualisation");
         options.addOption("disableUserImports", "Prevent the user from manually importing an audio file");
         options.addOption("disableSkipping", "Prevent the user from skipping forward and backward in the queue");
-        options.addOption("disableDynamicIcon", "Use a static icon instead of dynamically updating it, may improve performance");
         options.addOption("disableQueueManagement", "Prevent the user from opening the queue management panel");
         options.addOption("disablePreferences", "Prevents the user from opening the preferences dialog");
         options.addOption("hideControls", "Hide the playback controls");
@@ -252,10 +248,7 @@ public class Main {
         options.addOption("microphone", "Use the microphone as input");
         options.addOption("shuffle", "Shuffles the input when multiple tracks are specified");
         options.addOption("raw", "Show raw data instead of using smoothing functions");
-        options.addOption("highContrast", "Increases contrast on some visualizations. Setting this option from the command line prevents the user from disabling it in the preferences dialog");
-        options.addOption("backgroundColor", true, "The background color of the visualization (Default: " + DEFAULT_BACKGROUND_COLOR + ")");
-        options.addOption("foregroundColor", true, "The foreground color the of the visualization (Default: " + DEFAULT_FOREGROUND_COLOR + ")");
-        options.addOption("playedColor", true, "The color of the played portion of the visualization (Default: " + DEFAULT_PLAYED_COLOR + ")");
+        options.addOption("preferences", true, "Supply default preferences as comma-seperated key=value pairs");
         options.addOption("exportImage", true, "Export as an image to the specified .png file");
         options.addOption("exportVideo", true, "Export as a video to the specified .mp4 file");
         options.addOption("exportGif", true, "Export as a GIF to the specified .gif file");

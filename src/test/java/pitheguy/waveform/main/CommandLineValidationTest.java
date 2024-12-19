@@ -27,13 +27,6 @@ class CommandLineValidationTest {
     }
 
     @Test
-    void testInvalidModeInvalidColors() {
-        assertAll(() -> assertInvalid("-backgroundColor", "blurple"),
-                () -> assertInvalid("-foregroundColor", "blurple"),
-                () -> assertInvalid("-playedColor", "blurple"));
-    }
-
-    @Test
     void testLoopAndExitOnFinish() {
         assertInvalid("-loop", "-exitOnFinish");
     }

@@ -70,7 +70,7 @@ public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> 
         backgroundColor.ifPresent(color -> Config.backgroundColor = color);
         foregroundColor.ifPresent(color -> Config.foregroundColor = color);
         playedColor.ifPresent(color -> Config.playedColor = color);
-        dynamicIcon.ifPresent(dynamicIcon -> Config.disableDynamicIcon = !dynamicIcon);
+        dynamicIcon.ifPresent(dynamicIcon -> Config.dynamicIcon = dynamicIcon);
         highContrast.ifPresent(highContrast -> Config.highContrast = highContrast);
         pauseOnExport.ifPresent(pauseOnExport -> Config.pauseOnExport = pauseOnExport);
         mono.ifPresent(Config::setMono);

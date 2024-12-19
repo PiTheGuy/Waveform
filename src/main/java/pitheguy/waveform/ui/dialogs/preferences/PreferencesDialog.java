@@ -78,7 +78,7 @@ public class PreferencesDialog extends JDialog {
 
         //Dynamic Icon
         JPanel dynamicIconPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        dynamicIcon = createCheckBox("Dynamic icon", null, 'D', !Config.disableDynamicIcon);
+        dynamicIcon = createCheckBox("Dynamic icon", null, 'D', Config.dynamicIcon);
         dynamicIconPanel.add(dynamicIcon);
         generalPanel.add(dynamicIconPanel);
 
@@ -138,7 +138,7 @@ public class PreferencesDialog extends JDialog {
         preferences.apply();
         boolean visualizerSettingsChanged = visualizerSettingsPanel.saveSettings();
         SessionManager.getInstance().savePreferences(preferences);
-        if (Config.disableDynamicIcon) parent.setIconImage(Waveform.STATIC_ICON);
+        if (!Config.dynamicIcon) parent.setIconImage(Waveform.STATIC_ICON);
         parent.updateColors();
         parent.frameUpdater.forceUpdate();
         if (shouldRegenerate || visualizerSettingsChanged) Config.visualizer.getDrawer().regenerateIfNeeded();
@@ -166,19 +166,19 @@ public class PreferencesDialog extends JDialog {
     }
 
     private SavedPreferences getSavedPreferences() {
-        Optional<Color> backgroundColor = getValue(Config.forcedPreferences.backgroundColor(), this.backgroundColor.getColor());
-        Optional<Color> foregroundColor = getValue(Config.forcedPreferences.foregroundColor(), this.foregroundColor.getColor());
-        Optional<Color> playedColor = getValue(Config.forcedPreferences.playedColor(), this.playedColor.getColor());
-        Optional<Boolean> dynamicIcon = getValue(Config.forcedPreferences.dynamicIcon(), this.dynamicIcon.isSelected());
-        Optional<Boolean> highContrast = getValue(Config.forcedPreferences.highContrast(), this.highContrast.isSelected());
+        Optional<Color> backgroundColor = getValue(Config.commandLinePreferences.backgroundColor(), this.backgroundColor.getColor());
+        Optional<Color> foregroundColor = getValue(Config.commandLinePreferences.foregroundColor(), this.foregroundColor.getColor());
+        Optional<Color> playedColor = getValue(Config.commandLinePreferences.playedColor(), this.playedColor.getColor());
+        Optional<Boolean> dynamicIcon = getValue(Config.commandLinePreferences.dynamicIcon(), this.dynamicIcon.isSelected());
+        Optional<Boolean> highContrast = getValue(Config.commandLinePreferences.highContrast(), this.highContrast.isSelected());
         Optional<Boolean> pauseOnExport = Optional.of(this.pauseOnExport.isSelected());
         Optional<Boolean> mono = Optional.of(this.mono.isSelected());
         Optional<Boolean> disableSmoothing = Optional.of(this.disableSmoothing.isSelected());
         return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, mono, disableSmoothing);
     }
 
-    private <T> Optional<T> getValue(Optional<?> forcedValue, T value) {
-        return forcedValue.isPresent() ? Optional.empty() : Optional.of(value);
+    private <T> Optional<T> getValue(Optional<?> commandLineValue, T value) {
+        return commandLineValue.isPresent() && commandLineValue.get().equals(value) ? Optional.empty() : Optional.of(value);
     }
 
     private void disableAppropriateOptions() {
@@ -187,34 +187,6 @@ public class PreferencesDialog extends JDialog {
             dynamicIcon.setEnabled(false);
             dynamicIcon.setToolTipText("Dynamic icon is not available for this visualizer.");
         }
-        disableForcedOptions();
-    }
-
-    private void disableForcedOptions() {
-        disableIfNeeded(Config.forcedPreferences.backgroundColor(), backgroundColor);
-        disableIfNeeded(Config.forcedPreferences.foregroundColor(), foregroundColor);
-        disableIfNeeded(Config.forcedPreferences.playedColor(), playedColor);
-        disableIfNeeded(Config.forcedPreferences.dynamicIcon(), dynamicIcon);
-        disableIfNeeded(Config.forcedPreferences.highContrast(), highContrast);
-    }
-
-    private void disableIfNeeded(Optional<Color> forcedValue, ColorDropdown dropdown) {
-        forcedValue.ifPresent(value -> {
-            disableOption(dropdown);
-            dropdown.setColor(value);
-        });
-    }
-
-    private void disableIfNeeded(Optional<Boolean> forcedValue, JCheckBox checkBox) {
-        forcedValue.ifPresent(value -> {
-            disableOption(checkBox);
-            checkBox.setSelected(value);
-        });
-    }
-
-    private static void disableOption(JComponent option) {
-        option.setEnabled(false);
-        option.setToolTipText("This option was locked from the command line.");
     }
 
     static class ColorDropdown extends JPanel {

@@ -2,7 +2,7 @@ package pitheguy.waveform.config;
 
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.ui.dialogs.preferences.ForcedPreferences;
+import pitheguy.waveform.ui.dialogs.preferences.CommandLinePreferences;
 
 import java.awt.*;
 import java.io.File;
@@ -33,12 +33,12 @@ public class Config {
     public static boolean disableExports = false;
     public static boolean disableUserImports = false;
     public static boolean disableSkipping = false;
-    public static boolean disableDynamicIcon = false;
+    public static boolean dynamicIcon = true;
     public static boolean disableQueueManagement = false;
     public static boolean disablePreferences = false;
     public static boolean hideControls = false;
     public static boolean hideMenuBar = false;
-    public static ForcedPreferences forcedPreferences = ForcedPreferences.EMPTY;
+    public static CommandLinePreferences commandLinePreferences = CommandLinePreferences.EMPTY;
     public static boolean pauseOnExport = true;
 
     public static double getFrameLength() {
@@ -57,7 +57,7 @@ public class Config {
     }
 
     public static boolean useDynamicIcon() {
-        return !Config.disableDynamicIcon && Config.visualizer.getDrawer().usesDynamicIcon();
+        return Config.dynamicIcon && Config.visualizer.getDrawer().usesDynamicIcon();
     }
 
     public static void setMono(boolean mono) {
