@@ -4,6 +4,8 @@ import pitheguy.waveform.io.export.ExportContext;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.ProgressTracker;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class FrameExportStrategy implements ExportStrategy {
@@ -15,6 +17,7 @@ public class FrameExportStrategy implements ExportStrategy {
 
     @Override
     public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
-        Waveform.getInstance().audioDrawer.exportFrame(context.outputFile(), sec);
+        BufferedImage frame = Waveform.getInstance().audioDrawer.drawFrame(sec);
+        ImageIO.write(frame, "png", context.outputFile());
     }
 }

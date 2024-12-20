@@ -1,18 +1,15 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettings;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettings;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
 import pitheguy.waveform.ui.util.DebugText;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public abstract class AudioDrawer {
     protected final DrawContext context;
@@ -81,16 +78,6 @@ public abstract class AudioDrawer {
         updateAudioData(sec, length);
         context.updateDimensions();
         return null;
-    }
-
-    public void exportFrame(File file, double sec) throws IOException {
-        BufferedImage frame = drawFrame(sec);
-        ImageIO.write(frame, "png", file);
-    }
-
-    public void exportFullImage(File file) throws IOException {
-        BufferedImage fullAudio = drawFullAudio();
-        ImageIO.write(fullAudio, "png", file);
     }
 
     protected void updateAudioData(double sec, double length) {

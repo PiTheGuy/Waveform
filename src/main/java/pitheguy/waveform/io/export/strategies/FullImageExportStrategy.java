@@ -5,6 +5,8 @@ import pitheguy.waveform.io.export.ExportContext;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.util.ProgressTracker;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class FullImageExportStrategy implements ExportStrategy {
@@ -12,6 +14,7 @@ public class FullImageExportStrategy implements ExportStrategy {
     public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
         AudioDrawer drawer = Config.visualizer.getExportDrawer(context.width(), context.height());
         drawer.setPlayingAudio(context.audioData());
-        drawer.exportFullImage(context.outputFile());
+        BufferedImage fullAudio = drawer.drawFullAudio();
+        ImageIO.write(fullAudio, "png", context.outputFile());
     }
 }

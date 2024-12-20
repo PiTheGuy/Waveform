@@ -442,7 +442,7 @@ public class Waveform extends JFrame {
     public void switchVisualizer(Visualizer newVisualizer) {
         if (newVisualizer.isCommandLineOnly()) throw new IllegalArgumentException("Cannot switch to a command line only visualizer");
         if (Config.visualizer == newVisualizer) return;
-        if (!confirmVisualizerSwitch()) return;
+        if (Config.visualizer.isCommandLineOnly() && !confirmVisualizerSwitch()) return;
         if (newVisualizer.shouldShowEpilepsyWarning() && !showEpilepsyWarning()) return;
         Config.visualizer = newVisualizer;
         audioDrawer = Config.visualizer.getDrawer();
@@ -455,7 +455,6 @@ public class Waveform extends JFrame {
     }
 
     private boolean confirmVisualizerSwitch() {
-        if (!Config.visualizer.isCommandLineOnly()) return true;
         return dialogManager.showConfirmDialog("command_line_visualizer", "Confirm Visualizer Switch", """
                 You are about to switch off of a command line only visualizer. You won't be able to
                 switch back without rerunning the program. Are you sure you want to do this?""");
