@@ -22,6 +22,8 @@ public class DoubleSpectrogramDrawer extends AbstractSpectrogramDrawer {
         double[][] magnitudes = new double[fftData.length][];
         double[][] phases = new double[fftData.length][];
         for (int i = 0; i < fftData.length; i++) {
+            magnitudes[i] = new double[fftData[i].length];
+            phases[i] = new double[fftData[i].length];
             for (int j = 0; j < fftData[i].length; j++) {
                 magnitudes[i][j] = getMagnitude(fftData[i][j].getReal(), fftData[i][j].getImaginary());
                 phases[i][j] = PhaseSpectrogramDrawer.getPhase(fftData[i][j].getReal(), fftData[i][j].getImaginary());
