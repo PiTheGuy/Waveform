@@ -60,6 +60,7 @@ public class Waveform extends JFrame {
     public AudioDrawer audioDrawer;
     public File audioFile;
     public AudioData audioData;
+    public WaveformTrayIcon trayIcon;
     public final TrackParsingService parsingService = new TrackParsingService(this);
     public final ExportManager exportManager = new ExportManager(this);
     public final DialogManager dialogManager = new DialogManager(this);
@@ -102,6 +103,7 @@ public class Waveform extends JFrame {
             }
         });
         playbackManager.addQueueChangeListener(this::handleQueueChange);
+        if (Config.showInSystemTray) addTrayIcon();
         addMouseListener(new WaveformMouseListener());
         addKeyListener(new QueueKeyboardListener(this));
         addControls();
@@ -146,6 +148,10 @@ public class Waveform extends JFrame {
         keyBindingManager.registerGlobalKeyBinding("ESCAPE", "exit", this::handleExit);
         keyBindingManager.registerGlobalKeyBinding("ctrl B", "visualizerSelection", this::toggleVisualizerSelectionWindow);
         keyBindingManager.setupKeyBindings();
+    }
+
+    public boolean isMinimized() {
+        return (getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED;
     }
 
     public void openPreferences() {
@@ -411,6 +417,30 @@ public class Waveform extends JFrame {
         repaint();
     }
 
+    public void addTrayIcon() {
+        if (SystemTray.isSupported()) {
+            trayIcon = new WaveformTrayIcon();
+            try {
+                SystemTray.getSystemTray().add(trayIcon);
+            } catch (AWTException e) {
+                trayIcon = null;
+                LOGGER.warn("Failed to add tray icon", e);
+            }
+        } else LOGGER.warn("Attempted to add tray icon to unsupported system tray");
+    }
+
+    public void removeTrayIcon() {
+        if (trayIcon != null) {
+            SystemTray.getSystemTray().remove(trayIcon);
+            trayIcon = null;
+        }
+    }
+
+    public void showNotification(String title, String message, TrayIcon.MessageType type) {
+        if (trayIcon == null) return;
+        if (Config.notifications.shouldNotify()) trayIcon.displayMessage(title, message, type);
+    }
+
     public void startup() {
         hasAudio = false;
         playbackManager.reset();
@@ -425,8 +455,10 @@ public class Waveform extends JFrame {
     public void onAudioFinished() {
         if (Config.loop == LoopState.TRACk)
             Util.showErrorOnException(() -> forcePlayIndex(queueIndex()), "Failed to replay the track", LOGGER);
-        else if (hasNextTrack()) nextTrack();
-        else if (Config.loop == LoopState.ALL) Util.showErrorOnException(() -> playIndex(0), "Failed to replay the queue", LOGGER);
+        else if (hasNextTrack()) {
+            nextTrack();
+            showNotification(getTrackTitle(), null, TrayIcon.MessageType.INFO);
+        } else if (Config.loop == LoopState.ALL) Util.showErrorOnException(() -> playIndex(0), "Failed to replay the queue", LOGGER);
         else startup();
     }
 
@@ -506,6 +538,7 @@ public class Waveform extends JFrame {
         playbackManager.togglePlayback();
         controls.updateState();
         menuBar.updateState();
+        if (trayIcon != null) trayIcon.updateState();
         updateTitle();
     }
 
@@ -691,6 +724,7 @@ public class Waveform extends JFrame {
         if (frameUpdater != null) frameUpdater.silentShutdown();
         playbackManager.closeAudioPlayer();
         parsingService.shutdown();
+        removeTrayIcon();
         TempFileManager.cleanupTempFiles();
         dispose();
     }

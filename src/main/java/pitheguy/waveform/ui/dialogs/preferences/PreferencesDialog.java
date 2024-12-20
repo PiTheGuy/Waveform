@@ -1,12 +1,14 @@
 package pitheguy.waveform.ui.dialogs.preferences;
 
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.config.NotificationState;
+import pitheguy.waveform.config.visualizersettings.VisualizerSettingsPanel;
 import pitheguy.waveform.io.session.SavedPreferences;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.ButtonsPanel;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsPanel;
+import pitheguy.waveform.ui.util.LabeledEnumDropdown;
 import pitheguy.waveform.util.Util;
 
 import javax.swing.*;
@@ -26,6 +28,8 @@ public class PreferencesDialog extends JDialog {
     JCheckBox dynamicIcon;
     JCheckBox highContrast;
     JCheckBox pauseOnExport;
+    JCheckBox showInSystemTray;
+    NotificationDropdown notifications;
     JCheckBox mono;
     JCheckBox disableSmoothing;
 
@@ -94,6 +98,11 @@ public class PreferencesDialog extends JDialog {
         pauseOnExport.setDisplayedMnemonicIndex(9);
         pauseOnExportPanel.add(pauseOnExport);
         if (!Config.disableExports) generalPanel.add(pauseOnExportPanel);
+
+        //Notifications
+        notifications = new NotificationDropdown("Notifications", 'N');
+        generalPanel.add(notifications);
+
         return generalPanel;
     }
 
@@ -114,6 +123,17 @@ public class PreferencesDialog extends JDialog {
         disableSmoothingPanel.add(disableSmoothing);
         disableSmoothingPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, disableSmoothingPanel.getPreferredSize().height));
         advancedPanel.add(disableSmoothingPanel);
+
+        //Show in System Tray
+        JPanel showInSystemTrayPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        showInSystemTray = createCheckBox("Show in system tray", null, 'S', Config.showInSystemTray);
+        showInSystemTray.addActionListener(e -> {
+            notifications.setEnabled(showInSystemTray.isSelected());
+            notifications.setToolTipText(showInSystemTray.isSelected() ? null : "Requires system tray icon");
+        });
+        showInSystemTrayPanel.add(showInSystemTray);
+        advancedPanel.add(showInSystemTrayPanel);
+        notifications.setEnabled(showInSystemTray.isSelected());
 
         return advancedPanel;
     }
@@ -172,9 +192,11 @@ public class PreferencesDialog extends JDialog {
         Optional<Boolean> dynamicIcon = getValue(Config.commandLinePreferences.dynamicIcon(), this.dynamicIcon.isSelected());
         Optional<Boolean> highContrast = getValue(Config.commandLinePreferences.highContrast(), this.highContrast.isSelected());
         Optional<Boolean> pauseOnExport = Optional.of(this.pauseOnExport.isSelected());
+        Optional<NotificationState> notifications = Optional.of(this.notifications.getSelectedValue());
         Optional<Boolean> mono = Optional.of(this.mono.isSelected());
         Optional<Boolean> disableSmoothing = Optional.of(this.disableSmoothing.isSelected());
-        return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, mono, disableSmoothing);
+        Optional<Boolean> showInSystemTray = Optional.of(this.showInSystemTray.isSelected());
+        return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, notifications, mono, disableSmoothing, showInSystemTray);
     }
 
     private <T> Optional<T> getValue(Optional<?> commandLineValue, T value) {
@@ -186,6 +208,14 @@ public class PreferencesDialog extends JDialog {
             dynamicIcon.setSelected(false);
             dynamicIcon.setEnabled(false);
             dynamicIcon.setToolTipText("Dynamic icon is not available for this visualizer.");
+        }
+
+        if (!SystemTray.isSupported()) {
+            showInSystemTray.setSelected(false);
+            showInSystemTray.setEnabled(false);
+            showInSystemTray.setToolTipText("Not supported on this device.");
+            notifications.setEnabled(false);
+            notifications.setToolTipText("Not supported on this device.");
         }
     }
 
@@ -238,6 +268,12 @@ public class PreferencesDialog extends JDialog {
 
         public boolean isEnabled() {
             return comboBox.isEnabled();
+        }
+    }
+
+    static class NotificationDropdown extends LabeledEnumDropdown<NotificationState> {
+        public NotificationDropdown(String labelText, char mnemonic) {
+            super(labelText, mnemonic, NotificationState.class, Config.notifications);
         }
     }
 }

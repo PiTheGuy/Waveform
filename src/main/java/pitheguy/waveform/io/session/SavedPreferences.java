@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.config.NotificationState;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.Util;
 
@@ -14,10 +15,13 @@ import java.util.function.Function;
 public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> foregroundColor,
                                Optional<Color> playedColor, Optional<Boolean> dynamicIcon,
                                Optional<Boolean> highContrast, Optional<Boolean> pauseOnExport,
-                               Optional<Boolean> mono, Optional<Boolean> disableSmoothing) {
+                               Optional<NotificationState> notifications, Optional<Boolean> mono,
+                               Optional<Boolean> disableSmoothing, Optional<Boolean> showInSystemTray) {
 
     public static final SavedPreferences EMPTY = new SavedPreferences(
-            Optional.empty(),
+            java.util.Optional.empty(),
+            java.util.Optional.empty(),
+            java.util.Optional.empty(),
             Optional.empty(),
             Optional.empty(),
             Optional.empty(),
@@ -28,7 +32,8 @@ public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> 
 
     public static SavedPreferences create(Color backgroundColor, Color foregroundColor, Color playedColor,
                                           boolean dynamicIcon, boolean highContrast, boolean pauseOnExport,
-                                          boolean mono, boolean disableSmoothing) {
+                                          NotificationState notifications, boolean mono, boolean disableSmoothing,
+                                          boolean showInSystemTray) {
         return new SavedPreferences(
                 Optional.of(backgroundColor),
                 Optional.of(foregroundColor),
@@ -36,8 +41,10 @@ public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> 
                 Optional.of(dynamicIcon),
                 Optional.of(highContrast),
                 Optional.of(pauseOnExport),
+                Optional.of(notifications),
                 Optional.of(mono),
-                Optional.of(disableSmoothing));
+                Optional.of(disableSmoothing),
+                Optional.of(showInSystemTray));
     }
 
     public JsonObject toJson() {
@@ -48,8 +55,10 @@ public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> 
         dynamicIcon.ifPresent(d -> json.addProperty("dynamicIcon", d));
         highContrast.ifPresent(h -> json.addProperty("highContrast", h));
         pauseOnExport.ifPresent(pa -> json.addProperty("pauseOnExport", pa));
+        notifications.ifPresent(n -> json.addProperty("notifications", n.name()));
         mono.ifPresent(m -> json.addProperty("mono", m));
         disableSmoothing.ifPresent(d -> json.addProperty("disableSmoothing", d));
+        showInSystemTray.ifPresent(s -> json.addProperty("showInSystemTray", s));
         return json;
     }
 
@@ -61,9 +70,11 @@ public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> 
         Optional<Boolean> dynamicIcon = parseOption(json, "dynamicIcon", JsonElement::getAsBoolean);
         Optional<Boolean> highContrast = parseOption(json, "highContrast", JsonElement::getAsBoolean);
         Optional<Boolean> pauseOnExport = parseOption(json, "pauseOnExport", JsonElement::getAsBoolean);
+        Optional<NotificationState> notifications = parseOption(json, "notifications", SavedPreferences::parseNotification);
         Optional<Boolean> mono = parseOption(json, "mono", JsonElement::getAsBoolean);
         Optional<Boolean> disableSmoothing = parseOption(json, "disableSmoothing", JsonElement::getAsBoolean);
-        return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, mono, disableSmoothing);
+        Optional<Boolean> showInSystemTray = parseOption(json, "showInSystemTray", JsonElement::getAsBoolean);
+        return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, notifications, mono, disableSmoothing, showInSystemTray);
     }
 
     public void apply() {
@@ -73,13 +84,23 @@ public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> 
         dynamicIcon.ifPresent(dynamicIcon -> Config.dynamicIcon = dynamicIcon);
         highContrast.ifPresent(highContrast -> Config.highContrast = highContrast);
         pauseOnExport.ifPresent(pauseOnExport -> Config.pauseOnExport = pauseOnExport);
+        notifications.ifPresent(notifications -> Config.notifications = notifications);
         mono.ifPresent(Config::setMono);
         disableSmoothing.ifPresent(disableSmoothing -> Config.disableSmoothing = disableSmoothing);
+        showInSystemTray.ifPresent(Config::setShowInSystemTray);
         Waveform.getInstance().updateColors();
     }
 
     private static Color parseColor(JsonElement element) {
         return Util.parseColor(element.getAsString());
+    }
+
+    private static NotificationState parseNotification(JsonElement element) {
+        try {
+            return NotificationState.valueOf(element.getAsString());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private static <T> Optional<T> parseOption(JsonObject json, String option, Function<JsonElement, T> parser) {
@@ -94,8 +115,10 @@ public record SavedPreferences(Optional<Color> backgroundColor, Optional<Color> 
         Optional<Boolean> dynamicIcon = dynamicIcon().or(old::dynamicIcon);
         Optional<Boolean> highContrast = highContrast().or(old::highContrast);
         Optional<Boolean> pauseOnExport = pauseOnExport().or(old::pauseOnExport);
+        Optional<NotificationState> notifications = notifications().or(old::notifications);
         Optional<Boolean> mono = mono().or(old::mono);
         Optional<Boolean> disableSmoothing = disableSmoothing().or(old::disableSmoothing);
-        return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, mono, disableSmoothing);
+        Optional<Boolean> showInSystemTray = showInSystemTray().or(old::showInSystemTray);
+        return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, notifications, mono, disableSmoothing, showInSystemTray);
     }
 }
