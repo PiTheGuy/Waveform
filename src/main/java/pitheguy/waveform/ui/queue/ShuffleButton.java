@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.controls.ControlButton;
+import pitheguy.waveform.util.ResourceGetter;
 import pitheguy.waveform.util.Util;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ import java.util.Collections;
 
 public class ShuffleButton extends ControlButton {
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final ImageIcon ICON = new ImageIcon(Waveform.class.getResource("/icons/shuffle.png"));
+    public static final ImageIcon ICON = ResourceGetter.getUiIcon("shuffle.png");
     public static final int WIDTH = ICON.getIconWidth();
     public static final int HEIGHT = ICON.getIconHeight();
 

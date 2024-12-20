@@ -2,12 +2,13 @@ package pitheguy.waveform.ui.controls;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.util.ResourceGetter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class NextTrackButton extends ControlButton {
-    private static final ImageIcon ICON = new ImageIcon(Waveform.class.getResource("/icons/controls/next.png"));
+    private static final ImageIcon ICON = ResourceGetter.getUiIcon("controls/next.png");
     public static final int BUTTON_WIDTH = ICON.getIconWidth();
     public static final int BUTTON_HEIGHT = ICON.getIconHeight();
 

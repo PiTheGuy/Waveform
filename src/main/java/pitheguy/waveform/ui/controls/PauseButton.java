@@ -1,13 +1,14 @@
 package pitheguy.waveform.ui.controls;
 
 import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.util.ResourceGetter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class PauseButton extends ControlButton {
-    private static final ImageIcon PAUSE_ICON = new ImageIcon(Waveform.class.getResource("/icons/controls/pause.png"));
-    private static final ImageIcon PLAY_ICON = new ImageIcon(Waveform.class.getResource("/icons/controls/play.png"));
+    private static final ImageIcon PAUSE_ICON = ResourceGetter.getUiIcon("controls/pause.png");
+    private static final ImageIcon PLAY_ICON = ResourceGetter.getUiIcon("controls/play.png");
     public static final int BUTTON_WIDTH = PAUSE_ICON.getIconWidth();
     public static final int BUTTON_HEIGHT = PAUSE_ICON.getIconHeight();
 

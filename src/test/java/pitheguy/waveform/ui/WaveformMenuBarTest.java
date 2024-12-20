@@ -2,14 +2,10 @@ package pitheguy.waveform.ui;
 
 import org.junit.jupiter.api.*;
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.io.download.YoutubeAudioGetter;
-import pitheguy.waveform.util.ResourceGetter;
 
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 class WaveformMenuBarTest {
     public static final File TEST_FILE = new File("src/test/resources/test.wav");
@@ -87,7 +83,7 @@ class WaveformMenuBarTest {
     }
 
     @Test
-    void testVisualizerMenu_disableModeSelection() {
+    void testVisualizerMenu_disableVisualizerSelection() {
         Config.disableVisualizerSelection = true;
         waveform.hasAudio = true;
         waveform.menuBar.updateState();

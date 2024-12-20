@@ -1,18 +1,18 @@
 package pitheguy.waveform.config;
 
-import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.util.ResourceGetter;
 
 import javax.swing.*;
 
 public enum LoopState {
-    OFF("/icons/loop_off.png"),
-    ALL("/icons/loop_on.png"),
-    TRACk("/icons/loop_track.png"),;
+    OFF("loop_off.png"),
+    ALL("loop_on.png"),
+    TRACk("loop_track.png"),;
 
     private final ImageIcon icon;
 
     LoopState(String iconPath) {
-        icon = new ImageIcon(Waveform.class.getResource(iconPath));
+        icon = ResourceGetter.getUiIcon(iconPath);
     }
 
     public ImageIcon getIcon() {

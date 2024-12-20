@@ -1,9 +1,12 @@
 package pitheguy.waveform.ui.visualizer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.util.ClickableMouseListener;
 import pitheguy.waveform.ui.util.PlaceholderTextField;
+import pitheguy.waveform.util.ResourceGetter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,11 +14,11 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 import java.util.List;
 import java.util.*;
 
 public class VisualizerSelectionWindow extends JWindow {
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final int HEIGHT = 400;
     private final Waveform parent;
     private final List<CategoryEntry> categoryEntries = new ArrayList<>();
@@ -166,8 +169,8 @@ public class VisualizerSelectionWindow extends JWindow {
         }
 
         private class CategoryNamePanel extends JPanel {
-            private static final ImageIcon CLOSED_ICON = new ImageIcon(Waveform.class.getResource("/icons/chevron/closed.png"));
-            private static final ImageIcon OPEN_ICON = new ImageIcon(Waveform.class.getResource("/icons/chevron/open.png"));
+            private static final ImageIcon CLOSED_ICON = ResourceGetter.getUiIcon("chevron/closed.png");
+            private static final ImageIcon OPEN_ICON = ResourceGetter.getUiIcon("chevron/open.png");
             private final JLabel chevron;
             private boolean open = false;
 
@@ -229,7 +232,7 @@ public class VisualizerSelectionWindow extends JWindow {
 
     public class VisualizerEntry extends JPanel {
         private static final Map<Visualizer, ImageIcon> ICON_CACHE = new HashMap<>();
-        public static final ImageIcon PLACEHOLDER_ICON = new ImageIcon(Waveform.class.getResource("/icons/visualizers/placeholder.png"));
+        public static final ImageIcon PLACEHOLDER_ICON = ResourceGetter.getUiIcon("visualizers/placeholder.png");
         private final Visualizer visualizer;
 
         public VisualizerEntry(Visualizer visualizer) {
@@ -258,12 +261,12 @@ public class VisualizerSelectionWindow extends JWindow {
         }
 
         private static ImageIcon fetchIcon(Visualizer visualizer) {
-            URL url = Waveform.class.getResource("/icons/visualizers/%s.png".formatted(visualizer.getKey()));
-            if (url == null) {
-                System.err.println("Missing icon for " + visualizer.getName());
+            ImageIcon icon = ResourceGetter.getUiIcon("visualizers/%s.png".formatted(visualizer.getKey()));
+            if (icon == null) {
+                LOGGER.warn("Missing icon for {}", visualizer.getKey());
                 return PLACEHOLDER_ICON;
             }
-            return new ImageIcon(url);
+            return icon;
         }
 
         private void onClick() {

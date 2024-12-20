@@ -44,7 +44,7 @@ public class Waveform extends JFrame {
             ".alac", ".opus", ".ac3", ".amr", ".dsd", ".dts", ".pcm", ".ra", ".vqf",
             ".tak", ".tta", ".wv", ".caf", ".mpc", ".snd", ".au", ".gsm"
     );
-    public static final Image STATIC_ICON = new ImageIcon(Waveform.class.getResource("/icon.png")).getImage();
+    public static final Image STATIC_ICON = ResourceGetter.getStaticIcon();
     private static Waveform instance;
     public static int WIDTH = Main.DEFAULT_WIDTH;
     public static int HEIGHT = Main.DEFAULT_HEIGHT;
