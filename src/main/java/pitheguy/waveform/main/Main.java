@@ -10,6 +10,7 @@ import pitheguy.waveform.main.validator.CommandLineValidator;
 import pitheguy.waveform.main.validator.ValidationRule;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.preferences.CommandLinePreferences;
+import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.*;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class Main {
     private static boolean visualizerSpecified;
 
     public static void main(String... args) throws Exception {
+        System.setProperty("sun.java.command", "Waveform");
         System.setProperty("PROGRAM_DATA_PATH", OS.getProgramDataPath().toString());
         try {
             processInput(args);

@@ -1,6 +1,7 @@
 package pitheguy.waveform.io.session;
 
 import org.junit.jupiter.api.Test;
+import pitheguy.waveform.config.NotificationState;
 
 import java.awt.*;
 import java.io.File;
@@ -16,7 +17,7 @@ class SessionTest {
 
     @Test
     void testSaveCreatesFile() throws IOException {
-        SavedPreferences preferences = SavedPreferences.create(Color.ORANGE, Color.GREEN, Color.BLUE, false, true, true, false, false);
+        SavedPreferences preferences = SavedPreferences.create(Color.ORANGE, Color.GREEN, Color.BLUE, false, true, true, NotificationState.WHEN_MINIMIZED, false, false, true);
         Session session = new Session(preferences, List.of(), List.of());
         session.save(SESSION_FILE);
         assertTrue(SESSION_FILE.exists());
@@ -25,7 +26,7 @@ class SessionTest {
 
     @Test
     void testSaveAndLoadPreferences() throws IOException {
-        SavedPreferences preferences = SavedPreferences.create(Color.RED, Color.GREEN, Color.BLUE, false, true, true, false, false);
+        SavedPreferences preferences = SavedPreferences.create(Color.RED, Color.GREEN, Color.BLUE, false, true, true, NotificationState.WHEN_MINIMIZED, false, false, true);
         Session session = new Session(preferences, List.of(), List.of());
         session.save(SESSION_FILE);
         SavedPreferences loadedPreferences = Session.load(SESSION_FILE).savedPreferences();

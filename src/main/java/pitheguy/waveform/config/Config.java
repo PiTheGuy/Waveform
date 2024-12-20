@@ -40,6 +40,8 @@ public class Config {
     public static boolean hideMenuBar = false;
     public static CommandLinePreferences commandLinePreferences = CommandLinePreferences.EMPTY;
     public static boolean pauseOnExport = true;
+    public static boolean showInSystemTray = true;
+    public static NotificationState notifications = NotificationState.WHEN_MINIMIZED;
 
     public static double getFrameLength() {
         return 1 / frameRate;
@@ -64,6 +66,14 @@ public class Config {
         if (Config.mono != mono) {
             Config.mono = mono;
             Waveform.getInstance().invalidateAudioCache();
+        }
+    }
+
+    public static void setShowInSystemTray(boolean showInSystemTray) {
+        if (Config.showInSystemTray != showInSystemTray) {
+            Config.showInSystemTray = showInSystemTray;
+            if (showInSystemTray) Waveform.getInstance().addTrayIcon();
+            else Waveform.getInstance().removeTrayIcon();
         }
     }
 
