@@ -29,7 +29,7 @@ public class PreferencesDialog extends JDialog {
     JCheckBox highContrast;
     JCheckBox pauseOnExport;
     JCheckBox showInSystemTray;
-    NotificationDropdown notifications;
+    LabeledEnumDropdown<NotificationState> notifications;
     JCheckBox mono;
     JCheckBox disableSmoothing;
 
@@ -100,7 +100,7 @@ public class PreferencesDialog extends JDialog {
         if (!Config.disableExports) generalPanel.add(pauseOnExportPanel);
 
         //Notifications
-        notifications = new NotificationDropdown("Notifications", 'N');
+        notifications = new LabeledEnumDropdown<>("Notifications", 'N', NotificationState.class, Config.notifications);
         generalPanel.add(notifications);
 
         return generalPanel;
@@ -224,18 +224,19 @@ public class PreferencesDialog extends JDialog {
         private Color selectedColor;
 
         public ColorDropdown(String text, Color startValue, char mnemonic) {
-            setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+            setLayout(new BorderLayout());
             JLabel label = new JLabel(text);
-            add(label);
+            add(label, BorderLayout.WEST);
             String[] colors = Stream.concat(
                     Arrays.stream(WaveColor.values()).map(WaveColor::getHumanName),
                     Stream.of("Custom")
             ).toArray(String[]::new);
             comboBox = new JComboBox<>(colors);
             comboBox.setMaximumRowCount(colors.length);
+            comboBox.setMaximumSize(comboBox.getPreferredSize());
             setColor(startValue);
             comboBox.addActionListener(e -> onColorChange());
-            add(comboBox);
+            add(comboBox, BorderLayout.EAST);
             label.setLabelFor(comboBox);
             label.setDisplayedMnemonic(mnemonic);
             getAccessibleContext().setAccessibleName(text);
@@ -268,12 +269,6 @@ public class PreferencesDialog extends JDialog {
 
         public boolean isEnabled() {
             return comboBox.isEnabled();
-        }
-    }
-
-    static class NotificationDropdown extends LabeledEnumDropdown<NotificationState> {
-        public NotificationDropdown(String labelText, char mnemonic) {
-            super(labelText, mnemonic, NotificationState.class, Config.notifications);
         }
     }
 }

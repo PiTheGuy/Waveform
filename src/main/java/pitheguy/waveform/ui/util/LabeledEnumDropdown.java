@@ -30,4 +30,10 @@ public class LabeledEnumDropdown<T extends Enum<?>> extends JPanel {
         super.setEnabled(enabled);
         comboBox.setEnabled(enabled);
     }
+
+    @Override
+    public void setToolTipText(String text) {
+        super.setToolTipText(text);
+        comboBox.setToolTipText(text);
+    }
 }
