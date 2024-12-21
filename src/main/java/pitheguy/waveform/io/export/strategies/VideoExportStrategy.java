@@ -2,6 +2,7 @@ package pitheguy.waveform.io.export.strategies;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.export.ExportContext;
+import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.*;
 
 import java.io.*;
@@ -26,6 +27,11 @@ public class VideoExportStrategy implements ExportStrategy {
         }
         args.add(context.outputFile().getAbsolutePath());
         runFfmpeg(args, context, progressTracker);
+    }
+
+    @Override
+    public ProgressTracker getProgressTracker() {
+        return ProgressTracker.getProgressTracker(Waveform.getInstance(), "Exporting video", (int) (Waveform.getInstance().duration / Config.getFrameLength()));
     }
 
     private String findVideoEncoder() throws IOException {

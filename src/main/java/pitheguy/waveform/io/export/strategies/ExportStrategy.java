@@ -15,6 +15,10 @@ import java.util.List;
 public interface ExportStrategy {
     void export(ExportContext context, ProgressTracker progressTracker) throws IOException;
 
+    default ProgressTracker getProgressTracker() {
+        return null;
+    }
+
     default void runFfmpeg(List<String> args, ExportContext context, ProgressTracker progressTracker) throws IOException {
         List<String> command = new ArrayList<>(args);
         command.addFirst(ResourceGetter.getFFmpegPath());

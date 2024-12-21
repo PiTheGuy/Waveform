@@ -31,8 +31,6 @@ public class WaveformMenuBar extends JMenuBar {
     JMenuItem pauseItem;
     JMenuItem nextTrackItem;
     JCheckBoxMenuItem hideControlsItem;
-    JMenuItem exportVideoItem;
-    JMenuItem exportGifItem;
     JMenuItem exitItem;
     JMenuItem importFromYoutubeItem;
     private JMenuItem preferencesItem;
@@ -87,14 +85,25 @@ public class WaveformMenuBar extends JMenuBar {
         JMenuItem exportFrameItem = MenuHelper.createMenuItem("Export Frame...", 'F', KeyStroke.getKeyStroke("ctrl E"), e -> parent.exportManager.exportFrame(null));
         JMenuItem exportFullItem = MenuHelper.createMenuItem("Export Full Image...", 'I', KeyStroke.getKeyStroke("shift ctrl E"), e -> parent.exportManager.exportFullImage(null, false));
         JMenuItem exportAudioFileItem = MenuHelper.createMenuItem("Export Audio...", 'A', null, e -> parent.exportManager.exportAudio());
-        exportVideoItem = MenuHelper.createMenuItem("Export Video...", 'V', null, e -> parent.exportManager.exportVideo(null, false));
-        exportGifItem = MenuHelper.createMenuItem("Export GIF...", 'G', null, e -> parent.exportManager.exportGif(null, false));
+        JMenuItem exportVideoItem = MenuHelper.createMenuItem("Export Video...", 'V', null, e -> parent.exportManager.exportVideo(null, false));
+        JMenuItem exportGifItem = MenuHelper.createMenuItem("Export GIF...", 'G', null, e -> parent.exportManager.exportGif(null, false));
+        JMenu exportQueueSubMenu = createQueueSubMenu();
         exportMenu.add(exportFrameItem);
         exportMenu.add(exportFullItem);
         exportMenu.add(exportAudioFileItem);
         exportMenu.add(exportVideoItem);
         exportMenu.add(exportGifItem);
+        exportMenu.add(exportQueueSubMenu);
         add(exportMenu);
+    }
+
+    private JMenu createQueueSubMenu() {
+        JMenu exportQueueSubMenu = new JMenu("Export Queue");
+        JMenuItem exportToFolder = MenuHelper.createMenuItem("To Folder", 'F', e -> parent.exportManager.exportQueue(false));
+        JMenuItem exportToZip = MenuHelper.createMenuItem("To ZIP File", 'Z', e -> parent.exportManager.exportQueue(true));
+        exportQueueSubMenu.add(exportToFolder);
+        exportQueueSubMenu.add(exportToZip);
+        return exportQueueSubMenu;
     }
 
     private void addVisualizerMenu() {

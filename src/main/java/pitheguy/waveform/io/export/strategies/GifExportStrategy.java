@@ -2,6 +2,7 @@ package pitheguy.waveform.io.export.strategies;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.export.ExportContext;
+import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.ProgressTracker;
 
 import java.io.IOException;
@@ -20,5 +21,10 @@ public class GifExportStrategy implements ExportStrategy {
                 context.outputFile().getAbsolutePath() // Output GIF file
         );
         runFfmpeg(args, context, progressTracker);
+    }
+
+    @Override
+    public ProgressTracker getProgressTracker() {
+        return ProgressTracker.getProgressTracker(Waveform.getInstance(), "Exporting GIF", (int) (Waveform.getInstance().duration / Config.getFrameLength()));
     }
 }

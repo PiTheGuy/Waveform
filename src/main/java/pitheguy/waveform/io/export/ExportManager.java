@@ -2,7 +2,6 @@ package pitheguy.waveform.io.export;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.ExportType;
 import pitheguy.waveform.io.FileConverter;
 import pitheguy.waveform.io.export.strategies.*;
@@ -10,10 +9,8 @@ import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.ExportOptionsDialog;
 import pitheguy.waveform.util.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.io.*;
+import java.nio.file.*;
 
 public class ExportManager {
     private static final Logger LOGGER = LogManager.getLogger(ExportManager.class);
@@ -23,13 +20,13 @@ public class ExportManager {
         this.parent = parent;
     }
 
-    private void export(File file, ExportStrategy strategy, String name, ExportType type, boolean useProgressTracker, boolean waitUntilFinished) {
+    private void export(File file, ExportStrategy strategy, String name, ExportType type, boolean waitUntilFinished) {
         parent.backgroundPauseUntilFinished(() -> {
             try {
                 ExportOptionsDialog.ExportOptions options = ExportOptionsDialog.showDialogIfNeeded(parent, name, type, file);
                 if (options == null) return;
                 ExportContext context = new ExportContext(parent, options);
-                ProgressTracker tracker = useProgressTracker ? ProgressTracker.getProgressTracker(parent, "Exporting " + name, (int) (parent.duration / Config.getFrameLength())) : null;
+                ProgressTracker tracker = strategy.getProgressTracker();
                 strategy.export(context, tracker);
             } catch (IOException e) {
                 LOGGER.error("Failed to export {}", name, e);
@@ -40,11 +37,11 @@ public class ExportManager {
     }
 
     public void exportFrame(File file) {
-        export(file, new FrameExportStrategy(parent.frameUpdater.getSec()), "frame", ExportType.IMAGE, false, false);
+        export(file, new FrameExportStrategy(parent.frameUpdater.getSec()), "frame", ExportType.IMAGE, false);
     }
 
     public void exportFullImage(File file, boolean waitUntilFinished) {
-        export(file, new FullImageExportStrategy(), "image", ExportType.IMAGE, false, waitUntilFinished);
+        export(file, new FullImageExportStrategy(), "image", ExportType.IMAGE, waitUntilFinished);
     }
 
     public void exportAudio() {
@@ -78,12 +75,26 @@ public class ExportManager {
     public void exportVideo(File file, boolean waitUntilFinished) {
         if (!ResourceGetter.isFfmpegAvailable())
             parent.showError("FFmpeg Not Found", "FFmpeg is required for video and GIF exports.");
-        export(file, new VideoExportStrategy(), "video", ExportType.VIDEO, true, waitUntilFinished);
+        export(file, new VideoExportStrategy(), "video", ExportType.VIDEO, waitUntilFinished);
     }
 
     public void exportGif(File file, boolean waitUntilFinished) {
         if (!ResourceGetter.isFfmpegAvailable())
             parent.showError("FFmpeg Not Found", "FFmpeg is required for video and GIF exports.");
-        export(file, new GifExportStrategy(), "gif", ExportType.GIF, true, waitUntilFinished);
+        export(file, new GifExportStrategy(), "gif", ExportType.GIF, waitUntilFinished);
+    }
+
+    public void exportQueue(boolean createZip) {
+        parent.pauseUntilFinished(() -> {
+            File file;
+            if (createZip) file = parent.dialogManager.showSaveDialog("Export Queue", ".zip");
+            else file = parent.dialogManager.showSelectFolderDialog("Export Queue");
+            if (file == null) return;
+            exportQueue(file, createZip);
+        });
+    }
+
+    public void exportQueue(File file, boolean createZip) {
+        export(file, new QueueExportStrategy(createZip), "queue", null, false);
     }
 }

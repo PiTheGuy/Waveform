@@ -45,6 +45,19 @@ public class DialogManager {
         } else return null;
     }
 
+    public File showSelectFolderDialog(String title) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setDialogTitle(title);
+        chooser.setCurrentDirectory(lastSelectedFile);
+        chooser.setAcceptAllFileFilterUsed(false);
+        if (chooser.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            lastSelectedFile = file;
+            return file;
+        } else return null;
+    }
+
     public YoutubeImportInfo promptForYoutubeUrl() {
         String[] options = new String[]{"Add to Queue", "Play"};
         JOptionPane pane = new JOptionPane("Enter a video or playlist URL: ", JOptionPane.QUESTION_MESSAGE,

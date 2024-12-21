@@ -31,7 +31,6 @@ public class Main {
     private static boolean visualizerSpecified;
 
     public static void main(String... args) throws Exception {
-        System.setProperty("sun.java.command", "Waveform");
         System.setProperty("PROGRAM_DATA_PATH", OS.getProgramDataPath().toString());
         try {
             processInput(args);
