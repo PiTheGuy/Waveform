@@ -2,6 +2,7 @@ package pitheguy.waveform.ui.dialogs.preferences;
 
 import org.apache.commons.cli.ParseException;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.config.NotificationState;
 import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.Util;
@@ -11,8 +12,17 @@ import java.util.*;
 
 public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<Color> backgroundColor,
                                      Optional<Color> playedColor, Optional<Boolean> dynamicIcon,
-                                     Optional<Boolean> highContrast) {
-    public static CommandLinePreferences EMPTY = new CommandLinePreferences(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+                                     Optional<Boolean> highContrast, Optional<NotificationState> notifications,
+                                     Optional<Boolean> mono, Optional<Boolean> disableSmoothing) {
+    public static CommandLinePreferences EMPTY = new CommandLinePreferences(
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty());
 
     public void apply() {
         foregroundColor.ifPresent(color -> Config.foregroundColor = color);
@@ -20,6 +30,8 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         playedColor.ifPresent(color -> Config.playedColor = color);
         dynamicIcon.ifPresent(dynamicIcon -> Config.dynamicIcon = dynamicIcon);
         highContrast.ifPresent(highContrast -> Config.highContrast = highContrast);
+        mono.ifPresent(mono -> Config.mono = mono);
+        disableSmoothing.ifPresent(disableSmoothing -> Config.disableSmoothing = disableSmoothing);
         Waveform.getInstance().updateColors();
     }
 
@@ -40,6 +52,9 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
                 case "playedColor" -> builder.playedColor = parseColor(value);
                 case "dynamicIcon" -> builder.dynamicIcon = parseBoolean(value);
                 case "highContrast" -> builder.highContrast = parseBoolean(value);
+                case "notifications" -> builder.notifications = parseNotifications(value);
+                case "mono" -> builder.mono = parseBoolean(value);
+                case "disableSmoothing" -> builder.disableSmoothing = parseBoolean(value);
                 default -> throw new ParseException("Unknown key: " + key);
             }
         }
@@ -60,12 +75,23 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         };
     }
 
+    private static NotificationState parseNotifications(String value) throws ParseException {
+        try {
+            return NotificationState.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ParseException("Invalid notification state: " + value + ". Must be one of: " + NotificationState.getKeys());
+        }
+    }
+
     private static class Builder {
         Color foregroundColor;
         Color backgroundColor;
         Color playedColor;
         Boolean dynamicIcon;
         Boolean highContrast;
+        NotificationState notifications;
+        Boolean mono;
+        Boolean disableSmoothing;
 
         public CommandLinePreferences build() {
             return new CommandLinePreferences(
@@ -73,7 +99,10 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
                     Optional.ofNullable(backgroundColor),
                     Optional.ofNullable(playedColor),
                     Optional.ofNullable(dynamicIcon),
-                    Optional.ofNullable(highContrast)
+                    Optional.ofNullable(highContrast),
+                    Optional.ofNullable(notifications),
+                    Optional.ofNullable(mono),
+                    Optional.ofNullable(disableSmoothing)
             );
         }
     }
