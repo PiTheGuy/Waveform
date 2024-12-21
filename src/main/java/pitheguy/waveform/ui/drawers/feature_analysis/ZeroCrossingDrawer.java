@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.SlicedImageDrawer;
 import pitheguy.waveform.ui.drawers.waveform.WaveformDrawer;
 
@@ -53,8 +53,8 @@ public class ZeroCrossingDrawer extends SlicedImageDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
-                .addSetting("relative", "Relative scaling", SettingType.bool(), false);
+                .addSetting("relative", "Relative scaling", SettingType.BOOLEAN, false);
     }
 }

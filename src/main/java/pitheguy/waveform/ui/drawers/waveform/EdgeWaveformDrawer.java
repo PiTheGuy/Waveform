@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers.waveform;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -39,7 +39,7 @@ public class EdgeWaveformDrawer extends WaveformDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("line_thickness", SettingType.positiveFloat(), 1f);
     }

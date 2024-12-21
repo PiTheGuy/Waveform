@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers.feature_analysis;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.config.visualizersettings.options.ColorChannel;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -106,13 +106,13 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("calculation_mode", SettingType.forEnum(CalculationMode.class), CalculationMode.LOW_PASS)
                 .addSetting("transient_channel", SettingType.forEnum(ColorChannel.class), ColorChannel.RED)
                 .addSetting("sustained_channel", SettingType.forEnum(ColorChannel.class), ColorChannel.GREEN)
                 .addSetting("sustained_window_size", SettingType.positiveInt(), 5)
-                .addSetting("normalize", SettingType.bool(), true);
+                .addSetting("normalize", SettingType.BOOLEAN, true);
     }
 
     public enum CalculationMode {

@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.dialogs.preferences;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.NotificationState;
 import pitheguy.waveform.config.visualizersettings.VisualizerSettingsPanel;
-import pitheguy.waveform.io.session.SavedPreferences;
+import pitheguy.waveform.config.SavedPreferences;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;

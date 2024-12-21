@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.visualizersettings.VisualizerSettings;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
@@ -123,8 +123,8 @@ public abstract class AudioDrawer {
         this.playingAudio = playingAudio;
     }
 
-    public VisualizerSettingsInstance.Builder constructSettings() {
-        return new VisualizerSettingsInstance.Builder();
+    public SettingsInstance.Builder constructSettings() {
+        return new SettingsInstance.Builder();
     }
 
     public boolean isResizable() {

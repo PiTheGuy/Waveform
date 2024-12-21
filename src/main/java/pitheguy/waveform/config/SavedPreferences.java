@@ -1,10 +1,8 @@
-package pitheguy.waveform.io.session;
+package pitheguy.waveform.config;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import pitheguy.waveform.config.Config;
-import pitheguy.waveform.config.NotificationState;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.Util;
 

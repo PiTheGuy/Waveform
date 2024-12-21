@@ -3,6 +3,7 @@ package pitheguy.waveform.config.visualizersettings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import java.awt.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -11,6 +12,8 @@ public class SettingType<T> {
     private final Function<T, JsonElement> serializer;
     private final Function<JsonElement, T> deserializer;
     private final Predicate<T> validator;
+
+    public static final SettingType<Boolean> BOOLEAN = new SettingType<>(Boolean.class, JsonPrimitive::new, JsonElement::getAsBoolean);
 
     public SettingType(Class<T> clazz, Function<T, JsonElement> serializer, Function<JsonElement, T> deserializer, Predicate<T> validator) {
         this.clazz = clazz;
@@ -49,10 +52,6 @@ public class SettingType<T> {
 
     public static SettingType<Double> forDouble(double min, double max) {
         return new SettingType<>(Double.class, JsonPrimitive::new, JsonElement::getAsDouble, i -> i >= min && i <= max);
-    }
-
-    public static SettingType<Boolean> bool() {
-        return new SettingType<>(Boolean.class, JsonPrimitive::new, JsonElement::getAsBoolean);
     }
 
     public static <T extends Enum<T>> SettingType<T> forEnum(Class<T> enumClass) {

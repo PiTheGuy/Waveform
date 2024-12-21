@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers.spectogram;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.util.FftAnalyser;
 
@@ -90,8 +90,8 @@ public class CircularSpectrogramDrawer extends AudioDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
-                .addSetting("invert_axes", SettingType.bool(), false);
+                .addSetting("invert_axes", SettingType.BOOLEAN, false);
     }
 }

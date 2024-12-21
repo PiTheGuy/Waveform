@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers.spectogram;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 
 import java.util.*;
 
@@ -38,7 +38,7 @@ public class DifferenceSpectrogramDrawer extends AbstractSpectrogramDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("order", SettingType.positiveInt(), 1);
     }

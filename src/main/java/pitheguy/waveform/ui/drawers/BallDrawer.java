@@ -5,7 +5,7 @@ import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.util.BeatDetectionHelper;
 import pitheguy.waveform.ui.util.DebugText;
 import pitheguy.waveform.util.FftAnalyser;
@@ -79,11 +79,11 @@ public class BallDrawer extends AudioDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("small_radius", SettingType.fraction(), 0.15)
                 .addSetting("big_radius", SettingType.fraction(), 0.25)
                 .addSetting("persistence", SettingType.fraction(), 0.2)
-                .addSetting("increased_sensitivity", SettingType.bool(), false);
+                .addSetting("increased_sensitivity", SettingType.BOOLEAN, false);
     }
 }

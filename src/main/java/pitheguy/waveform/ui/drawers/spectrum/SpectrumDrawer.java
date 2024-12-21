@@ -4,7 +4,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -108,10 +108,10 @@ public class SpectrumDrawer extends CompoundDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("display_mode", SettingType.forEnum(DisplayMode.class), DisplayMode.BAR_GRAPH)
-                .addSetting("invert_direction", SettingType.bool(), false);
+                .addSetting("invert_direction", SettingType.BOOLEAN, false);
     }
 
     private enum DisplayMode {

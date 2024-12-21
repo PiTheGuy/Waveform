@@ -2,6 +2,7 @@ package pitheguy.waveform.io.session;
 
 import com.google.gson.*;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.config.SavedPreferences;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.config.visualizersettings.VisualizerSettings;

@@ -4,7 +4,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.rolling.RollingList;
@@ -100,7 +100,7 @@ public class ChromagramDrawer extends AbstractSpectrogramDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("window", SettingType.positiveDouble(), DEFAULT_ROLLING_WINDOW);
     }

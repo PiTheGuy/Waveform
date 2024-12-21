@@ -35,11 +35,11 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
             if (addedKeys.contains(key)) throw new ParseException("Duplicate key in preferences");
             addedKeys.add(key);
             switch (key) {
-                case "foregroundColor" -> builder.foregroundColor(parseColor(value));
-                case "backgroundColor" -> builder.backgroundColor(parseColor(value));
-                case "playedColor" -> builder.playedColor(parseColor(value));
-                case "dynamicIcon" -> builder.dynamicIcon(parseBoolean(value));
-                case "highContrast" -> builder.highContrast(parseBoolean(value));
+                case "foregroundColor" -> builder.foregroundColor = parseColor(value);
+                case "backgroundColor" -> builder.backgroundColor = parseColor(value);
+                case "playedColor" -> builder.playedColor = parseColor(value);
+                case "dynamicIcon" -> builder.dynamicIcon = parseBoolean(value);
+                case "highContrast" -> builder.highContrast = parseBoolean(value);
                 default -> throw new ParseException("Unknown key: " + key);
             }
         }
@@ -60,32 +60,12 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         };
     }
 
-    public static class Builder {
+    private static class Builder {
         Color foregroundColor;
         Color backgroundColor;
         Color playedColor;
         Boolean dynamicIcon;
         Boolean highContrast;
-
-        public void foregroundColor(Color foregroundColor) {
-            this.foregroundColor = foregroundColor;
-        }
-
-        public void backgroundColor(Color backgroundColor) {
-            this.backgroundColor = backgroundColor;
-        }
-
-        public void playedColor(Color playedColor) {
-            this.playedColor = playedColor;
-        }
-
-        public void dynamicIcon(boolean dynamicIcon) {
-            this.dynamicIcon = dynamicIcon;
-        }
-
-        public void highContrast(boolean highContrast) {
-            this.highContrast = highContrast;
-        }
 
         public CommandLinePreferences build() {
             return new CommandLinePreferences(

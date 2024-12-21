@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.LineGraphDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 
@@ -38,7 +38,7 @@ public class SpectralRolloffDrawer extends LineGraphDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("cutoff", SettingType.fraction(), DEFAULT_CUTOFF);
     }

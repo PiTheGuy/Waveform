@@ -6,15 +6,15 @@ import pitheguy.waveform.main.Visualizer;
 import java.util.EnumMap;
 
 public class VisualizerSettings {
-    public static final EnumMap<Visualizer, VisualizerSettingsInstance> SETTINGS = new EnumMap<>(Visualizer.class);
+    public static final EnumMap<Visualizer, SettingsInstance> SETTINGS = new EnumMap<>(Visualizer.class);
     private static final EnumMap<Visualizer, JsonObject> SERIALIZED_SETTINGS = new EnumMap<>(Visualizer.class);
 
-    public static VisualizerSettingsInstance getSettings(Visualizer visualizer) {
+    public static SettingsInstance getSettings(Visualizer visualizer) {
         return SETTINGS.computeIfAbsent(visualizer, VisualizerSettings::loadSettings);
     }
 
-    private static VisualizerSettingsInstance loadSettings(Visualizer visualizer) {
-        VisualizerSettingsInstance visualizerSettings = visualizer.getSettings();
+    private static SettingsInstance loadSettings(Visualizer visualizer) {
+        SettingsInstance visualizerSettings = visualizer.getSettings();
         if (SERIALIZED_SETTINGS.containsKey(visualizer)) visualizerSettings.setFromJson(SERIALIZED_SETTINGS.get(visualizer));
         return visualizerSettings;
     }

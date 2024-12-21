@@ -4,7 +4,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.config.visualizersettings.options.ColorChannel;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -95,7 +95,7 @@ public class HarmonicPercussiveDecompDrawer extends HeatmapDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("harmonic", SettingType.forEnum(ColorChannel.class), ColorChannel.RED)
                 .addSetting("percussive", SettingType.forEnum(ColorChannel.class), ColorChannel.GREEN);

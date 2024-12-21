@@ -2,7 +2,7 @@ package pitheguy.waveform.ui.drawers.waveform;
 
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 
 import java.util.ArrayDeque;
 
@@ -29,7 +29,7 @@ public class RollingAverageWaveformDrawer extends ResampledWaveformDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("window", "Smoothing window", SettingType.positiveInt(), DEFAULT_WINDOW);
     }
