@@ -4,7 +4,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.config.visualizersettings.options.VisualizationMode;
 import pitheguy.waveform.ui.util.DebugText;
 import pitheguy.waveform.util.FftAnalyser;
@@ -107,7 +107,7 @@ public class LoudnessDrawer extends CompoundDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("visualization_mode", SettingType.forEnum(VisualizationMode.class), VisualizationMode.INSTANTANEOUS);
     }

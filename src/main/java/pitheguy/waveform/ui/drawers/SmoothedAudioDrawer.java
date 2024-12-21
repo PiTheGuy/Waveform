@@ -4,7 +4,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.util.rolling.RollingAverageTracker;
 
 public abstract class SmoothedAudioDrawer extends AudioDrawer {
@@ -40,7 +40,7 @@ public abstract class SmoothedAudioDrawer extends AudioDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         if (Config.disableSmoothing || !addSetting) return super.constructSettings();
         return super.constructSettings()
                 .addSetting("window", SettingType.positiveInt(), defaultWindow);

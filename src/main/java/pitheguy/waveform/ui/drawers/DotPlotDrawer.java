@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -40,7 +40,7 @@ public abstract class DotPlotDrawer extends MappedPlotDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("point_radius", SettingType.positiveInt(), 1);
     }

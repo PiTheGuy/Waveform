@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers.spectogram;
 import org.apache.commons.math3.complex.Complex;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.config.visualizersettings.options.ColorChannel;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -57,7 +57,7 @@ public class DoubleSpectrogramDrawer extends AbstractSpectrogramDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("magnitude", SettingType.forEnum(ColorChannel.class), ColorChannel.RED)
                 .addSetting("phase", SettingType.forEnum(ColorChannel.class), ColorChannel.GREEN);

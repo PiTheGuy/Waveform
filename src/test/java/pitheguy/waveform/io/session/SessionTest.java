@@ -2,6 +2,7 @@ package pitheguy.waveform.io.session;
 
 import org.junit.jupiter.api.Test;
 import pitheguy.waveform.config.NotificationState;
+import pitheguy.waveform.config.SavedPreferences;
 
 import java.awt.*;
 import java.io.File;

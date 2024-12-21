@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SettingPanel<T> extends JPanel {
-    protected final VisualizerSettingsInstance.Setting<T> setting;
+    protected final Setting<T> setting;
     private final List<Runnable> validationListeners = new ArrayList<>();
 
-    private SettingPanel(VisualizerSettingsInstance.Setting<T> setting) {
+    private SettingPanel(Setting<T> setting) {
         this.setting = setting;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
@@ -48,27 +48,27 @@ public abstract class SettingPanel<T> extends JPanel {
     }
 
     @SuppressWarnings("unchecked")
-    public static SettingPanel<?> create(VisualizerSettingsInstance.Setting<?> setting) {
+    public static SettingPanel<?> create(Setting<?> setting) {
         Class<?> typeClass = setting.getType().getClazz();
-        if (typeClass == Integer.class) return new Int((VisualizerSettingsInstance.Setting<Integer>) setting);
+        if (typeClass == Integer.class) return new Int((Setting<Integer>) setting);
         else if (typeClass == java.lang.Double.class)
-            return new Double((VisualizerSettingsInstance.Setting<java.lang.Double>) setting);
+            return new Double((Setting<java.lang.Double>) setting);
         else if (typeClass == java.lang.Float.class)
-            return new Float((VisualizerSettingsInstance.Setting<java.lang.Float>) setting);
+            return new Float((Setting<java.lang.Float>) setting);
         else if (typeClass == java.lang.Boolean.class)
-            return new Boolean((VisualizerSettingsInstance.Setting<java.lang.Boolean>) setting);
+            return new Boolean((Setting<java.lang.Boolean>) setting);
         else if (typeClass.isEnum()) return createEnumPanel(setting);
         else throw new IllegalArgumentException("Unsupported setting type: " + typeClass);
     }
 
-    private static <T extends java.lang.Enum<T>> SettingPanel<?> createEnumPanel(VisualizerSettingsInstance.Setting<?> setting) {
-        return new SettingPanel.Enum<>((VisualizerSettingsInstance.Setting<T>) setting);
+    private static <T extends java.lang.Enum<T>> SettingPanel<?> createEnumPanel(Setting<?> setting) {
+        return new SettingPanel.Enum<>((Setting<T>) setting);
     }
 
     public static abstract class Number<T extends java.lang.Number> extends SettingPanel<T> {
         protected final NumericTextField field;
 
-        private Number(VisualizerSettingsInstance.Setting<T> setting, boolean allowDecimals) {
+        private Number(Setting<T> setting, boolean allowDecimals) {
             super(setting);
             JLabel label = new JLabel(setting.getName() + " ");
             add(label);
@@ -102,7 +102,7 @@ public abstract class SettingPanel<T> extends JPanel {
     }
 
     public static class Int extends Number<Integer> {
-        public Int(VisualizerSettingsInstance.Setting<Integer> setting) {
+        public Int(Setting<Integer> setting) {
             super(setting, false);
         }
 
@@ -113,7 +113,7 @@ public abstract class SettingPanel<T> extends JPanel {
     }
 
     public static class Double extends Number<java.lang.Double> {
-        public Double(VisualizerSettingsInstance.Setting<java.lang.Double> setting) {
+        public Double(Setting<java.lang.Double> setting) {
             super(setting, true);
         }
 
@@ -124,7 +124,7 @@ public abstract class SettingPanel<T> extends JPanel {
     }
 
     public static class Float extends Number<java.lang.Float> {
-        public Float(VisualizerSettingsInstance.Setting<java.lang.Float> setting) {
+        public Float(Setting<java.lang.Float> setting) {
             super(setting, true);
         }
 
@@ -137,7 +137,7 @@ public abstract class SettingPanel<T> extends JPanel {
     public static class Boolean extends SettingPanel<java.lang.Boolean> {
         private final JCheckBox checkBox;
 
-        public Boolean(VisualizerSettingsInstance.Setting<java.lang.Boolean> setting) {
+        public Boolean(Setting<java.lang.Boolean> setting) {
             super(setting);
             checkBox = new JCheckBox(setting.getName());
             checkBox.setSelected(setting.getValue());
@@ -154,7 +154,7 @@ public abstract class SettingPanel<T> extends JPanel {
     public static class Enum<T extends java.lang.Enum<T>> extends SettingPanel<T> {
         private final JComboBox<T> comboBox;
 
-        public Enum(VisualizerSettingsInstance.Setting<T> setting) {
+        public Enum(Setting<T> setting) {
             super(setting);
             JLabel label = new JLabel(setting.getName() + " ");
             add(label);

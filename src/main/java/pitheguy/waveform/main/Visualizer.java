@@ -2,7 +2,7 @@ package pitheguy.waveform.main;
 
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.io.session.SessionManager;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.ui.drawers.feature_analysis.*;
 import pitheguy.waveform.ui.drawers.spectogram.*;
@@ -75,7 +75,7 @@ public enum Visualizer {
     private AudioDrawer mainDrawer;
     private final boolean commandLineOnly;
     private final Category category;
-    private VisualizerSettingsInstance settings;
+    private SettingsInstance settings;
 
     Visualizer(Function<DrawContext, AudioDrawer> drawer, String key, boolean commandLineOnly, Category category) {
         this.key = key;
@@ -93,7 +93,7 @@ public enum Visualizer {
         return mainDrawer;
     }
 
-    public VisualizerSettingsInstance getSettings() {
+    public SettingsInstance getSettings() {
         if (settings == null) settings = getDrawer().constructSettings().build();
         return settings;
     }

@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers.feature_analysis;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -48,8 +48,8 @@ public class SpectralTemporalContrastDrawer extends HeatmapDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
-                .addSetting("normalize", SettingType.bool(), false);
+                .addSetting("normalize", SettingType.BOOLEAN, false);
     }
 }

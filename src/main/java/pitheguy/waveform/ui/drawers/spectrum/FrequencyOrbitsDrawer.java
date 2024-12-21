@@ -4,7 +4,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.ui.drawers.CircularDrawer;
 import pitheguy.waveform.util.FftAnalyser;
@@ -127,12 +127,12 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("orbit_path", SettingType.forEnum(OrbitPath.class), OrbitPath.HORIZONTAL)
                 .addSetting("speed", SettingType.positiveDouble(), 1.0)
                 .addSetting("point_size", SettingType.forEnum(PointSize.class), PointSize.NORMAL)
-                .addSetting("show_trails", SettingType.bool(), true);
+                .addSetting("show_trails", SettingType.BOOLEAN, true);
     }
 
     private enum PointSize {

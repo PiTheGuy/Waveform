@@ -7,11 +7,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class VisualizerSettingsInstance {
-    private static final Logger LOGGER = LogManager.getLogger();
+public class SettingsInstance {
     private final Map<String, Setting<?>> settings;
 
-    private VisualizerSettingsInstance(Map<String, Setting<?>> settings) {
+    private SettingsInstance(Map<String, Setting<?>> settings) {
         this.settings = settings;
     }
 
@@ -49,10 +48,10 @@ public class VisualizerSettingsInstance {
         if (setting == null) {
             throw new IllegalArgumentException("No setting found for key: " + key);
         }
-        if (!clazz.isAssignableFrom(setting.type.getClazz())) {
+        if (!clazz.isAssignableFrom(setting.getType().getClazz())) {
             throw new ClassCastException("Setting type mismatch for key: " + key);
         }
-        return clazz.cast(setting.value);
+        return clazz.cast(setting.getValue());
     }
 
     public static class Builder {
@@ -68,46 +67,9 @@ public class VisualizerSettingsInstance {
             return this;
         }
 
-        public VisualizerSettingsInstance build() {
-            return new VisualizerSettingsInstance(settings);
+        public SettingsInstance build() {
+            return new SettingsInstance(settings);
         }
     }
 
-    public static class Setting<T> {
-        private final String name;
-        private final SettingType<T> type;
-        private T value;
-        private final T defaultValue;
-
-        public Setting(String name, SettingType<T> type, T value, T defaultValue) {
-            this.name = name;
-            this.type = type;
-            this.value = value;
-            this.defaultValue = defaultValue;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public SettingType<T> getType() {
-            return type;
-        }
-
-        public boolean isValid(T value) {
-            return type.isValid(value);
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            if (value == null || !type.isValid(value)) {
-                LOGGER.warn("Attempted to set invalid value for setting: {}", name);
-                value = defaultValue;
-            }
-            this.value = value;
-        }
-    }
 }

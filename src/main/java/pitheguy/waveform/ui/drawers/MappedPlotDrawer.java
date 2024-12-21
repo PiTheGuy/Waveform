@@ -3,7 +3,7 @@ package pitheguy.waveform.ui.drawers;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 
 public abstract class MappedPlotDrawer extends AudioDrawer {
     public short maxValue = Short.MAX_VALUE;
@@ -27,8 +27,8 @@ public abstract class MappedPlotDrawer extends AudioDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
-                .addSetting("relative", "Relative scaling", SettingType.bool(), false);
+                .addSetting("relative", "Relative scaling", SettingType.BOOLEAN, false);
     }
 }

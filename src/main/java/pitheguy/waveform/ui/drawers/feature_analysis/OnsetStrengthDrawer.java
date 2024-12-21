@@ -4,7 +4,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
-import pitheguy.waveform.config.visualizersettings.VisualizerSettingsInstance;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.BarGraphDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
@@ -61,7 +61,7 @@ public class OnsetStrengthDrawer extends BarGraphDrawer {
     }
 
     @Override
-    public VisualizerSettingsInstance.Builder constructSettings() {
+    public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("history", SettingType.positiveDouble(), 10.0);
     }

@@ -7,9 +7,9 @@ import java.util.List;
 public class VisualizerSettingsPanel extends JPanel {
     List<SettingPanel<?>> panels = new ArrayList<>();
 
-    public VisualizerSettingsPanel(VisualizerSettingsInstance settingsInstance) {
+    public VisualizerSettingsPanel(SettingsInstance settingsInstance) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        for (VisualizerSettingsInstance.Setting<?> setting : settingsInstance.getSettings().values()) {
+        for (Setting<?> setting : settingsInstance.getSettings().values()) {
             SettingPanel<?> panel = SettingPanel.create(setting);
             panels.add(panel);
             add(panel);
