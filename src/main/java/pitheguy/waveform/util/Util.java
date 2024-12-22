@@ -7,11 +7,9 @@ import pitheguy.waveform.ui.Waveform;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -57,15 +55,6 @@ public class Util {
         }
     }
 
-    public static String getExtension(String filename) {
-        return filename.substring(filename.lastIndexOf(".")).toLowerCase();
-    }
-
-    public static String stripExtension(String filename) {
-        if (!filename.contains(".")) return filename;
-        return filename.substring(0, filename.lastIndexOf("."));
-    }
-
     public static void runInBackground(ThrowingRunnable task) {
         runInBackground(task, false);
     }
@@ -86,22 +75,6 @@ public class Util {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static List<File> getAllFiles(File folder) {
-        File[] files = folder.listFiles();
-        List<File> fileList = new ArrayList<>();
-        if (files == null) return fileList;
-        return Arrays.stream(files).flatMap(file -> file.isDirectory() ? getAllFiles(file).stream() : Stream.of(file)).toList();
-    }
-
-    public static List<File> flatten(List<File> files) {
-        ArrayList<File> flattenedFiles = new ArrayList<>();
-        for (File file : files) {
-            if (file.isDirectory()) flattenedFiles.addAll(getAllFiles(file));
-            else flattenedFiles.add(file);
-        }
-        return flattenedFiles;
     }
 
     public static double[] normalize(double[] data) {

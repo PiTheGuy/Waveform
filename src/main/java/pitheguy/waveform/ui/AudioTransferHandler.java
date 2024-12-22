@@ -1,15 +1,20 @@
 package pitheguy.waveform.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.util.FileUtil;
 import pitheguy.waveform.util.Util;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AudioTransferHandler extends TransferHandler {
+    private static final Logger LOGGER = LogManager.getLogger();
     private final Waveform waveform;
 
     public AudioTransferHandler(Waveform waveform) {
@@ -33,7 +38,8 @@ public class AudioTransferHandler extends TransferHandler {
     }
 
     private static boolean isSupportedFile(File file) {
-        if (file.isDirectory()) return Util.getAllFiles(file).stream().anyMatch(Waveform::isFileSupported);
+        if (file.isFile() && file.getName().endsWith(".zip")) return true;
+        if (file.isDirectory()) return FileUtil.getAllFiles(file).stream().anyMatch(Waveform::isFileSupported);
         else return Waveform.isFileSupported(file);
     }
 
@@ -41,18 +47,33 @@ public class AudioTransferHandler extends TransferHandler {
     public boolean importData(TransferSupport support) {
         try {
             List<File> droppedFiles = (List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-            List<File> audioFiles = Util.flatten(droppedFiles).stream().filter(Waveform::isFileSupported).toList();
-            if (audioFiles.isEmpty()) {
-                System.out.println("File drop ignored because no valid audio files were found");
-                return false;
-            } else {
-                Util.runInBackground(() -> {
-                    if (support.getDropAction() == COPY) waveform.playFiles(audioFiles);
-                    else waveform.addFilesToQueue(audioFiles);
-                });
-            }
+            List<File> allFiles = FileUtil.flatten(droppedFiles);
+            List<File> unzippedFiles = new ArrayList<>(allFiles);
+            int dropAction = support.getDropAction();
+            Util.runInBackground(() -> {
+                waveform.setText("Importing...");
+                try {
+                    for (File file : allFiles) {
+                        if (file.getName().endsWith(".zip")) {
+                            waveform.setText("Extracting ZIP...");
+                            unzippedFiles.remove(file);
+                            unzippedFiles.addAll(FileUtil.extractAudioFilesFromZip(file));
+                            waveform.setText("Importing...");
+                        }
+                    }
+                    List<File> audioFiles = unzippedFiles.stream().filter(Waveform::isFileSupported).toList();
+                    if (audioFiles.isEmpty()) waveform.showError("Import Failed", "No valid audio files found.");
+                    else {
+                        if (dropAction == COPY) waveform.playFiles(audioFiles);
+                        else waveform.addFilesToQueue(audioFiles);
+                    }
+                } catch (Exception e) {
+                    LOGGER.error("Drag and drop failed", e);
+                    waveform.showError("Import Failed", "An error occurred while importing audio files.");
+                }
+            });
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Import failed", e);
             return false;
         }
         return true;

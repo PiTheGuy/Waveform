@@ -46,7 +46,7 @@ public class ExportManager {
 
     public void exportAudio() {
         parent.pauseUntilFinished(() -> {
-            String startingExtension = Util.getExtension(parent.audioFile.getName());
+            String startingExtension = FileUtil.getExtension(parent.audioFile.getName());
             File file = parent.dialogManager.showSaveDialog("Save Audio", "Audio", Waveform.CONVENTIONAL_FORMATS, startingExtension);
             if (file == null) return;
             exportAudio(file, false);
@@ -54,8 +54,8 @@ public class ExportManager {
     }
 
     public void exportAudio(File file, boolean waitUntilFinished) {
-        String startingExtension = Util.getExtension(parent.audioFile.getName());
-        String newExtension = Util.getExtension(file.getName());
+        String startingExtension = FileUtil.getExtension(parent.audioFile.getName());
+        String newExtension = FileUtil.getExtension(file.getName());
         Util.runInBackground(() -> {
             try {
                 if (newExtension.equals(startingExtension))

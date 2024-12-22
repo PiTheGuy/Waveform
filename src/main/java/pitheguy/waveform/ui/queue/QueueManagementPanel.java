@@ -6,7 +6,7 @@ import pitheguy.waveform.ui.AudioTransferHandler;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.util.ClickableMouseListener;
 import pitheguy.waveform.ui.util.MenuHelper;
-import pitheguy.waveform.util.Util;
+import pitheguy.waveform.util.FileUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -290,7 +290,7 @@ public class QueueManagementPanel extends JPanel {
         private void handleFileDrop(DropTargetDropEvent dtde, Transferable transferable, int targetIndex) throws Exception {
             dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
             List<File> droppedFiles = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
-            List<File> audioFiles = Util.flatten(droppedFiles).stream().filter(Waveform::isFileSupported).toList();
+            List<File> audioFiles = FileUtil.flatten(droppedFiles).stream().filter(Waveform::isFileSupported).toList();
             if (audioFiles.isEmpty())
                 System.out.println("File drop ignored because no valid audio files were found");
             else parent.addFilesToQueue(targetIndex, audioFiles);

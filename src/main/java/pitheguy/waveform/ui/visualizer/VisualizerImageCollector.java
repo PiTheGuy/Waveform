@@ -4,7 +4,7 @@ import org.apache.commons.cli.*;
 import pitheguy.waveform.main.Main;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.util.Util;
+import pitheguy.waveform.util.FileUtil;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -45,7 +45,7 @@ public class VisualizerImageCollector {
             }
             for (File file : files) {
                 if (file.getName().equals("placeholder.png")) continue;
-                String filename = Util.stripExtension(file.getName());
+                String filename = FileUtil.stripExtension(file.getName());
                 if (Visualizer.fromKey(filename) == null) {
                     if (file.delete()) System.out.println("Deleted " + file.getName());
                     else System.err.println("Error deleting " + file.getName());

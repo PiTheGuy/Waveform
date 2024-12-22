@@ -115,7 +115,7 @@ public class Main {
 
     private static List<File> getInputFiles() {
         if (INPUT_FILE == null) return List.of();
-        if (INPUT_FILE.isDirectory()) return Util.getAllFiles(INPUT_FILE).stream().filter(Waveform::isFileSupported).toList();
+        if (INPUT_FILE.isDirectory()) return FileUtil.getAllFiles(INPUT_FILE).stream().filter(Waveform::isFileSupported).toList();
         else return List.of(INPUT_FILE);
     }
 

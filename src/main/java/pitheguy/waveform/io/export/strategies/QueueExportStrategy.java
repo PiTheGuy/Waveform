@@ -5,8 +5,7 @@ import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.io.export.ExportContext;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.util.ProgressTracker;
-import pitheguy.waveform.util.Util;
+import pitheguy.waveform.util.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -24,7 +23,7 @@ public class QueueExportStrategy implements ExportStrategy {
         if (!context.outputFile().isDirectory()) throw new IOException("File is not a directory");
         List<TrackInfo> queue = Waveform.getInstance().getQueue();
         for (TrackInfo track : queue) {
-            String exportPath = context.outputFile().getAbsolutePath() + File.separator + track.title() + Util.getExtension(track.audioFile().getName());
+            String exportPath = context.outputFile().getAbsolutePath() + File.separator + track.title() + FileUtil.getExtension(track.audioFile().getName());
             Files.copy(track.audioFile().toPath(), Path.of(exportPath), StandardCopyOption.REPLACE_EXISTING);
             LOGGER.info("Exported {}", track.title());
             progressTracker.step();
