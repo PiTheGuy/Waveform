@@ -11,30 +11,16 @@ import pitheguy.waveform.util.Util;
 import java.io.*;
 import java.nio.file.*;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class QueueExportStrategy implements ExportStrategy {
     private static final Logger LOGGER = LogManager.getLogger();
-    private final boolean createZip;
 
-    public QueueExportStrategy(boolean createZip) {
-        this.createZip = createZip;
+    public QueueExportStrategy() {
     }
 
     @Override
     public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
-        if (createZip) exportZip(context, progressTracker);
-        else exportFolder(context, progressTracker);
-    }
-
-    @Override
-    public ProgressTracker getProgressTracker() {
-        return ProgressTracker.getProgressTracker(Waveform.getInstance(), "Exporting video", Waveform.getInstance().queueSize());
-    }
-
-    private static void exportFolder(ExportContext context, ProgressTracker progressTracker) throws IOException {
-        if (!context.outputFile().exists()) context.outputFile().mkdirs();
+        if (!context.outputFile().exists()) Files.createDirectories(context.outputFile().toPath());
         if (!context.outputFile().isDirectory()) throw new IOException("File is not a directory");
         List<TrackInfo> queue = Waveform.getInstance().getQueue();
         for (TrackInfo track : queue) {
@@ -47,22 +33,9 @@ public class QueueExportStrategy implements ExportStrategy {
         progressTracker.finish();
     }
 
-    private static void exportZip(ExportContext context, ProgressTracker progressTracker) throws IOException {
-        if (context.outputFile().exists()) throw new FileAlreadyExistsException("File already exists");
-        try (FileOutputStream fos = new FileOutputStream(context.outputFile());
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
-            List<TrackInfo> queue = Waveform.getInstance().getQueue();
-            for (TrackInfo track : queue) {
-                String filename = track.title() + Util.getExtension(track.audioFile().getName());
-                zos.putNextEntry(new ZipEntry(filename));
-                Files.copy(track.audioFile().toPath(), zos);
-                LOGGER.info("Exported {}", track.title());
-                zos.closeEntry();
-                progressTracker.step();
-            }
-            LOGGER.info("Finished exporting queue");
-        } finally {
-            progressTracker.finish();
-        }
+    @Override
+    public ProgressTracker getProgressTracker() {
+        return ProgressTracker.getProgressTracker(Waveform.getInstance(), "Exporting video", Waveform.getInstance().queueSize());
     }
+
 }

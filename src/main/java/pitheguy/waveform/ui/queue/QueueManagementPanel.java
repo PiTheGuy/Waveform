@@ -198,11 +198,7 @@ public class QueueManagementPanel extends JPanel {
             JMenuItem moveUpItem = MenuHelper.createMenuItem("Move Up", 'U', e -> parent.moveTrackInQueue(index, index - 1));
             JMenuItem moveDownItem = MenuHelper.createMenuItem("Move Down", 'D', e -> parent.moveTrackInQueue(index, index + 1));
             JMenuItem removeItem = MenuHelper.createMenuItem("Remove From Queue", 'R', e -> parent.removeIndexFromQueue(index));
-            JMenu exportQueueSubMenu = new JMenu("Export Queue");
-            JMenuItem exportToFolder = MenuHelper.createMenuItem("To Folder", 'F', e -> parent.exportManager.exportQueue(false)); //TODO implement
-            JMenuItem exportToZip = MenuHelper.createMenuItem("To ZIP File", 'Z', e -> parent.exportManager.exportQueue(true)); //TODO implement
-            exportQueueSubMenu.add(exportToFolder);
-            exportQueueSubMenu.add(exportToZip);
+            JMenuItem exportQueueItem = MenuHelper.createMenuItem("Export Queue...", 'F', e -> parent.exportManager.exportQueue(null));
             if (parent.queueIndex() != index) add(playNowItem);
             add(playNextItem);
             add(playLastItem);
@@ -210,8 +206,7 @@ public class QueueManagementPanel extends JPanel {
             add(moveDownItem);
             add(removeItem);
             if (!Config.disableExports) {
-                addSeparator();
-                add(exportQueueSubMenu);
+                add(exportQueueItem);
             }
         }
     }

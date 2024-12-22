@@ -62,5 +62,6 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
     public void setPlayingAudio(AudioData playingAudio) {
         super.setPlayingAudio(playingAudio);
         history.clear();
+        pastPeaks.clear();
     }
 }

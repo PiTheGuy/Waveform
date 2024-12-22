@@ -87,23 +87,14 @@ public class WaveformMenuBar extends JMenuBar {
         JMenuItem exportAudioFileItem = MenuHelper.createMenuItem("Export Audio...", 'A', null, e -> parent.exportManager.exportAudio());
         JMenuItem exportVideoItem = MenuHelper.createMenuItem("Export Video...", 'V', null, e -> parent.exportManager.exportVideo(null, false));
         JMenuItem exportGifItem = MenuHelper.createMenuItem("Export GIF...", 'G', null, e -> parent.exportManager.exportGif(null, false));
-        JMenu exportQueueSubMenu = createQueueSubMenu();
+        JMenuItem exportQueueItem = MenuHelper.createMenuItem("Export Queue...", 'F', e -> parent.exportManager.exportQueue(null));
         exportMenu.add(exportFrameItem);
         exportMenu.add(exportFullItem);
         exportMenu.add(exportAudioFileItem);
         exportMenu.add(exportVideoItem);
         exportMenu.add(exportGifItem);
-        exportMenu.add(exportQueueSubMenu);
+        exportMenu.add(exportQueueItem);
         add(exportMenu);
-    }
-
-    private JMenu createQueueSubMenu() {
-        JMenu exportQueueSubMenu = new JMenu("Export Queue");
-        JMenuItem exportToFolder = MenuHelper.createMenuItem("To Folder", 'F', e -> parent.exportManager.exportQueue(false));
-        JMenuItem exportToZip = MenuHelper.createMenuItem("To ZIP File", 'Z', e -> parent.exportManager.exportQueue(true));
-        exportQueueSubMenu.add(exportToFolder);
-        exportQueueSubMenu.add(exportToZip);
-        return exportQueueSubMenu;
     }
 
     private void addVisualizerMenu() {

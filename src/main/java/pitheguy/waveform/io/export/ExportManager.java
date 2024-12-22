@@ -84,17 +84,11 @@ public class ExportManager {
         export(file, new GifExportStrategy(), "gif", ExportType.GIF, waitUntilFinished);
     }
 
-    public void exportQueue(boolean createZip) {
-        parent.pauseUntilFinished(() -> {
-            File file;
-            if (createZip) file = parent.dialogManager.showSaveDialog("Export Queue", ".zip");
-            else file = parent.dialogManager.showSelectFolderDialog("Export Queue");
+    public void exportQueue(File file) {
+        if (file == null) {
+            file = parent.dialogManager.showSelectFolderDialog("Export Queue");
             if (file == null) return;
-            exportQueue(file, createZip);
-        });
-    }
-
-    public void exportQueue(File file, boolean createZip) {
-        export(file, new QueueExportStrategy(createZip), "queue", null, false);
+        }
+        export(file, new QueueExportStrategy(), "queue", null, false);
     }
 }
