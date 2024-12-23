@@ -80,7 +80,7 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
     private static Color parseColor(String value) throws ParseException {
         Color color = Util.parseColor(value);
         if (color == null)
-            throw new ParseException("Invalid color: " + value + ". Must be one of: " + WaveColor.getAvailableColors() + ", or a hex color code");
+            throw new ParseException("Invalid color: " + value + ". Must be one of: " + Util.getEnumKeys(WaveColor.class) + ", or a hex color code");
         return color;
     }
 
@@ -96,7 +96,7 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         try {
             return NotificationState.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new ParseException("Invalid notification state: " + value + ". Must be one of: " + NotificationState.getKeys());
+            throw new ParseException("Invalid notification state: " + value + ". Must be one of: " + Util.getEnumKeys(NotificationState.class));
         }
     }
 

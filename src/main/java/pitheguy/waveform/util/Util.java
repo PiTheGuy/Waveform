@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Util {
@@ -133,6 +134,10 @@ public class Util {
 
     public static double lerp(double delta, double min, double max) {
         return min + delta * (max - min);
+    }
+
+    public static String getEnumKeys(Class<? extends Enum<?>> enumClass) {
+        return Arrays.stream(enumClass.getEnumConstants()).map(v -> v.name().toLowerCase()).collect(Collectors.joining(", "));
     }
 
     public static void showErrorOnException(ThrowingRunnable task, String message, Logger logger) {

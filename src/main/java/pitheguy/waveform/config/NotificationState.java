@@ -2,9 +2,6 @@ package pitheguy.waveform.config;
 
 import pitheguy.waveform.ui.Waveform;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 public enum NotificationState {
     ALWAYS("Always"),
     WHEN_MINIMIZED("When Minimized"),
@@ -19,10 +16,6 @@ public enum NotificationState {
     @Override
     public String toString() {
         return name;
-    }
-
-    public static String getKeys() {
-        return Arrays.stream(NotificationState.values()).map(v -> v.name().toLowerCase()).collect(Collectors.joining(", "));
     }
 
     public boolean shouldNotify() {

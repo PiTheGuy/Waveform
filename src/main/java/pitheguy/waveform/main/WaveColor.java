@@ -42,11 +42,6 @@ public enum WaveColor {
         return Arrays.stream(WaveColor.values()).filter(waveColor -> waveColor.getColor().equals(color)).findFirst();
     }
 
-    public static String getAvailableColors() {
-        String[] colors = Arrays.stream(WaveColor.values()).map(waveColor -> waveColor.toString().toLowerCase()).toArray(String[]::new);
-        return String.join(", ", colors);
-    }
-
     public String getHumanName() {
         return Arrays.stream(toString().split("_")).map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase() + " ").collect(Collectors.joining()).trim();
     }
