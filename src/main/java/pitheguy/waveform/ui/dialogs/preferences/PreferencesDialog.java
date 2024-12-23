@@ -119,7 +119,14 @@ public class PreferencesDialog extends JDialog {
 
         //Disable smoothing
         JPanel disableSmoothingPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        disableSmoothing = createCheckBox("Disable smoothing", "Some visualizers apply smoothing to their data. This disables this, but may cause flashing images", 'D', Config.disableSmoothing());
+        disableSmoothing = createCheckBox("Disable smoothing", """
+                Some visualizers apply smoothing to their data.
+                This disables this, but may cause flashing images""", 'D', Config.disableSmoothing());
+        disableSmoothing.addActionListener(e -> {
+            if (disableSmoothing.isSelected())
+                if (!parent.dialogManager.showConfirmDialog("disable_smoothing_warning", "Warning", "Disabling smoothing may cause flashing images. Proceed?"))
+                    disableSmoothing.setSelected(false);
+        });
         disableSmoothingPanel.add(disableSmoothing);
         disableSmoothingPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, disableSmoothingPanel.getPreferredSize().height));
         advancedPanel.add(disableSmoothingPanel);
