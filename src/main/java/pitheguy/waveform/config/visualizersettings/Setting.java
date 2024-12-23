@@ -34,6 +34,10 @@ public class Setting<T> {
         return value;
     }
 
+    public T getDefaultValue() {
+        return defaultValue;
+    }
+
     public void setValue(T value) {
         if (value == null || !type.isValid(value)) {
             LOGGER.warn("Attempted to set invalid value for setting: {}", name);

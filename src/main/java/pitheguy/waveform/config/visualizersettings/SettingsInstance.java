@@ -34,7 +34,7 @@ public class SettingsInstance {
         for (Map.Entry<String, Setting<?>> entry : settings.entrySet()) {
             String key = entry.getKey();
             Setting<?> setting = entry.getValue();
-            JsonElement element = setting.getType().serialize(setting.getValue());
+            JsonElement element = setting.serialize();
             json.add(key, element);
         }
         return json;
@@ -67,6 +67,14 @@ public class SettingsInstance {
         if (!clazz.isAssignableFrom(setting.getType().getClazz()))
             throw new ClassCastException("Setting type mismatch for key: " + key);
         return clazz.cast(setting.getValue());
+    }
+
+    public <T> T getDefaultValue(String key, Class<T> clazz) {
+        Setting<?> setting = settings.get(key);
+        if (setting == null) throw new IllegalArgumentException("No setting found for key: " + key);
+        if (!clazz.isAssignableFrom(setting.getType().getClazz()))
+            throw new ClassCastException("Setting type mismatch for key: " + key);
+        return clazz.cast(setting.getDefaultValue());
     }
 
     public void setValue(String key, Object value) {

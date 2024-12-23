@@ -155,6 +155,15 @@ public class PreferencesDialog extends JDialog {
         forceReadPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, forceReadPanel.getPreferredSize().height));
         advancedPanel.add(forceReadPanel);
 
+        //Restore Defaults
+        JPanel resetPanel = new JPanel(new FlowLayout());
+        JButton resetButton = new JButton("Restore Defaults");
+        resetButton.setMnemonic('E');
+        resetButton.setToolTipText("Restore all options to their default values");
+        resetButton.addActionListener(e -> this.resetToDefaults());
+        resetPanel.add(resetButton);
+        advancedPanel.add(resetPanel);
+
         return advancedPanel;
     }
 
@@ -224,6 +233,23 @@ public class PreferencesDialog extends JDialog {
         if (commandLineValue.isEmpty() || !commandLineValue.get().equals(value)) {
             map.put(key, value);
         };
+    }
+
+    public void resetToDefaults() {
+        backgroundColor.setColor(getDefaultValue(Config.commandLinePreferences.backgroundColor(), "backgroundColor", Color.class));
+        foregroundColor.setColor(getDefaultValue(Config.commandLinePreferences.foregroundColor(), "foregroundColor", Color.class));
+        playedColor.setColor(getDefaultValue(Config.commandLinePreferences.playedColor(), "playedColor", Color.class));
+        dynamicIcon.setSelected(getDefaultValue(Config.commandLinePreferences.dynamicIcon(), "dynamicIcon", Boolean.class));
+        highContrast.setSelected(getDefaultValue(Config.commandLinePreferences.highContrast(), "highContrast", Boolean.class));
+        notifications.setSelectedValue(getDefaultValue(Config.commandLinePreferences.notifications(), "notifications", NotificationState.class));
+        mono.setSelected(getDefaultValue(Config.commandLinePreferences.mono(), "mono", Boolean.class));
+        disableSmoothing.setSelected(getDefaultValue(Config.commandLinePreferences.disableSmoothing(), "disableSmoothing", Boolean.class));
+        showInSystemTray.setSelected(getDefaultValue(Optional.empty(), "showInSystemTray", Boolean.class));
+        forceRead.setSelected(getDefaultValue(Optional.empty(), "forceRead", Boolean.class));
+    }
+
+    private <T> T getDefaultValue(Optional<T> commandLineValue, String key, Class<T> clazz) {
+        return commandLineValue.orElseGet(() -> Config.settings.getDefaultValue(key, clazz));
     }
 
     private void disableAppropriateOptions() {
