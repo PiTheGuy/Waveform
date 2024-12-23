@@ -92,21 +92,11 @@ public class Main {
     }
 
     private static void processExportParameters(CommandLine commandLine) {
-        if (commandLine.hasOption("exportImage")) {
-            Config.exportFile = new File(commandLine.getOptionValue("exportImage"));
-            Config.exportType = ExportType.IMAGE;
-        }
-        if (commandLine.hasOption("exportVideo")) {
-            Config.exportFile = new File(commandLine.getOptionValue("exportVideo"));
-            Config.exportType = ExportType.VIDEO;
-        }
-        if (commandLine.hasOption("exportGif")) {
-            Config.exportFile = new File(commandLine.getOptionValue("exportGif"));
-            Config.exportType = ExportType.GIF;
-        }
-        if (commandLine.hasOption("exportAudio")) {
-            Config.exportFile = new File(commandLine.getOptionValue("exportAudio"));
-            Config.exportType = ExportType.AUDIO;
+        for (ExportType exportType : ExportType.values()) {
+            if (commandLine.hasOption(exportType.getCommandLineOption())) {
+                Config.exportFile = new File(commandLine.getOptionValue(exportType.getCommandLineOption()));
+                Config.exportType = exportType;
+            }
         }
     }
 
@@ -194,7 +184,7 @@ public class Main {
         validator.addRule(ValidationRule.createWarning().requires("disableExports").requires("hideMenuBar").message("-disableExports was ignored because the entire menu bar was already hidden"));
         validator.addRule(ValidationRule.createWarning(!hasInput()).requires("shuffle").message("-shuffle was ignored because no input was provided"));
         validator.addRule(ValidationRule.mutuallyExclusive("input", "url", "microphone").message("You can only specify one input source"));
-        validator.addRule(ValidationRule.mutuallyExclusive("exportImage", "exportVideo", "exportGif", "exportAudio").message("You can only specify one export type"));
+        validator.addRule(ValidationRule.mutuallyExclusive(ExportType.commandLineOptions()).message("You can only specify one export type"));
         validator.addRule(ValidationRule.mutuallyExclusive("loop", "exitOnFinish").message("-loop and -exitOnFinish cannot be used together"));
         validator.addRule(ValidationRule.mutuallyExclusive("fullScreen", "size").message("You can't specify explicit dimensions while in full screen"));
         validator.addWarning(() -> !Util.areUnique(Config.backgroundColor(), Config.foregroundColor(), Config.playedColor()), "Duplicate colors found. Some UI elements may be invisible.");
@@ -214,7 +204,7 @@ public class Main {
         options.addHiddenOption("debug", "Debug mode");
         options.addOption("help", "Print this message");
         options.addOption("visualizer", true, "Which visualizer to use");
-        options.addOption(Option.builder("input").hasArg().argName("file").desc("An audio file to play, or a folder containing audio files").build());
+        options.addOption("input", true, "An audio file to play, or a folder containing audio files");
         options.addOption("url", true, "Specify a url to import from YouTube");
         options.addOption(Option.builder("size").numberOfArgs(2).desc("The width and height of the visualization. Takes 2 arguments.").build());
         options.addOption("targetFrameRate", true, "The target frame rate (Default: " + DEFAULT_FRAME_RATE + ")");
