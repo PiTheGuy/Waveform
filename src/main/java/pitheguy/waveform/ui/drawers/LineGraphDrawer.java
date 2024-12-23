@@ -27,7 +27,7 @@ public abstract class LineGraphDrawer extends SlicedImageDrawer {
 
 
     protected void drawData(Graphics2D g, double[] data) {
-        drawData(g, data, context.getHeight(), 0, false, Config.foregroundColor);
+        drawData(g, data, context.getHeight(), 0, false, Config.foregroundColor());
     }
 
     protected void drawData(Graphics2D g, double[] data, Color color) {
@@ -35,7 +35,7 @@ public abstract class LineGraphDrawer extends SlicedImageDrawer {
     }
 
     protected void drawData(Graphics2D g, double[] data, int height, int x, boolean reverse) {
-        drawData(g, data, height, x, reverse, Config.foregroundColor);
+        drawData(g, data, height, x, reverse, Config.foregroundColor());
     }
 
     protected void drawData(Graphics2D g, double[] data, int height, int x, boolean reverse, Color color) {

@@ -41,8 +41,8 @@ public class WaveformMenuBar extends JMenuBar {
 
     WaveformMenuBar(Waveform parent) {
         this.parent = parent;
-        setBackground(Config.backgroundColor);
-        setForeground(Config.foregroundColor);
+        setBackground(Config.backgroundColor());
+        setForeground(Config.foregroundColor());
         setBorder(BorderFactory.createEmptyBorder());
     }
 
@@ -191,8 +191,8 @@ public class WaveformMenuBar extends JMenuBar {
     }
 
     public void updateColors() {
-        setBackground(Config.backgroundColor);
-        menus.forEach(menu -> menu.setForeground(Config.foregroundColor));
+        setBackground(Config.backgroundColor());
+        menus.forEach(menu -> menu.setForeground(Config.foregroundColor()));
     }
 
     private String getExitItemText() {
@@ -204,7 +204,7 @@ public class WaveformMenuBar extends JMenuBar {
     private JMenu createMenu(String text, char mnemonic) {
         JMenu menu = new JMenu(text);
         menu.setMnemonic(mnemonic);
-        menu.setForeground(Config.foregroundColor);
+        menu.setForeground(Config.foregroundColor());
         menu.setName(text);
         menus.add(menu);
         return menu;

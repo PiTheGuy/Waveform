@@ -3,6 +3,7 @@ package pitheguy.waveform.ui.dialogs.preferences;
 import org.apache.commons.cli.ParseException;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.NotificationState;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.main.WaveColor;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.Util;
@@ -25,13 +26,15 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
             Optional.empty());
 
     public void apply() {
-        foregroundColor.ifPresent(color -> Config.foregroundColor = color);
-        backgroundColor.ifPresent(color -> Config.backgroundColor = color);
-        playedColor.ifPresent(color -> Config.playedColor = color);
-        dynamicIcon.ifPresent(dynamicIcon -> Config.dynamicIcon = dynamicIcon);
-        highContrast.ifPresent(highContrast -> Config.highContrast = highContrast);
-        mono.ifPresent(mono -> Config.mono = mono);
-        disableSmoothing.ifPresent(disableSmoothing -> Config.disableSmoothing = disableSmoothing);
+        SettingsInstance settings = Config.settings;
+        foregroundColor.ifPresent(color -> settings.setValue("foregroundColor", color));
+        backgroundColor.ifPresent(color -> settings.setValue("backgroundColor", color));
+        playedColor.ifPresent(color -> settings.setValue("playedColor", color));
+        dynamicIcon.ifPresent(d -> settings.setValue("dynamicIcon", d));
+        highContrast.ifPresent(hc -> settings.setValue("highContrast", hc));
+        notifications.ifPresent(n -> settings.setValue("notifications", n));
+        mono.ifPresent(m -> settings.setValue("mono", m));
+        disableSmoothing.ifPresent(ds -> settings.setValue("disableSmoothing", ds));
         Waveform.getInstance().updateColors();
     }
 

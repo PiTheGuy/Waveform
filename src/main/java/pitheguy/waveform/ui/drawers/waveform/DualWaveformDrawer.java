@@ -31,7 +31,7 @@ public class DualWaveformDrawer extends MappedPlotDrawer {
         BitSet2D rightBitSet = getWaveformBitSet(rightMapped, width, height);
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.backgroundColor);
+        g.setColor(Config.backgroundColor());
         g.fillRect(0, 0, width, height);
         g.dispose();
         for (int x = 0; x < width; x++)

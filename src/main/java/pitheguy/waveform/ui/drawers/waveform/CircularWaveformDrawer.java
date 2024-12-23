@@ -27,7 +27,7 @@ public class CircularWaveformDrawer extends CircularDrawer {
         super.drawAudio(sec, length);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         short[] data = AudioData.averageChannels(left, right);
         drawData(context, g, normalize(data));
         g.dispose();

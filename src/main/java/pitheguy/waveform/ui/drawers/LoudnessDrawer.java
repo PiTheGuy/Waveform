@@ -41,7 +41,7 @@ public class LoudnessDrawer extends CompoundDrawer {
             double loudness = calculateLoudness(frequencyData, playingAudio.sampleRate());
             BufferedImage image = createBlankImage();
             Graphics2D g = image.createGraphics();
-            g.setColor(Config.foregroundColor);
+            g.setColor(Config.foregroundColor());
             double displayValue = Math.min(getDisplayValue(loudness / 3), 1);
             int height = (int) (displayValue * context.getHeight());
             g.fillRect(0, context.getHeight() - height, image.getWidth(), height);

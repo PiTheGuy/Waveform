@@ -32,7 +32,7 @@ public class SelfSimilarityDrawer extends HeatmapDrawer {
             }
         }
         double[][] normalizedMatrix = new double[context.getWidth()][context.getHeight()];
-        int power = Config.highContrast ? 4 : 2;
+        int power = Config.highContrast() ? 4 : 2;
         for (int x = 0; x < context.getWidth(); x++)
             for (int y = 0; y < context.getHeight(); y++) normalizedMatrix[x][y] = Math.pow((similarityMatrix[x][y] + 1) / 2, power);
         return drawData(context, normalizedMatrix);

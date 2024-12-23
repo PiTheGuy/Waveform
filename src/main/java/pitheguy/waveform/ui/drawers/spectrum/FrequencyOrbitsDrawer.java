@@ -54,7 +54,7 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
     private void drawData(BufferedImage image) {
         PointSize pointSize = getSetting("point_size", PointSize.class);
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         for (int index = 0; index < positions.length; index++) {
             double pos = (positions[index] % ORBIT_SIZE) / ORBIT_SIZE;
             Point point = convertToDisplayPoint(index, pos);
@@ -84,8 +84,8 @@ public class FrequencyOrbitsDrawer extends AudioDrawer {
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 int rgb = image.getRGB(x, y);
-                if (rgb == Config.backgroundColor.getRGB()) continue;
-                Color newColor = Util.blendColor(fadeFactor, Config.backgroundColor, new Color(rgb));
+                if (rgb == Config.backgroundColor().getRGB()) continue;
+                Color newColor = Util.blendColor(fadeFactor, Config.backgroundColor(), new Color(rgb));
                 image.setRGB(x, y, newColor.getRGB());
             }
         }

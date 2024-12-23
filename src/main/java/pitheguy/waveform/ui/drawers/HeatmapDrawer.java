@@ -16,11 +16,11 @@ public abstract class HeatmapDrawer extends SlicedImageDrawer {
     }
 
     public static Color getColor(double delta) {
-        return Util.blendColor(delta, Config.backgroundColor, Config.foregroundColor);
+        return Util.blendColor(delta, Config.backgroundColor(), Config.foregroundColor());
     }
 
     public static Color getSecondaryColor(double delta) {
-        return Util.blendColor(delta, Config.foregroundColor, Config.playedColor);
+        return Util.blendColor(delta, Config.foregroundColor(), Config.playedColor());
     }
 
     protected static BufferedImage drawData(DrawContext context, double[][] data) {
@@ -78,7 +78,7 @@ public abstract class HeatmapDrawer extends SlicedImageDrawer {
     public void updatePlayed(BufferedImage image, double seconds, double duration) {
         int maxX = (int) (seconds / duration * context.getWidth());
         maxX = Math.min(maxX, image.getWidth());
-        HeatmapDrawer.replaceGradientPixels(image, Config.backgroundColor, Config.foregroundColor, Config.playedColor, maxX, 0.1);
+        HeatmapDrawer.replaceGradientPixels(image, Config.backgroundColor(), Config.foregroundColor(), Config.playedColor(), maxX, 0.1);
     }
 
     protected abstract BufferedImage precomputeImage();

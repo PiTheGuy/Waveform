@@ -17,8 +17,8 @@ public abstract class CircularDrawer extends AudioDrawer {
         int centerX = context.getWidth() / 2;
         int centerY = context.getHeight() / 2;
         double progress = seconds / duration;
-        int fromRGB = Config.foregroundColor.getRGB();
-        int toRGB = Config.playedColor.getRGB();
+        int fromRGB = Config.foregroundColor().getRGB();
+        int toRGB = Config.playedColor().getRGB();
         double maxRadius = Math.min(centerX, centerY);
         double maxAngle = progress * 2 * Math.PI;
         for (double angle = -Math.PI / 2; angle <= maxAngle - Math.PI / 2; angle += 0.001) {

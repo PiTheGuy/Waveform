@@ -14,8 +14,7 @@ import pitheguy.waveform.util.Util;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class PreferencesDialog extends JDialog {
@@ -73,34 +72,34 @@ public class PreferencesDialog extends JDialog {
         generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.Y_AXIS));
 
         //Colors
-        foregroundColor = new ColorDropdown("Foreground color: ", Config.foregroundColor, 'F');
+        foregroundColor = new ColorDropdown("Foreground color: ", Config.foregroundColor(), 'F');
         generalPanel.add(foregroundColor);
-        backgroundColor = new ColorDropdown("Background color: ", Config.backgroundColor, 'B');
+        backgroundColor = new ColorDropdown("Background color: ", Config.backgroundColor(), 'B');
         generalPanel.add(backgroundColor);
-        playedColor = new ColorDropdown("Played color: ", Config.playedColor, 'P');
+        playedColor = new ColorDropdown("Played color: ", Config.playedColor(), 'P');
         generalPanel.add(playedColor);
 
         //Dynamic Icon
         JPanel dynamicIconPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        dynamicIcon = createCheckBox("Dynamic icon", null, 'D', Config.dynamicIcon);
+        dynamicIcon = createCheckBox("Dynamic icon", null, 'D', Config.dynamicIcon());
         dynamicIconPanel.add(dynamicIcon);
         generalPanel.add(dynamicIconPanel);
 
         //High Contrast
         JPanel highContrastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        highContrast = createCheckBox("High contrast", null, 'H', Config.highContrast);
+        highContrast = createCheckBox("High contrast", null, 'H', Config.highContrast());
         highContrastPanel.add(highContrast);
         generalPanel.add(highContrastPanel);
 
         //Pause on Export
         JPanel pauseOnExportPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pauseOnExport = createCheckBox("Pause on export", null, 'E', Config.pauseOnExport);
+        pauseOnExport = createCheckBox("Pause on export", null, 'E', Config.pauseOnExport());
         pauseOnExport.setDisplayedMnemonicIndex(9);
         pauseOnExportPanel.add(pauseOnExport);
         if (!Config.disableExports) generalPanel.add(pauseOnExportPanel);
 
         //Notifications
-        notifications = new LabeledEnumDropdown<>("Notifications", 'N', NotificationState.class, Config.notifications);
+        notifications = new LabeledEnumDropdown<>("Notifications", 'N', NotificationState.class, Config.notifications());
         generalPanel.add(notifications);
 
         return generalPanel;
@@ -112,21 +111,21 @@ public class PreferencesDialog extends JDialog {
 
         //Force mono
         JPanel monoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        mono = createCheckBox("Force mono", "Convert stereo audio to mono before visualization", 'F', Config.mono);
+        mono = createCheckBox("Force mono", "Convert stereo audio to mono before visualization", 'F', Config.mono());
         monoPanel.add(mono);
         monoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, monoPanel.getPreferredSize().height));
         advancedPanel.add(monoPanel);
 
         //Disable smoothing
         JPanel disableSmoothingPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        disableSmoothing = createCheckBox("Disable smoothing", "Some visualizers apply smoothing to their data. This disables this, but may cause flashing images", 'D', Config.disableSmoothing);
+        disableSmoothing = createCheckBox("Disable smoothing", "Some visualizers apply smoothing to their data. This disables this, but may cause flashing images", 'D', Config.disableSmoothing());
         disableSmoothingPanel.add(disableSmoothing);
         disableSmoothingPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, disableSmoothingPanel.getPreferredSize().height));
         advancedPanel.add(disableSmoothingPanel);
 
         //Show in System Tray
         JPanel showInSystemTrayPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        showInSystemTray = createCheckBox("Show in system tray", null, 'S', Config.showInSystemTray);
+        showInSystemTray = createCheckBox("Show in system tray", null, 'S', Config.showInSystemTray());
         showInSystemTray.addActionListener(e -> {
             notifications.setEnabled(showInSystemTray.isSelected());
             notifications.setToolTipText(showInSystemTray.isSelected() ? null : "Requires system tray icon");
@@ -158,7 +157,7 @@ public class PreferencesDialog extends JDialog {
         preferences.apply();
         boolean visualizerSettingsChanged = visualizerSettingsPanel.saveSettings();
         SessionManager.getInstance().savePreferences(preferences);
-        if (!Config.dynamicIcon) parent.setIconImage(Waveform.STATIC_ICON);
+        if (!Config.dynamicIcon()) parent.setIconImage(Waveform.STATIC_ICON);
         parent.updateColors();
         parent.frameUpdater.forceUpdate();
         if (shouldRegenerate || visualizerSettingsChanged) Config.visualizer.getDrawer().regenerateIfNeeded();
@@ -168,9 +167,9 @@ public class PreferencesDialog extends JDialog {
 
     private boolean warnOnDuplicateColors() {
         if (!Util.areUnique(foregroundColor.getColor(), backgroundColor.getColor(), playedColor.getColor()) &&
-            (Config.foregroundColor != foregroundColor.getColor() ||
-             Config.backgroundColor != backgroundColor.getColor() ||
-             Config.playedColor != playedColor.getColor())) {
+            (Config.foregroundColor() != foregroundColor.getColor() ||
+             Config.backgroundColor() != backgroundColor.getColor() ||
+             Config.playedColor() != playedColor.getColor())) {
             int response = JOptionPane.showConfirmDialog(this, "Duplicate colors selected. This may cause some UI elements to be invisible. Proceed anyway?", "Duplicate Colors Selected", JOptionPane.YES_NO_OPTION);
             return response == JOptionPane.YES_OPTION;
         }
@@ -178,29 +177,31 @@ public class PreferencesDialog extends JDialog {
     }
 
     private boolean shouldRegenerate(SavedPreferences preferences) {
-        if (preferences.backgroundColor().isPresent() && Config.backgroundColor != preferences.backgroundColor().get()) return true;
-        if (preferences.foregroundColor().isPresent() && Config.foregroundColor != preferences.foregroundColor().get()) return true;
-        if (preferences.playedColor().isPresent() && Config.playedColor != preferences.playedColor().get()) return true;
-        if (preferences.highContrast().isPresent() && Config.highContrast != preferences.highContrast().get()) return true;
+        if (preferences.containsSetting("backgroundColor") && Config.backgroundColor() != preferences.getSetting("backgroundColor", Color.class)) return true;
+        if (preferences.containsSetting("foregroundColor") && Config.foregroundColor() != preferences.getSetting("foregroundColor", Color.class)) return true;
+        if (preferences.containsSetting("playedColor") && Config.playedColor() != preferences.getSetting("playedColor", Color.class)) return true;
+        if (preferences.containsSetting("highContrast") && Config.highContrast() != preferences.getSetting("highContrast", Boolean.class)) return true;
         return false;
     }
 
     private SavedPreferences getSavedPreferences() {
-        Optional<Color> backgroundColor = getValue(Config.commandLinePreferences.backgroundColor(), this.backgroundColor.getColor());
-        Optional<Color> foregroundColor = getValue(Config.commandLinePreferences.foregroundColor(), this.foregroundColor.getColor());
-        Optional<Color> playedColor = getValue(Config.commandLinePreferences.playedColor(), this.playedColor.getColor());
-        Optional<Boolean> dynamicIcon = getValue(Config.commandLinePreferences.dynamicIcon(), this.dynamicIcon.isSelected());
-        Optional<Boolean> highContrast = getValue(Config.commandLinePreferences.highContrast(), this.highContrast.isSelected());
-        Optional<Boolean> pauseOnExport = Optional.of(this.pauseOnExport.isSelected());
-        Optional<NotificationState> notifications = Optional.of(this.notifications.getSelectedValue());
-        Optional<Boolean> mono = Optional.of(this.mono.isSelected());
-        Optional<Boolean> disableSmoothing = Optional.of(this.disableSmoothing.isSelected());
-        Optional<Boolean> showInSystemTray = Optional.of(this.showInSystemTray.isSelected());
-        return new SavedPreferences(backgroundColor, foregroundColor, playedColor, dynamicIcon, highContrast, pauseOnExport, notifications, mono, disableSmoothing, showInSystemTray);
+        Map<String, Object> map = new HashMap<>();
+        addValue(map, Config.commandLinePreferences.backgroundColor(), "backgroundColor", backgroundColor.getColor());
+        addValue(map, Config.commandLinePreferences.foregroundColor(), "foregroundColor", foregroundColor.getColor());
+        addValue(map, Config.commandLinePreferences.playedColor(), "playedColor", playedColor.getColor());
+        addValue(map, Config.commandLinePreferences.dynamicIcon(), "dynamicIcon", dynamicIcon.isSelected());
+        addValue(map, Config.commandLinePreferences.highContrast(), "highContrast", highContrast.isSelected());
+        addValue(map, Config.commandLinePreferences.notifications(), "notifications", notifications.getSelectedValue());
+        addValue(map, Config.commandLinePreferences.mono(), "mono", mono.isSelected());
+        addValue(map, Config.commandLinePreferences.disableSmoothing(), "disableSmoothing", disableSmoothing.isSelected());
+        map.put("showInSystemTray", showInSystemTray.isSelected());
+        return SavedPreferences.create(map);
     }
 
-    private <T> Optional<T> getValue(Optional<?> commandLineValue, T value) {
-        return commandLineValue.isPresent() && commandLineValue.get().equals(value) ? Optional.empty() : Optional.of(value);
+    private void addValue(Map<String, Object> map, Optional<?> commandLineValue, String key, Object value) {
+        if (commandLineValue.isEmpty() || !commandLineValue.get().equals(value)) {
+            map.put(key, value);
+        };
     }
 
     private void disableAppropriateOptions() {

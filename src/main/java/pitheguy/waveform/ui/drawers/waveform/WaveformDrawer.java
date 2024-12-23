@@ -14,7 +14,7 @@ public class WaveformDrawer extends MappedPlotDrawer {
 
     public static BufferedImage drawData(DrawContext context, BufferedImage image, int[] top, int[] bottom) {
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         int halfHeight = context.getHeight() / 2;
         double scale = (double) top.length / context.getWidth();
         for (int x = 0; x < context.getWidth(); x++) {

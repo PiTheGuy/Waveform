@@ -45,4 +45,8 @@ public class Setting<T> {
     public JsonElement serialize() {
         return type.serialize(value);
     }
+
+    public Object deserialize(JsonElement jsonElement) {
+        return type.deserialize(jsonElement);
+    }
 }

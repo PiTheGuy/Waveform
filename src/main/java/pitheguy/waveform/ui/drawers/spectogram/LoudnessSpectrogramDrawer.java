@@ -34,7 +34,7 @@ public class LoudnessSpectrogramDrawer extends HeatmapDrawer {
             spectrogramData[i] = FftAnalyser.resampleMagnitudesToBands(scaledFrequencyData, context.getHeight());
         }
         double[][] displayData = Util.normalize(spectrogramData);
-        int scaleFactor = Config.highContrast ? 20 : 10;
+        int scaleFactor = Config.highContrast() ? 20 : 10;
         Arrays.setAll(displayData, i -> Arrays.stream(displayData[i]).map(v -> v * scaleFactor).toArray());
         return drawData(context, displayData);
     }

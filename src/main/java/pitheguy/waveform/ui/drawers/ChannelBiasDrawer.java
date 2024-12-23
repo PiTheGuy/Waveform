@@ -48,7 +48,7 @@ public class ChannelBiasDrawer extends CompoundDrawer {
             BufferedImage image = createBlankImage();
             Graphics2D g = image.createGraphics();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setColor(Config.foregroundColor);
+            g.setColor(Config.foregroundColor());
             int ballX = (int) ((displayValue + 1) / 2 * context.getWidth());
             int ballY = context.getHeight() / 2;
             drawBall(g, ballX, ballY, ballSize);

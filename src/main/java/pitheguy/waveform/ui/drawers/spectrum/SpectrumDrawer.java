@@ -101,7 +101,7 @@ public class SpectrumDrawer extends CompoundDrawer {
             for (int x = 0; x < context.getWidth(); x++) {
                 int index = (int) (x * scale);
                 Point point = getDisplayPoint(displayData, index);
-                image.setRGB(point.x, point.y, Config.foregroundColor.getRGB());
+                image.setRGB(point.x, point.y, Config.foregroundColor().getRGB());
             }
             return image;
         }

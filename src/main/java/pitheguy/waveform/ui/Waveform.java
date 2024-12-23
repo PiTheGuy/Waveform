@@ -85,8 +85,8 @@ public class Waveform extends JFrame {
         setJMenuBar(menuBar);
         this.imgLabel = new JLabel(LOADING_TEXT, JLabel.CENTER);
         imgLabel.setOpaque(true);
-        imgLabel.setBackground(Config.backgroundColor);
-        imgLabel.setForeground(Config.foregroundColor);
+        imgLabel.setBackground(Config.backgroundColor());
+        imgLabel.setForeground(Config.foregroundColor());
         imgLabel.setFont(new Font(this.imgLabel.getFont().getName(), this.imgLabel.getFont().getStyle(), 24));
         imgLabel.setLayout(null);
         add(imgLabel);
@@ -103,7 +103,7 @@ public class Waveform extends JFrame {
             }
         });
         playbackManager.addQueueChangeListener(this::handleQueueChange);
-        if (Config.showInSystemTray) addTrayIcon();
+        if (Config.showInSystemTray()) addTrayIcon();
         addMouseListener(new WaveformMouseListener());
         addKeyListener(new QueueKeyboardListener(this));
         addControls();
@@ -379,8 +379,8 @@ public class Waveform extends JFrame {
 
     public void updateColors() {
         menuBar.updateColors();
-        imgLabel.setBackground(Config.backgroundColor);
-        imgLabel.setForeground(Config.foregroundColor);
+        imgLabel.setBackground(Config.backgroundColor());
+        imgLabel.setForeground(Config.foregroundColor());
     }
 
     public void setLoadingText() {
@@ -438,7 +438,7 @@ public class Waveform extends JFrame {
 
     public void showNotification(String title, String message, TrayIcon.MessageType type) {
         if (trayIcon == null) return;
-        if (Config.notifications.shouldNotify()) trayIcon.displayMessage(title, message, type);
+        if (Config.notifications().shouldNotify()) trayIcon.displayMessage(title, message, type);
     }
 
     public void startup() {
@@ -685,17 +685,17 @@ public class Waveform extends JFrame {
 
     public void pauseUntilFinished(Runnable task) {
         boolean wasPaused = isPaused();
-        if (!wasPaused && Config.pauseOnExport) togglePlayback();
+        if (!wasPaused && Config.pauseOnExport()) togglePlayback();
         task.run();
-        if (!wasPaused && Config.pauseOnExport) togglePlayback();
+        if (!wasPaused && Config.pauseOnExport()) togglePlayback();
     }
 
     public void backgroundPauseUntilFinished(Runnable task, boolean waitUntilFinished) {
         boolean wasPaused = isPaused();
-        if (!wasPaused && Config.pauseOnExport) togglePlayback();
+        if (!wasPaused && Config.pauseOnExport()) togglePlayback();
         Util.runInBackground(() -> {
             task.run();
-            if (!wasPaused && Config.pauseOnExport) togglePlayback();
+            if (!wasPaused && Config.pauseOnExport()) togglePlayback();
         }, waitUntilFinished);
     }
 

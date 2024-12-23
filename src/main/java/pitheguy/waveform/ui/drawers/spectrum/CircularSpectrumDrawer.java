@@ -20,7 +20,7 @@ public class CircularSpectrumDrawer extends CircularDrawer {
         super.drawAudio(sec, length);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         short[] data = AudioData.averageChannels(left, right);
         double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
         drawData(context, g, magnitudes);

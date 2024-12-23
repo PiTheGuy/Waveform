@@ -24,7 +24,7 @@ public class VolumeDrawer extends SmoothedAudioDrawer {
         double rms = calculateRMS(monoData);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         double displayValue = getDisplayValue(rms);
         g.fillRect(0, 0, image.getWidth(), (int) (displayValue * context.getHeight()));
         drawDebugText(g, new DebugText().add("RMS", rms).add("Displayed", displayValue), Color.RED);

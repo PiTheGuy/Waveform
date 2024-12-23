@@ -15,7 +15,7 @@ public abstract class BarGraphDrawer extends AudioDrawer {
     }
 
     protected BufferedImage drawArray(double[] data) {
-        return drawArray(data, createBlankImage(), Config.foregroundColor);
+        return drawArray(data, createBlankImage(), Config.foregroundColor());
     }
 
 

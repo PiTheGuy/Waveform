@@ -47,7 +47,7 @@ public class PolarityDrawer extends CompoundDrawer {
             Polarity polarity = getPolarity(audioData);
             BufferedImage image = createBlankImage();
             Graphics2D g = image.createGraphics();
-            g.setColor(Config.foregroundColor);
+            g.setColor(Config.foregroundColor());
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             int ballSize = (int) (Math.min(context.getWidth(), context.getHeight()) * 0.2);
             int ballX = context.getWidth() / 2;

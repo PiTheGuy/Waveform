@@ -36,7 +36,7 @@ public class TransientSustainedDrawer extends HeatmapDrawer {
             sustainedData[x] = FftAnalyser.resampleMagnitudesToBands(sustainedData[x], context.getWidth());
         }
         if (getSetting("normalize", Boolean.class)) {
-            int scaleFactor = Config.highContrast ? 15 : 10;
+            int scaleFactor = Config.highContrast() ? 15 : 10;
             return drawData(Util.normalize(transientData), Util.normalize(sustainedData), scaleFactor);
         } else return drawData(transientData, sustainedData, 1);
     }

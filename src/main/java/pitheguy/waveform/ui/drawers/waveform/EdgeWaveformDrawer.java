@@ -22,7 +22,7 @@ public class EdgeWaveformDrawer extends WaveformDrawer {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int halfHeight = context.getHeight() / 2;
         double scale = (double) left.length / context.getWidth();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         g.setStroke(new BasicStroke(getSetting("line_thickness", Float.class)));
         for (int x = 0; x < context.getWidth(); x++) {
             int i = (int) (x * scale);

@@ -26,7 +26,7 @@ public class OnsetEnvelopeDrawer extends SlicedImageDrawer {
         double maxValue = Arrays.stream(energy).max().orElseThrow();
         int[] pixelHeights = mapArrayToPixelHeight(energy, maxValue);
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         for (int x = 0; x < pixelHeights.length; x++)
             g.drawLine(x, context.getHeight() - 1, x, context.getHeight() - 1 - pixelHeights[x]);
         return image;

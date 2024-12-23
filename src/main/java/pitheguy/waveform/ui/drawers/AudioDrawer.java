@@ -51,11 +51,11 @@ public abstract class AudioDrawer {
     public void updatePlayed(BufferedImage image, double seconds, double duration) {
         int maxX = (int) (seconds / duration * context.getWidth());
         maxX = Math.min(maxX, image.getWidth());
-        replacePixels(image, Config.foregroundColor, Config.playedColor, maxX);
+        replacePixels(image, Config.foregroundColor(), Config.playedColor(), maxX);
     }
 
     public void resetPlayed(BufferedImage image) {
-        replacePixels(image, Config.playedColor, Config.foregroundColor, image.getWidth());
+        replacePixels(image, Config.playedColor(), Config.foregroundColor(), image.getWidth());
     }
 
     private static void replacePixels(BufferedImage image, Color from, Color to, int maxX) {
@@ -94,7 +94,7 @@ public abstract class AudioDrawer {
     protected static BufferedImage createBlankImage(DrawContext context) {
         BufferedImage image = new BufferedImage(context.getWidth(), context.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.backgroundColor);
+        g.setColor(Config.backgroundColor());
         g.fillRect(0, 0, context.getWidth(), context.getHeight());
         g.dispose();
         return image;

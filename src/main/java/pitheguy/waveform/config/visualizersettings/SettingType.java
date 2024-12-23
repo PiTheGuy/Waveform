@@ -2,6 +2,7 @@ package pitheguy.waveform.config.visualizersettings;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import pitheguy.waveform.util.Util;
 
 import java.awt.*;
 import java.util.function.Function;
@@ -14,6 +15,7 @@ public class SettingType<T> {
     private final Predicate<T> validator;
 
     public static final SettingType<Boolean> BOOLEAN = new SettingType<>(Boolean.class, JsonPrimitive::new, JsonElement::getAsBoolean);
+    public static final SettingType<Color> COLOR = SettingType.stringSerializer(Color.class, Util::writeColor, Util::parseColor);
 
     public SettingType(Class<T> clazz, Function<T, JsonElement> serializer, Function<JsonElement, T> deserializer, Predicate<T> validator) {
         this.clazz = clazz;
@@ -24,6 +26,16 @@ public class SettingType<T> {
 
     public SettingType(Class<T> clazz, Function<T, JsonElement> serializer, Function<JsonElement, T> deserializer) {
         this(clazz, serializer, deserializer, v -> true);
+    }
+
+    public static <T> SettingType<T> stringSerializer(Class<T> clazz, Function<T, String> serializer, Function<String, T> deserializer) {
+        return new SettingType<>(clazz, value -> {
+            if (value == null) return null;
+            else return new JsonPrimitive(serializer.apply(value));
+        }, element -> {
+            if (!element.isJsonPrimitive()) return null;
+            return deserializer.apply(element.getAsString());
+        });
     }
 
     public static SettingType<Integer> positiveInt() {

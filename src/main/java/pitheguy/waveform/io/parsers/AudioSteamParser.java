@@ -39,7 +39,7 @@ public abstract class AudioSteamParser implements AudioParser {
         for (int i = 0; i < sampleData.length; i++) {
             sampleData[i] = byteBuffer.getShort();
         }
-        if (Config.mono) {
+        if (Config.mono()) {
             short[] data = AudioData.averageChannelsInterweaved(sampleData, numChannels);
             return new AudioData(data, data, format.getFrameRate(), duration);
         }

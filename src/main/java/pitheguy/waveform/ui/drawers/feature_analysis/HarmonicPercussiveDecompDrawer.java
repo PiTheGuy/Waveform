@@ -30,7 +30,7 @@ public class HarmonicPercussiveDecompDrawer extends HeatmapDrawer {
         BufferedImage image = createBlankImage();
         for (int x = 0; x < context.getWidth(); x++) {
             for (int y = 0; y < context.getHeight(); y++) {
-                int scaleFactor = Config.highContrast ? 6 : 4;
+                int scaleFactor = Config.highContrast() ? 6 : 4;
                 float harmonicIntensity = (float) Math.min(signals.harmonic[x][y] * scaleFactor, 1);
                 float percussiveIntensity = (float) Math.min(signals.percussive[x][y] * scaleFactor, 1);
                 Color color = getColor(harmonicIntensity, percussiveIntensity);

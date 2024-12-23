@@ -33,7 +33,7 @@ public class SpectralSparsityDrawer extends AudioDrawer {
         Random random = new Random();
         for (int x = 0; x < context.getWidth(); x++)
             for (int y = 0; y < context.getHeight(); y++)
-                if (random.nextFloat() < percentage) image.setRGB(x, y, Config.foregroundColor.getRGB());
+                if (random.nextFloat() < percentage) image.setRGB(x, y, Config.foregroundColor().getRGB());
         drawDebugText(g, new DebugText()
                 .add("Active Frequencies", activeFrequencies)
                 .add("Percentage", percentage), Color.GREEN);

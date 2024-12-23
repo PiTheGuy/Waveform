@@ -23,7 +23,7 @@ public abstract class SmoothedAudioDrawer extends AudioDrawer {
     }
 
     protected double getDisplayValue(double value) {
-        if (Config.disableSmoothing) return value;
+        if (Config.disableSmoothing()) return value;
         tracker.add(value);
         return tracker.getAverage();
     }
@@ -41,7 +41,7 @@ public abstract class SmoothedAudioDrawer extends AudioDrawer {
 
     @Override
     public SettingsInstance.Builder constructSettings() {
-        if (Config.disableSmoothing || !addSetting) return super.constructSettings();
+        if (Config.disableSmoothing() || !addSetting) return super.constructSettings();
         return super.constructSettings()
                 .addSetting("window", SettingType.positiveInt(), defaultWindow);
     }

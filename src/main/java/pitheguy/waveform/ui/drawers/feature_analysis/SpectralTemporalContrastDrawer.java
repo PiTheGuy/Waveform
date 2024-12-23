@@ -37,7 +37,7 @@ public class SpectralTemporalContrastDrawer extends HeatmapDrawer {
                 contrast[time][band] = geomMean(temporalContrast[time][band], spectralContrast[time][band]);
         if (getSetting("normalize", Boolean.class)) {
             contrast = Util.normalize(contrast);
-            double scaleFactor = Config.highContrast ? 15 : 10;
+            double scaleFactor = Config.highContrast() ? 15 : 10;
             Arrays.stream(contrast).forEach(arr -> Arrays.setAll(arr, i -> arr[i] * scaleFactor));
         }
         return drawData(context, contrast);

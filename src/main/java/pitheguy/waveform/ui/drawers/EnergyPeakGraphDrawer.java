@@ -35,9 +35,9 @@ public class EnergyPeakGraphDrawer extends BarGraphDrawer {
         Graphics2D g = image.createGraphics();
         double[] displayData = history.stream().mapToDouble(v -> v / 10000).toArray();
         delta = Math.min(Math.max(0, energy > cutoff ? delta + 0.2 : delta - 0.2), 1);
-        drawArray(displayData, image, Util.blendColor(delta, Config.foregroundColor, Config.playedColor));
+        drawArray(displayData, image, Util.blendColor(delta, Config.foregroundColor(), Config.playedColor()));
 
-        g.setColor(Config.playedColor);
+        g.setColor(Config.playedColor());
         g.drawLine(0, (int) (cutoff / 10000 * context.getHeight()), context.getWidth(), (int) (cutoff / 10000 * context.getHeight()));
         drawDebugText(g, new DebugText().add("Cutoff", cutoff).add("Energy", energy));
         return image;

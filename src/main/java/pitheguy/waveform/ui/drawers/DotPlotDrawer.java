@@ -33,7 +33,7 @@ public abstract class DotPlotDrawer extends MappedPlotDrawer {
         int[] mappedXAxis = mapArrayToPixelCoords(xAxis, context.getWidth());
         int[] mappedYAxis = mapArrayToPixelCoords(yAxis, context.getHeight());
         Graphics2D g = image.createGraphics();
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         for (int i = 0; i < xAxis.length; i++) drawPoint(g, mappedXAxis[i], mappedYAxis[i]);
         g.dispose();
         return image;

@@ -23,9 +23,6 @@ public class Main {
     public static final int DEFAULT_WIDTH = 600;
     public static final int DEFAULT_HEIGHT = 400;
     public static final int DEFAULT_FRAME_RATE = 20;
-    public static final String DEFAULT_BACKGROUND_COLOR = "black";
-    public static final String DEFAULT_FOREGROUND_COLOR = "white";
-    public static final String DEFAULT_PLAYED_COLOR = "red";
     public static File INPUT_FILE;
     public static String IMPORT_URL;
     private static boolean visualizerSpecified;
@@ -172,9 +169,6 @@ public class Main {
         Config.forceRead = commandLine.hasOption("force");
         Config.microphoneMode = commandLine.hasOption("microphone");
         Config.shuffle = commandLine.hasOption("shuffle");
-        Config.backgroundColor = Util.parseColor(commandLine.getOptionValue("backgroundColor", DEFAULT_BACKGROUND_COLOR));
-        Config.foregroundColor = Util.parseColor(commandLine.getOptionValue("foregroundColor", DEFAULT_FOREGROUND_COLOR));
-        Config.playedColor = Util.parseColor(commandLine.getOptionValue("playedColor", DEFAULT_PLAYED_COLOR));
         Config.visualizer = Visualizer.fromKey(commandLine.getOptionValue("visualizer", "waveform"));
         visualizerSpecified = commandLine.hasOption("visualizer");
         validateParameters(commandLine);
@@ -204,7 +198,7 @@ public class Main {
         validator.addRule(ValidationRule.mutuallyExclusive("exportImage", "exportVideo", "exportGif", "exportAudio").message("You can only specify one export type"));
         validator.addRule(ValidationRule.mutuallyExclusive("loop", "exitOnFinish").message("-loop and -exitOnFinish cannot be used together"));
         validator.addRule(ValidationRule.mutuallyExclusive("fullScreen", "size").message("You can't specify explicit dimensions while in full screen"));
-        validator.addWarning(() -> !Util.areUnique(Config.backgroundColor, Config.foregroundColor, Config.playedColor), "Duplicate colors found. Some UI elements may be invisible.");
+        validator.addWarning(() -> !Util.areUnique(Config.backgroundColor(), Config.foregroundColor(), Config.playedColor()), "Duplicate colors found. Some UI elements may be invisible.");
         validator.validate(commandLine);
     }
 

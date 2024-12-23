@@ -32,7 +32,7 @@ public abstract class RangeLineGraphDrawer extends SlicedImageDrawer {
             previousCenter = center;
             previousDeviation = deviation;
         }
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         for (int x = 0; x < context.getWidth(); x++) {
             double center = centers[x];
             int y = mapToPixelHeight(center);

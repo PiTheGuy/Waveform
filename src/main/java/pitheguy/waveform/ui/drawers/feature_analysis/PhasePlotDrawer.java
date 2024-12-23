@@ -29,7 +29,7 @@ public class PhasePlotDrawer extends DotPlotDrawer {
         for (int i = phaseFrames; i < mappedCurrentData.length; i++) {
             int x = Math.min(Math.abs(mappedCurrentData[i]), context.getWidth() - 1);
             int y = Math.min(Math.abs(mappedPhaseData[i]), context.getHeight() - 1);
-            image.setRGB(x, y, Config.foregroundColor.getRGB());
+            image.setRGB(x, y, Config.foregroundColor().getRGB());
         }
         return image;
     }

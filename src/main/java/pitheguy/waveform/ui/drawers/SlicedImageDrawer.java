@@ -54,7 +54,7 @@ public abstract class SlicedImageDrawer extends AudioDrawer {
         Graphics2D g = image.createGraphics();
         if (Config.playerMode) g.drawImage(precomputedImage, 0, 0, null);
         else {
-            g.setColor(Config.backgroundColor);
+            g.setColor(Config.backgroundColor());
             g.fillRect(0, 0, context.getWidth(), context.getHeight());
         }
         g.dispose();

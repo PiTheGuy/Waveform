@@ -42,7 +42,7 @@ public class BallDrawer extends AudioDrawer {
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(Config.foregroundColor);
+        g.setColor(Config.foregroundColor());
         int imageSize = Math.min(context.getWidth(), context.getHeight());
         int smallRadius = (int) (imageSize * getSetting("small_radius", Double.class));
         int bigRadius = (int) (imageSize * getSetting("big_radius", Double.class));

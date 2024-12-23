@@ -34,8 +34,8 @@ public class ControlsPanel extends JPanel {
         label.setBounds(0, 0, WIDTH, HEIGHT);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setBackground(Config.backgroundColor);
-        label.setForeground(Config.foregroundColor);
+        label.setBackground(Config.backgroundColor());
+        label.setForeground(Config.foregroundColor());
         label.setVisible(false);
         add(label);
         add(previousTrackButton);
