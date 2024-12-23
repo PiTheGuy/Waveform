@@ -41,7 +41,7 @@ public class PreferencesDialog extends JDialog {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         JPanel general = createGeneralPanel();
         JPanel advanced = createAdvancedPanel();
-        visualizerSettingsPanel = new VisualizerSettingsPanel(Config.visualizer.getSettings());
+        visualizerSettingsPanel = new VisualizerSettingsPanel(Config.visualizer);
         visualizerSettingsPanel.addValidationListener(() -> setSaveButtonEnabled(visualizerSettingsPanel.hasValidSettings()));
 
         tabs.addTab("General", general);
@@ -49,7 +49,7 @@ public class PreferencesDialog extends JDialog {
         tabs.setMnemonicAt(0, 'G');
         tabs.setMnemonicAt(1, 'A');
 
-        if (Config.visualizer.hasSettings() && parent.hasAudio) {
+        if (parent.hasAudio) {
             tabs.addTab("Visualizer", visualizerSettingsPanel);
             tabs.setMnemonicAt(2, 'V');
         }

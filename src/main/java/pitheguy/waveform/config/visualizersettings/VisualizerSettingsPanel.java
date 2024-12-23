@@ -1,17 +1,27 @@
 package pitheguy.waveform.config.visualizersettings;
 
+import pitheguy.waveform.main.Visualizer;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VisualizerSettingsPanel extends JPanel {
     List<SettingPanel<?>> panels = new ArrayList<>();
 
-    public VisualizerSettingsPanel(SettingsInstance settingsInstance) {
+    public VisualizerSettingsPanel(Visualizer visualizer) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        for (Setting<?> setting : settingsInstance.getSettings().values()) {
-            SettingPanel<?> panel = SettingPanel.create(setting);
-            panels.add(panel);
+        if (visualizer.hasSettings()) {
+            SettingsInstance settings = visualizer.getSettings();
+            for (Setting<?> setting : settings.getSettings().values()) {
+                SettingPanel<?> panel = SettingPanel.create(setting);
+                panels.add(panel);
+                add(panel);
+            }
+        } else {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel("<html><div style='text-align: center;'>This visualizer doesn't<br>have any settings.</html>"));
             add(panel);
         }
     }
