@@ -11,6 +11,7 @@ import pitheguy.waveform.util.Util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class SpectrumDrawer extends CompoundDrawer {
 
@@ -31,7 +32,9 @@ public class SpectrumDrawer extends CompoundDrawer {
         updateAudioData(sec, length);
         short[] monoData = AudioData.averageChannels(left, right);
         double[] magnitudes = FftAnalyser.performFFT(Util.normalize(monoData));
-        return Util.normalize(magnitudes);
+        boolean normalize = getSetting("normalize", Boolean.class);
+        if (normalize) return Util.normalize(magnitudes);
+        else return Arrays.stream(magnitudes).map(v -> Math.min(v, 1)).toArray();
     }
 
     private Point getDisplayPoint(double[] displayData, int index) {
@@ -111,7 +114,8 @@ public class SpectrumDrawer extends CompoundDrawer {
     public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("display_mode", SettingType.forEnum(DisplayMode.class), DisplayMode.BAR_GRAPH)
-                .addSetting("invert_direction", SettingType.BOOLEAN, false);
+                .addSetting("invert_direction", SettingType.BOOLEAN, false)
+                .addSetting("normalize", SettingType.BOOLEAN, true);
     }
 
     private enum DisplayMode {

@@ -1,6 +1,8 @@
 package pitheguy.waveform.ui.drawers.spectrum;
 
 import pitheguy.waveform.config.Config;
+import pitheguy.waveform.config.visualizersettings.SettingType;
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.CircularDrawer;
@@ -23,7 +25,14 @@ public class CircularSpectrumDrawer extends CircularDrawer {
         g.setColor(Config.foregroundColor());
         short[] data = AudioData.averageChannels(left, right);
         double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
-        drawData(context, g, magnitudes);
+        double[] displayData = getSetting("normalize", Boolean.class) ? Util.normalize(magnitudes) : magnitudes;
+        drawData(context, g, displayData);
         return image;
+    }
+
+    @Override
+    public SettingsInstance.Builder constructSettings() {
+        return super.constructSettings()
+                .addSetting("normalize", SettingType.BOOLEAN, true);
     }
 }
