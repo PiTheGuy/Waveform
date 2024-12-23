@@ -90,7 +90,13 @@ public class SettingsInstance {
         private final Map<String, Setting<?>> settings = new LinkedHashMap<>();
 
         public <T> Builder addSetting(String key, SettingType<T> type, T defaultValue) {
-            String name = Character.toUpperCase(key.charAt(0)) + key.substring(1).replace("_", " ");
+            String name;
+            if (key.contains("_"))
+                name = Character.toUpperCase(key.charAt(0)) + key.substring(1).replace("_", " ").toLowerCase();
+            else {
+                name = key.replaceAll("([a-z])([A-Z])", "$1 $2");
+                name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+            }
             return addSetting(key, name, type, defaultValue);
         }
 

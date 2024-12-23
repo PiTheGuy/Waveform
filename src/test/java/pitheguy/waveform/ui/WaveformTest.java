@@ -99,10 +99,10 @@ class WaveformTest {
 
     @Test
     public void testIsFileSupported_withForceRead() {
-        Config.forceRead = true;
+        Config.settings.setValue("forceRead", true);
         File textFile = new File("test.txt");
         assertTrue(Waveform.isFileSupported(textFile));
-        Config.forceRead = false;
+        Config.settings.setValue("forceRead", false);
     }
 
     @Test

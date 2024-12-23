@@ -166,13 +166,12 @@ public class Main {
         Config.exitOnFinish = commandLine.hasOption("exitOnFinish");
         Config.loop = commandLine.hasOption("loop") ? LoopState.ALL : LoopState.OFF;
         Config.fullScreen = commandLine.hasOption("fullScreen");
-        Config.forceRead = commandLine.hasOption("force");
         Config.microphoneMode = commandLine.hasOption("microphone");
         Config.shuffle = commandLine.hasOption("shuffle");
         Config.visualizer = Visualizer.fromKey(commandLine.getOptionValue("visualizer", "waveform"));
         visualizerSpecified = commandLine.hasOption("visualizer");
         validateParameters(commandLine);
-        Config.commandLinePreferences = CommandLinePreferences.fromString(commandLine.getOptionValue("preferences"));
+        Config.commandLinePreferences = CommandLinePreferences.fromCommandLine(commandLine);
     }
 
     private static void restoreSession() {
@@ -206,7 +205,7 @@ public class Main {
         if (INPUT_FILE == null) return;
         validator.addError(!INPUT_FILE.exists(), "Input file not found");
         validator.addError(!INPUT_FILE.canRead(), "Input file cannot be read");
-        validator.addRule(ValidationRule.createError(!INPUT_FILE.isDirectory() && !Waveform.isFileSupported(INPUT_FILE)).disallows("allFormats").message("Not an common audio format. Use -force to force the program to attempt to read it anyway"));
+        validator.addRule(ValidationRule.createError(!INPUT_FILE.isDirectory() && !Waveform.isFileSupported(INPUT_FILE)).disallows("force").message("Not an common audio format. Use -force to force the program to attempt to read it anyway"));
         validator.addError(Config.exportFile != null && Config.exportFile.isDirectory() != INPUT_FILE.isDirectory(), "Input and output must be both folders or both files");
     }
 

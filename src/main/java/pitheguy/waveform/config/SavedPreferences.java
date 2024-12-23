@@ -42,6 +42,7 @@ public class SavedPreferences {
                 .addSetting("mono", SettingType.BOOLEAN, false)
                 .addSetting("disableSmoothing", SettingType.BOOLEAN, false)
                 .addSetting("showInSystemTray", SettingType.BOOLEAN, true)
+                .addSetting("forceRead", SettingType.BOOLEAN, false)
                 .build();
     }
 

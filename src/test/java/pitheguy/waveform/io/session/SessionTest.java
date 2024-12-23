@@ -29,17 +29,18 @@ class SessionTest {
 
     @Test
     void testSaveAndLoadPreferences() throws IOException {
-        Map<String, Object> map = Map.of(
-                "backgroundColor", Color.GREEN,
-                "foregroundColor", Color.BLUE,
-                "playedColor", Color.ORANGE,
-                "dynamicIcon", false,
-                "highContrast", true,
-                "notifications", NotificationState.ALWAYS,
-                "mono", false,
-                "disableSmoothing", true,
-                "showInSystemTray", true,
-                "pauseOnExport", true
+        Map<String, Object> map = Map.ofEntries(
+                Map.entry("backgroundColor", Color.GREEN),
+                Map.entry("foregroundColor", Color.BLUE),
+                Map.entry("playedColor", Color.ORANGE),
+                Map.entry("dynamicIcon", false),
+                Map.entry("highContrast", true),
+                Map.entry("notifications", NotificationState.ALWAYS),
+                Map.entry("mono", false),
+                Map.entry("disableSmoothing", true),
+                Map.entry("showInSystemTray", true),
+                Map.entry("pauseOnExport", true),
+                Map.entry("forceRead", false)
         );
         SavedPreferences preferences = SavedPreferences.create(map);
         Session session = new Session(preferences, List.of(), List.of());

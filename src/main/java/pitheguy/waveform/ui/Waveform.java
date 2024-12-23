@@ -551,7 +551,7 @@ public class Waveform extends JFrame {
     }
 
     public static boolean isFileSupported(String name) {
-        if (Config.forceRead) return true;
+        if (Config.forceRead()) return true;
         if (!ResourceGetter.isFfmpegAvailable()) return NATIVE_FORMATS.stream().anyMatch(name::endsWith);
         return CONVENTIONAL_FORMATS.stream().anyMatch(name::endsWith);
     }

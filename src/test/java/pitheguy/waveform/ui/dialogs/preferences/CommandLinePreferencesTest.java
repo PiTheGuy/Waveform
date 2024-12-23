@@ -8,15 +8,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CommandLinePreferencesTest {
     @Test
-    void testFromString_oneOption() throws ParseException {
-        CommandLinePreferences commandLinePreferences = CommandLinePreferences.fromString("foregroundColor=blue");
+    void testFromCommandLine_oneOption() throws ParseException {
+        CommandLinePreferences commandLinePreferences = CommandLinePreferences.builderFromString("foregroundColor=blue").build();
         assertTrue(commandLinePreferences.foregroundColor().isPresent());
         assertEquals(WaveColor.BLUE.getColor(), commandLinePreferences.foregroundColor().get());
     }
 
     @Test
-    void testFromString_twoOptions() throws ParseException {
-        CommandLinePreferences commandLinePreferences = CommandLinePreferences.fromString("foregroundColor=blue,backgroundColor=black");
+    void testFromCommandLine_twoOptions() throws ParseException {
+        CommandLinePreferences commandLinePreferences = CommandLinePreferences.builderFromString("foregroundColor=blue,backgroundColor=black").build();
         assertTrue(commandLinePreferences.foregroundColor().isPresent());
         assertTrue(commandLinePreferences.backgroundColor().isPresent());
         assertEquals(WaveColor.BLUE.getColor(), commandLinePreferences.foregroundColor().get());
@@ -24,35 +24,35 @@ class CommandLinePreferencesTest {
     }
 
     @Test
-    void testFromString_boolean() throws ParseException {
-        CommandLinePreferences commandLinePreferences = CommandLinePreferences.fromString("dynamicIcon=false");
+    void testFromCommandLine_boolean() throws ParseException {
+        CommandLinePreferences commandLinePreferences = CommandLinePreferences.builderFromString("dynamicIcon=false").build();
         assertTrue(commandLinePreferences.dynamicIcon().isPresent());
         assertEquals(false, commandLinePreferences.dynamicIcon().get());
     }
 
     @Test
-    void testFromString_null() throws ParseException {
-        CommandLinePreferences commandLinePreferences = CommandLinePreferences.fromString(null);
+    void testFromCommandLine_null() throws ParseException {
+        CommandLinePreferences commandLinePreferences = CommandLinePreferences.builderFromString(null).build();
         assertEquals(CommandLinePreferences.EMPTY, commandLinePreferences);
     }
 
     @Test
-    void testFromString_invalidOption() {
-        assertThrows(ParseException.class, () -> CommandLinePreferences.fromString("invalidOption=value"));
+    void testFromCommandLine_invalidOption() {
+        assertThrows(ParseException.class, () -> CommandLinePreferences.builderFromString("invalidOption=value"));
     }
 
     @Test
-    void testFromString_duplicateOption() {
-        assertThrows(ParseException.class, () -> CommandLinePreferences.fromString("foregroundColor=blue,foregroundColor=red"));
+    void testFromCommandLine_duplicateOption() {
+        assertThrows(ParseException.class, () -> CommandLinePreferences.builderFromString("foregroundColor=blue,foregroundColor=red"));
     }
 
     @Test
-    void testFromString_invalidColor() {
-        assertThrows(ParseException.class, () -> CommandLinePreferences.fromString("foregroundColor=invalidColor"));
+    void testFromCommandLine_invalidColor() {
+        assertThrows(ParseException.class, () -> CommandLinePreferences.builderFromString("foregroundColor=invalidColor"));
     }
 
     @Test
-    void testFromString_invalidBoolean() {
-        assertThrows(ParseException.class, () -> CommandLinePreferences.fromString("dynamicIcon=maybe"));
+    void testFromCommandLine_invalidBoolean() {
+        assertThrows(ParseException.class, () -> CommandLinePreferences.builderFromString("dynamicIcon=maybe"));
     }
 }

@@ -1,5 +1,7 @@
 package pitheguy.waveform.ui.dialogs.preferences;
 
+import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.NotificationState;
@@ -14,8 +16,10 @@ import java.util.*;
 public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<Color> backgroundColor,
                                      Optional<Color> playedColor, Optional<Boolean> dynamicIcon,
                                      Optional<Boolean> highContrast, Optional<NotificationState> notifications,
-                                     Optional<Boolean> mono, Optional<Boolean> disableSmoothing) {
+                                     Optional<Boolean> mono, Optional<Boolean> disableSmoothing,
+                                     Optional<Boolean> forceRead) {
     public static CommandLinePreferences EMPTY = new CommandLinePreferences(
+            Optional.empty(),
             Optional.empty(),
             Optional.empty(),
             Optional.empty(),
@@ -35,14 +39,23 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         notifications.ifPresent(n -> settings.setValue("notifications", n));
         mono.ifPresent(m -> settings.setValue("mono", m));
         disableSmoothing.ifPresent(ds -> settings.setValue("disableSmoothing", ds));
+        forceRead.ifPresent(d -> settings.setValue("forceRead", d));
         Waveform.getInstance().updateColors();
     }
 
-    public static CommandLinePreferences fromString(String string) throws ParseException {
-        if (string == null) return EMPTY;
-        String[] parts = string.split(",");
-        Set<String> addedKeys = new HashSet<>();
+    public static CommandLinePreferences fromCommandLine(CommandLine commandLine) throws ParseException {
+        String preferencesString = commandLine.getOptionValue("preferences");
+        Builder builder = builderFromString(preferencesString);
+        if (commandLine.hasOption("force")) builder.forceRead = true;
+        return builder.build();
+    }
+
+    @VisibleForTesting
+    static CommandLinePreferences.Builder builderFromString(String preferencesString) throws ParseException {
         Builder builder = new Builder();
+        if (preferencesString == null) return builder;
+        String[] parts = preferencesString.split(",");
+        Set<String> addedKeys = new HashSet<>();
         for (String part : parts) {
             String[] keyValue = part.split("=");
             String key = keyValue[0].trim();
@@ -61,12 +74,13 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
                 default -> throw new ParseException("Unknown key: " + key);
             }
         }
-        return builder.build();
+        return builder;
     }
 
     private static Color parseColor(String value) throws ParseException {
         Color color = Util.parseColor(value);
-        if (color == null) throw new ParseException("Invalid color: " + value + ". Must be one of: " + WaveColor.getAvailableColors() + ", or a hex color code");
+        if (color == null)
+            throw new ParseException("Invalid color: " + value + ". Must be one of: " + WaveColor.getAvailableColors() + ", or a hex color code");
         return color;
     }
 
@@ -86,7 +100,7 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         }
     }
 
-    private static class Builder {
+    public static class Builder {
         Color foregroundColor;
         Color backgroundColor;
         Color playedColor;
@@ -95,6 +109,7 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         NotificationState notifications;
         Boolean mono;
         Boolean disableSmoothing;
+        Boolean forceRead;
 
         public CommandLinePreferences build() {
             return new CommandLinePreferences(
@@ -105,7 +120,8 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
                     Optional.ofNullable(highContrast),
                     Optional.ofNullable(notifications),
                     Optional.ofNullable(mono),
-                    Optional.ofNullable(disableSmoothing)
+                    Optional.ofNullable(disableSmoothing),
+                    Optional.ofNullable(forceRead)
             );
         }
     }

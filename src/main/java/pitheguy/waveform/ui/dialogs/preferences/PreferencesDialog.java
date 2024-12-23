@@ -27,10 +27,11 @@ public class PreferencesDialog extends JDialog {
     JCheckBox dynamicIcon;
     JCheckBox highContrast;
     JCheckBox pauseOnExport;
-    JCheckBox showInSystemTray;
     LabeledEnumDropdown<NotificationState> notifications;
     JCheckBox mono;
     JCheckBox disableSmoothing;
+    JCheckBox showInSystemTray;
+    JCheckBox forceRead;
 
     public PreferencesDialog(Waveform parent) {
         super(parent, "Preferences", true);
@@ -131,15 +132,28 @@ public class PreferencesDialog extends JDialog {
             notifications.setToolTipText(showInSystemTray.isSelected() ? null : "Requires system tray icon");
         });
         showInSystemTrayPanel.add(showInSystemTray);
+        showInSystemTrayPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, showInSystemTrayPanel.getPreferredSize().height));
         advancedPanel.add(showInSystemTrayPanel);
         notifications.setEnabled(showInSystemTray.isSelected());
+
+        //Force read files
+        JPanel forceReadPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        forceRead = createCheckBox("Force read audio files",
+                """
+                        Force the program to attempt to read all files. Will throw errors
+                        for invalid files, so don't enable this unless you need to.""",
+                'R', Config.forceRead());
+        forceRead.setDisplayedMnemonicIndex(6);
+        forceReadPanel.add(forceRead);
+        forceReadPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, forceReadPanel.getPreferredSize().height));
+        advancedPanel.add(forceReadPanel);
 
         return advancedPanel;
     }
 
     private static JCheckBox createCheckBox(String text, String tooltip, char mnemonic, boolean selected) {
         JCheckBox checkBox = new JCheckBox(text, selected);
-        if (tooltip != null) checkBox.setToolTipText(tooltip);
+        if (tooltip != null) checkBox.setToolTipText("<html>" + tooltip.replaceAll("\n", "<br>") + "</html>");
         checkBox.setMnemonic(mnemonic);
         checkBox.getAccessibleContext().setAccessibleName(text);
         return checkBox;
@@ -195,6 +209,7 @@ public class PreferencesDialog extends JDialog {
         addValue(map, Config.commandLinePreferences.mono(), "mono", mono.isSelected());
         addValue(map, Config.commandLinePreferences.disableSmoothing(), "disableSmoothing", disableSmoothing.isSelected());
         map.put("showInSystemTray", showInSystemTray.isSelected());
+        map.put("forceRead", forceRead.isSelected());
         return SavedPreferences.create(map);
     }
 

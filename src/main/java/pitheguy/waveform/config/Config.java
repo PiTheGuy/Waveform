@@ -20,7 +20,6 @@ public class Config {
     public static ExportType exportType = null;
     public static Visualizer visualizer = Visualizer.WAVEFORM;
     public static LoopState loop = LoopState.OFF;
-    public static boolean forceRead = false;
     public static boolean microphoneMode = false;
     public static boolean shuffle = false;
     public static boolean disableSeeking = false;
@@ -73,6 +72,10 @@ public class Config {
 
     public static boolean showInSystemTray() {
         return settings.getValue("showInSystemTray", Boolean.class);
+    }
+
+    public static boolean forceRead() {
+        return settings.getValue("forceRead", Boolean.class);
     }
 
     public static double getFrameLength() {
