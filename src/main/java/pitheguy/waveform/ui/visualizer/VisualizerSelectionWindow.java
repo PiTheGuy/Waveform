@@ -2,6 +2,7 @@ package pitheguy.waveform.ui.visualizer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pitheguy.waveform.config.Config;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.util.ClickableMouseListener;
@@ -238,6 +239,7 @@ public class VisualizerSelectionWindow extends JWindow {
         public VisualizerEntry(Visualizer visualizer) {
             this.visualizer = visualizer;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            setBackground(getBackgroundColor());
             JLabel imageLabel = new JLabel();
             imageLabel.setPreferredSize(new Dimension(150, 100));
             imageLabel.setMaximumSize(new Dimension(150, 100));
@@ -250,7 +252,12 @@ public class VisualizerSelectionWindow extends JWindow {
             getAccessibleContext().setAccessibleName(visualizer.getName());
             add(label);
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            addMouseListener(new ClickableMouseListener(this, new Color(240, 240, 240), Color.LIGHT_GRAY, this::onClick));
+            addMouseListener(new ClickableMouseListener(this, this::getBackgroundColor, Color.LIGHT_GRAY, this::onClick));
+        }
+
+        private Color getBackgroundColor() {
+            if (Config.visualizer == visualizer) return new Color(128, 255, 128);
+            else return new Color(240, 240, 240);
         }
 
         private static ImageIcon getIcon(Visualizer visualizer) {
