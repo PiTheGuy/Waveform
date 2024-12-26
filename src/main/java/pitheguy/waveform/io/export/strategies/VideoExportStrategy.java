@@ -8,9 +8,9 @@ import pitheguy.waveform.util.*;
 import java.io.*;
 import java.util.*;
 
-public class VideoExportStrategy implements ExportStrategy {
+public class VideoExportStrategy extends FfmpegExportStrategy {
     @Override
-    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    protected void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
         List<String> args = new ArrayList<>(List.of(
                 "-y", // Overwrite output if it exists
                 "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", context.width() + "x" + context.height(),  // Input frame format

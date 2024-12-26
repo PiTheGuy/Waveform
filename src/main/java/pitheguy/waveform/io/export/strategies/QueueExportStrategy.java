@@ -11,14 +11,14 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.List;
 
-public class QueueExportStrategy implements ExportStrategy {
+public class QueueExportStrategy extends ExportStrategy {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public QueueExportStrategy() {
     }
 
     @Override
-    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    protected void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
         if (!context.outputFile().exists()) Files.createDirectories(context.outputFile().toPath());
         if (!context.outputFile().isDirectory()) throw new IOException("File is not a directory");
         List<TrackInfo> queue = Waveform.getInstance().getQueue();

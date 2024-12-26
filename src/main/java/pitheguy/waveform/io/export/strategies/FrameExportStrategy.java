@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class FrameExportStrategy implements ExportStrategy {
+public class FrameExportStrategy extends ExportStrategy {
     private final double sec;
 
     public FrameExportStrategy(double sec) {
@@ -16,7 +16,7 @@ public class FrameExportStrategy implements ExportStrategy {
     }
 
     @Override
-    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    protected void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
         BufferedImage frame = Waveform.getInstance().audioDrawer.drawFrame(sec);
         ImageIO.write(frame, "png", context.outputFile());
     }

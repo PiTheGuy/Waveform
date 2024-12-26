@@ -70,13 +70,13 @@ public class Waveform extends JFrame {
     public final YoutubeAudioGetter audioGetter = new YoutubeAudioGetter();
     public final MicrophoneCapture microphone = new MicrophoneCapture();
     public VisualizerSelectionWindow visualizerSelectionWindow;
-
     public boolean isQueuePanelVisible = false;
+    private boolean shuttingDown = false;
 
     public Waveform(boolean visible) {
         super("Waveform");
         instance = this;
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         if (Config.fullScreen && visible) toggleFullscreen();
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
@@ -100,7 +100,7 @@ public class Waveform extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                destroy();
+                exit();
             }
         });
         playbackManager.addQueueChangeListener(this::handleQueueChange);
@@ -709,22 +709,6 @@ public class Waveform extends JFrame {
         }, waitUntilFinished);
     }
 
-    public void handleExit() {
-        if (isQueuePanelVisible) toggleQueuePanel();
-        else if (isVisualizerSelectionWindowOpen()) toggleVisualizerSelectionWindow();
-        else exit();
-    }
-
-    public void exit() {
-        exit(null);
-    }
-
-    public void exit(QuitResponse response) {
-        destroy();
-        if (response != null) response.performQuit();
-        System.exit(0);
-    }
-
     private void handleQueueChange() {
         queuePanel.repopulate();
         updateTitle();
@@ -735,13 +719,45 @@ public class Waveform extends JFrame {
         }
     }
 
+    public void handleExit() {
+        if (isQueuePanelVisible) toggleQueuePanel();
+        else if (isVisualizerSelectionWindowOpen()) toggleVisualizerSelectionWindow();
+        else exit();
+    }
+
+    public boolean confirmExit() {
+        if (exportManager.isExporting()) {
+            return dialogManager.showConfirmDialog("export_in_progress", "Export In Progress", "An export is currently in progress. Are you sure you want to exit the program?");
+        } else return true;
+    }
+
+    public void exit() {
+        exit(null);
+    }
+
+    public void exit(QuitResponse response) {
+        if (!confirmExit()) {
+            if (response != null) response.cancelQuit();
+            return;
+        }
+        destroy();
+        if (response != null) response.performQuit();
+        System.exit(0);
+    }
+
     public void destroy() {
+        shuttingDown = true;
         if (frameUpdater != null) frameUpdater.silentShutdown();
         playbackManager.closeAudioPlayer();
         parsingService.shutdown();
+        exportManager.cancelExports();
         removeTrayIcon();
         TempFileManager.cleanupTempFiles();
         dispose();
+    }
+
+    public boolean isShuttingDown() {
+        return shuttingDown;
     }
 
     public class WaveformMouseListener extends MouseAdapter {

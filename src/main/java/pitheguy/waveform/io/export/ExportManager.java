@@ -15,12 +15,14 @@ import java.nio.file.*;
 public class ExportManager {
     private static final Logger LOGGER = LogManager.getLogger(ExportManager.class);
     private final Waveform parent;
+    private ExportStrategy strategy;
 
     public ExportManager(Waveform parent) {
         this.parent = parent;
     }
 
     private void export(File file, ExportStrategy strategy, String name, ExportType type, boolean waitUntilFinished) {
+        this.strategy = strategy;
         parent.backgroundPauseUntilFinished(() -> {
             try {
                 ExportOptionsDialog.ExportOptions options = ExportOptionsDialog.showDialogIfNeeded(parent, name, type, file);
@@ -29,11 +31,14 @@ public class ExportManager {
                 ProgressTracker tracker = strategy.getProgressTracker();
                 strategy.export(context, tracker);
             } catch (IOException e) {
-                LOGGER.error("Failed to export {}", name, e);
-                parent.showError("Export Failed", "Failed to export " + name + ": " + e.getMessage());
+                if (!parent.isShuttingDown()) { // Export may have been canceled
+                    LOGGER.error("Failed to export {}", name, e);
+                    parent.showError("Export Failed", "Failed to export " + name + ": " + e.getMessage());
+                }
+            } finally {
+                this.strategy = null;
             }
         }, waitUntilFinished);
-
     }
 
     public void exportFrame(File file) {
@@ -90,5 +95,16 @@ public class ExportManager {
             if (file == null) return;
         }
         export(file, new QueueExportStrategy(), "queue", null, false);
+    }
+
+    public boolean isExporting() {
+        return strategy != null && strategy.isExporting();
+    }
+
+    public void cancelExports() {
+        if (strategy != null) {
+            strategy.cancel();
+            strategy = null;
+        }
     }
 }

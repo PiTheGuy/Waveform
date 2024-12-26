@@ -9,9 +9,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class FullImageExportStrategy implements ExportStrategy {
+public class FullImageExportStrategy extends ExportStrategy {
+
     @Override
-    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    protected void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
         AudioDrawer drawer = Config.visualizer.getExportDrawer(context.width(), context.height());
         drawer.setPlayingAudio(context.audioData());
         BufferedImage fullAudio = drawer.drawFullAudio();

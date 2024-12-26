@@ -8,9 +8,9 @@ import pitheguy.waveform.util.ProgressTracker;
 import java.io.IOException;
 import java.util.List;
 
-public class GifExportStrategy implements ExportStrategy {
+public class GifExportStrategy extends FfmpegExportStrategy {
     @Override
-    public void export(ExportContext context, ProgressTracker progressTracker) throws IOException {
+    protected void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
         List<String> args = List.of(
                 "-y", // Overwrite existing files
                 "-f", "rawvideo", // Raw video format from stdin
