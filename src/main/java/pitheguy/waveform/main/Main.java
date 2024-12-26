@@ -28,7 +28,7 @@ public class Main {
     private static boolean visualizerSpecified;
 
     public static void main(String... args) throws Exception {
-        System.setProperty("PROGRAM_DATA_PATH", OS.getProgramDataPath().toString());
+        setSystemProperties();
         try {
             processInput(args);
         } catch (ParseException e) {
@@ -36,8 +36,7 @@ public class Main {
             new HelpFormatter().printHelp("java -jar Waveform.jar", createOptions().getVisibleOptions());
             System.exit(1);
         }
-        System.setProperty("sun.java2d.opengl", "true");
-        System.setProperty("sun.java2d.d3d", "true");
+
         Waveform waveform = new Waveform(Config.exportFile == null);
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         waveform.populateMenuBar();
@@ -45,6 +44,14 @@ public class Main {
         Util.runInBackground(HttpUtil::checkInternetConnection);
         if (Config.exportFile != null) export(waveform);
         else if (hasInput()) playInput(waveform);
+    }
+
+    private static void setSystemProperties() {
+        System.setProperty("PROGRAM_DATA_PATH", OS.getProgramDataPath().toString());
+        System.setProperty("sun.java2d.opengl", "true");
+        System.setProperty("sun.java2d.d3d", "true");
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Waveform");
     }
 
     private static boolean hasInput() {

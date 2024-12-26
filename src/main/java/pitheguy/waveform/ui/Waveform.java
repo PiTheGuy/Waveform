@@ -109,6 +109,7 @@ public class Waveform extends JFrame {
         addControls();
         addQueuePanel();
         setupKeyBindings();
+        setupPreferences();
         startup();
         setVisible(visible);
         setTransferHandler(new AudioTransferHandler(this));
@@ -148,6 +149,14 @@ public class Waveform extends JFrame {
         keyBindingManager.registerGlobalKeyBinding("ESCAPE", "exit", this::handleExit);
         keyBindingManager.registerGlobalKeyBinding("ctrl B", "visualizerSelection", this::toggleVisualizerSelectionWindow);
         keyBindingManager.setupKeyBindings();
+    }
+
+    private void setupPreferences() {
+        if (Config.disablePreferences) return;
+        if (!Desktop.isDesktopSupported()) return;
+        Desktop desktop = Desktop.getDesktop();
+        if (desktop.isSupported(Desktop.Action.APP_PREFERENCES))
+            desktop.setPreferencesHandler(event -> this.openPreferences());
     }
 
     public boolean isMinimized() {
@@ -545,7 +554,7 @@ public class Waveform extends JFrame {
     public boolean isPaused() {
         return playbackManager.paused;
     }
-
+    
     public static boolean isFileSupported(File file) {
         return isFileSupported(file.getName());
     }
