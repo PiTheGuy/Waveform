@@ -26,6 +26,7 @@ import pitheguy.waveform.util.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.desktop.QuitResponse;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -109,7 +110,7 @@ public class Waveform extends JFrame {
         addControls();
         addQueuePanel();
         setupKeyBindings();
-        setupPreferences();
+        setupMenuBarIntegration();
         startup();
         setVisible(visible);
         setTransferHandler(new AudioTransferHandler(this));
@@ -151,12 +152,12 @@ public class Waveform extends JFrame {
         keyBindingManager.setupKeyBindings();
     }
 
-    private void setupPreferences() {
-        if (Config.disablePreferences) return;
+    private void setupMenuBarIntegration() {
         if (!Desktop.isDesktopSupported()) return;
         Desktop desktop = Desktop.getDesktop();
-        if (desktop.isSupported(Desktop.Action.APP_PREFERENCES))
-            desktop.setPreferencesHandler(event -> this.openPreferences());
+        if (!Config.disablePreferences && desktop.isSupported(Desktop.Action.APP_PREFERENCES))
+            desktop.setPreferencesHandler(e -> openPreferences());
+        if (desktop.isSupported(Desktop.Action.APP_QUIT_HANDLER)) desktop.setQuitHandler((e, response) -> exit(response));
     }
 
     public boolean isMinimized() {
@@ -243,7 +244,7 @@ public class Waveform extends JFrame {
 
     public void microphoneInput() {
         if (!microphone.isSupported()) {
-            showError("Microphone Unavailable","Microphone not available.");
+            showError("Microphone Unavailable", "Microphone not available.");
             return;
         }
         Config.microphoneMode = true;
@@ -467,7 +468,8 @@ public class Waveform extends JFrame {
         else if (hasNextTrack()) {
             nextTrack();
             showNotification(getTrackTitle(), null, TrayIcon.MessageType.INFO);
-        } else if (Config.loop == LoopState.ALL) Util.showErrorOnException(() -> playIndex(0), "Failed to replay the queue", LOGGER);
+        } else if (Config.loop == LoopState.ALL)
+            Util.showErrorOnException(() -> playIndex(0), "Failed to replay the queue", LOGGER);
         else startup();
     }
 
@@ -481,7 +483,8 @@ public class Waveform extends JFrame {
     }
 
     public void switchVisualizer(Visualizer newVisualizer) {
-        if (newVisualizer.isCommandLineOnly()) throw new IllegalArgumentException("Cannot switch to a command line only visualizer");
+        if (newVisualizer.isCommandLineOnly())
+            throw new IllegalArgumentException("Cannot switch to a command line only visualizer");
         if (Config.visualizer == newVisualizer) return;
         if (Config.visualizer.isCommandLineOnly() && !confirmVisualizerSwitch()) return;
         if (newVisualizer.shouldShowEpilepsyWarning() && !showEpilepsyWarning()) return;
@@ -554,7 +557,7 @@ public class Waveform extends JFrame {
     public boolean isPaused() {
         return playbackManager.paused;
     }
-    
+
     public static boolean isFileSupported(File file) {
         return isFileSupported(file.getName());
     }
@@ -655,10 +658,7 @@ public class Waveform extends JFrame {
     }
 
     public void importFromYoutube() {
-        if (!HttpUtil.checkInternetConnection()) {
-            showError("No Internet Connection", "Please check your internet connection.");
-            return;
-        }
+        if (!HttpUtil.ensureInternetConnection()) return;
         if (!YoutubeAudioGetter.hasRequiredDependencies()) {
             showError("Missing Required Dependencies", "yt-dlp is required for YouTube imports.");
             return;
@@ -686,6 +686,7 @@ public class Waveform extends JFrame {
             }
         });
     }
+
     public void showError(String title, String message) {
         if (isVisible())
             JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
@@ -715,7 +716,12 @@ public class Waveform extends JFrame {
     }
 
     public void exit() {
+        exit(null);
+    }
+
+    public void exit(QuitResponse response) {
         destroy();
+        if (response != null) response.performQuit();
         System.exit(0);
     }
 

@@ -2,6 +2,7 @@ package pitheguy.waveform.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pitheguy.waveform.ui.Waveform;
 
 import java.io.*;
 import java.net.URI;
@@ -45,5 +46,12 @@ public class HttpUtil {
             LOGGER.debug("Internet connectivity check failed", e);
             return false;
         }
+    }
+
+    public static boolean ensureInternetConnection() {
+        boolean hasInternet = checkInternetConnection();
+        if (!hasInternet)
+            Waveform.getInstance().showError("No Internet Connection", "Please check your internet connection.");
+        return hasInternet;
     }
 }
