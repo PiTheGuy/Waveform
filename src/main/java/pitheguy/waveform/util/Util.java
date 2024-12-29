@@ -1,5 +1,6 @@
 package pitheguy.waveform.util;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.main.WaveColor;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Util {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static boolean areUnique(Object... elements) {
         Set<Object> uniqueElements = new HashSet<>(Arrays.asList(elements));
         return uniqueElements.size() == elements.length;
@@ -153,6 +156,18 @@ public class Util {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         if (Config.debug) processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT);
         return processBuilder.start();
+    }
+
+    public static void openUrl(String url, String name) {
+        if (!HttpUtil.ensureInternetConnection()) return;
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (IOException e) {
+            LOGGER.error("Failed to open {} page", name, e);
+            Waveform.getInstance().showError("Error", "Failed to open " + name + " page. Check logs for more information.");
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URL: " + url, e);
+        }
     }
 
     public interface ThrowingRunnable {

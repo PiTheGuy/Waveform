@@ -5,8 +5,10 @@ import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.main.Visualizer;
+import pitheguy.waveform.ui.dialogs.AboutDialog;
 import pitheguy.waveform.ui.util.MenuHelper;
 import pitheguy.waveform.util.HttpUtil;
+import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.rolling.RollingList;
 
 import javax.swing.*;
@@ -121,18 +123,14 @@ public class WaveformMenuBar extends JMenuBar {
     private void addHelpMenu() {
         JMenu helpMenu = createMenu("Help", 'H');
         JMenuItem reportBugsItem = MenuHelper.createMenuItem("Report Bugs...", 'R', null, e -> reportBugs());
+        JMenuItem aboutItem = MenuHelper.createMenuItem("About...", 'A', null, e -> new AboutDialog(parent));
         if (Desktop.isDesktopSupported()) helpMenu.add(reportBugsItem);
+        helpMenu.add(aboutItem);
         add(helpMenu);
     }
 
     private void reportBugs() {
-        if (!HttpUtil.ensureInternetConnection()) return;
-        try {
-            Desktop.getDesktop().browse(new URI("https://github.com/PiTheGuy/Waveform/issues"));
-        } catch (IOException | URISyntaxException e) {
-            LOGGER.error("Failed to open bug report page", e);
-            parent.showError("Error", "Failed to open bug report page. Check logs for more information.");
-        }
+        Util.openUrl("https://github.com/PiTheGuy/Waveform/issues", "bug report");
     }
 
     public void updateState() {
