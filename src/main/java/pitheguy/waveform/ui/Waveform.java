@@ -37,8 +37,6 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Waveform extends JFrame {
-    public static final String VERSION = "1.2.1";
-
     private static final Logger LOGGER = LogManager.getLogger(Waveform.class);
     public static final String VERSION = "1.2.1";
     public static final String DRAG_AND_DROP_TEXT = "Drag and drop an audio file to start playing";
@@ -731,9 +729,9 @@ public class Waveform extends JFrame {
     }
 
     public boolean confirmExit() {
-        if (exportManager.isExporting()) {
+        if (exportManager.isExporting())
             return dialogManager.showConfirmDialog("export_in_progress", "Export In Progress", "An export is currently in progress. Are you sure you want to exit the program?");
-        } else return true;
+        else return true;
     }
 
     public void exit() {
