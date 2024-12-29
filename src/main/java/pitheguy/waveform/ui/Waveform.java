@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Waveform extends JFrame {
+    public static final String VERSION = "1.2.1";
+
     private static final Logger LOGGER = LogManager.getLogger(Waveform.class);
     public static final String VERSION = "1.2.1";
     public static final String DRAG_AND_DROP_TEXT = "Drag and drop an audio file to start playing";
