@@ -14,6 +14,7 @@ import pitheguy.waveform.io.microphone.MicrophoneFrameUpdater;
 import pitheguy.waveform.main.Main;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.controls.ControlsPanel;
+import pitheguy.waveform.ui.dialogs.AboutDialog;
 import pitheguy.waveform.ui.dialogs.DialogManager;
 import pitheguy.waveform.ui.dialogs.preferences.PreferencesDialog;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class Waveform extends JFrame {
+    public static final String VERSION = "1.2.1";
+
     private static final Logger LOGGER = LogManager.getLogger(Waveform.class);
     public static final String DRAG_AND_DROP_TEXT = "Drag and drop an audio file to start playing";
     public static final String LOADING_TEXT = "Loading...";
@@ -158,6 +161,7 @@ public class Waveform extends JFrame {
         if (!Config.disablePreferences && desktop.isSupported(Desktop.Action.APP_PREFERENCES))
             desktop.setPreferencesHandler(e -> openPreferences());
         if (desktop.isSupported(Desktop.Action.APP_QUIT_HANDLER)) desktop.setQuitHandler((e, response) -> exit(response));
+        if (desktop.isSupported(Desktop.Action.APP_ABOUT)) desktop.setPreferencesHandler(e -> new AboutDialog(this));
     }
 
     public boolean isMinimized() {
