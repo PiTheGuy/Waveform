@@ -63,6 +63,7 @@ public class Waveform extends JFrame {
     public AudioData audioData;
     public WaveformTrayIcon trayIcon;
     public final TrackParsingService parsingService = new TrackParsingService(this);
+    public final IconManager iconManager = new IconManager(this);
     public final DrawerManager drawerManager = new DrawerManager(this);
     public final ExportManager exportManager = new ExportManager(this);
     public final DialogManager dialogManager = new DialogManager(this);
@@ -419,7 +420,6 @@ public class Waveform extends JFrame {
         if (!hasAudio) return;
         this.image = image;
         imgLabel.setIcon(new ImageIcon(image));
-        if (Config.useDynamicIcon()) setIconImage(image);
         repaint();
     }
 
@@ -454,7 +454,7 @@ public class Waveform extends JFrame {
         setText(DRAG_AND_DROP_TEXT);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setResizable(true);
-        setIconImage(STATIC_ICON);
+        iconManager.resetIcon();
         updateTitle();
     }
 
@@ -490,7 +490,8 @@ public class Waveform extends JFrame {
         if (frameUpdater != null) frameUpdater.forceUpdate();
         setResizable(drawerManager.mainDrawer.isResizable() || !hasAudio);
         setCursor(getCorrectCursor());
-        if (!drawerManager.mainDrawer.usesDynamicIcon()) setIconImage(STATIC_ICON);
+        if (!drawerManager.mainDrawer.usesDynamicIcon()) iconManager.resetIcon();
+        else iconManager.updateIconDrawer();
         menuBar.registerVisualizerSwitch(newVisualizer);
     }
 

@@ -100,13 +100,16 @@ public class Config {
     public static void setSettings(SettingsInstance settings) {
         boolean oldMono = settings.getValue("mono", Boolean.class);
         boolean oldShowInSystemTray = settings.getValue("showInSystemTray", Boolean.class);
+        boolean oldDynamicIcon = settings.getValue("dynamicIcon", Boolean.class);
         Config.settings = settings;
         if (oldMono != settings.getValue("mono", Boolean.class)) Waveform.getInstance().invalidateAudioCache();
-        Boolean showInSystemTray = settings.getValue("showInSystemTray", Boolean.class);
+        boolean showInSystemTray = settings.getValue("showInSystemTray", Boolean.class);
         if (oldShowInSystemTray != showInSystemTray) {
             if (showInSystemTray) Waveform.getInstance().addTrayIcon();
             else Waveform.getInstance().removeTrayIcon();
         }
+        boolean dynamicIcon = settings.getValue("dynamicIcon", Boolean.class);
+        if (oldDynamicIcon != dynamicIcon) Waveform.getInstance().iconManager.updateIconDrawer();
     }
 
 }

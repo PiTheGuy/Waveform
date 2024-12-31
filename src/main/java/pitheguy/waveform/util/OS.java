@@ -1,5 +1,9 @@
 package pitheguy.waveform.util;
 
+import com.sun.jna.platform.win32.User32;
+import org.apache.logging.log4j.LogManager;
+
+import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
 
@@ -34,5 +38,27 @@ public enum OS {
             default -> System.getProperty("user.home") + "/Waveform";
         };
         return Path.of(filePath);
+    }
+
+    public static int getIconSize() {
+        OS os = detectOS();
+        try {
+            return switch (os) {
+                case WINDOWS -> {
+                    int iconWidth = User32.INSTANCE.GetSystemMetrics(11);
+                    int iconHeight = User32.INSTANCE.GetSystemMetrics(12);
+                    yield Math.min(iconWidth, iconHeight);
+                }
+                case MAC_OS -> {
+                    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                    yield gd.getDefaultConfiguration().getBounds().width > 2560 ? 128 : 64;
+                }
+                case LINUX -> 48;
+                case OTHER -> 32;
+            };
+        } catch (Exception e) {
+            LogManager.getLogger().warn("Failed to get icon size", e);
+            return 32;
+        }
     }
 }
