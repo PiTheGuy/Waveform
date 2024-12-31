@@ -9,8 +9,10 @@ import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.ui.dialogs.ExportOptionsDialog;
 import pitheguy.waveform.util.*;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class ExportManager {
     private static final Logger LOGGER = LogManager.getLogger(ExportManager.class);

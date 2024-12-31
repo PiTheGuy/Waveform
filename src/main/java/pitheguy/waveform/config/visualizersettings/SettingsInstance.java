@@ -1,7 +1,7 @@
 package pitheguy.waveform.config.visualizersettings;
 
-import com.google.gson.*;
-import org.apache.commons.math3.optim.linear.LinearObjectiveFunction;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

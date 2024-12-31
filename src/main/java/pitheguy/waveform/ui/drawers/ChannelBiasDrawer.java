@@ -1,11 +1,11 @@
 package pitheguy.waveform.ui.drawers;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.config.visualizersettings.SettingType;
 import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.config.visualizersettings.options.VisualizationMode;
+import pitheguy.waveform.io.DrawContext;
+import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.util.DebugText;
 import pitheguy.waveform.util.Util;
 

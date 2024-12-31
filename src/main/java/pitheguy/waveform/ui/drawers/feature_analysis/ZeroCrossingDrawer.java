@@ -1,8 +1,8 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
-import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
 import pitheguy.waveform.config.visualizersettings.SettingsInstance;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.ui.drawers.SlicedImageDrawer;
 import pitheguy.waveform.ui.drawers.waveform.WaveformDrawer;
 

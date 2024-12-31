@@ -5,9 +5,11 @@ import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.io.export.ExportContext;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.util.*;
+import pitheguy.waveform.util.FileUtil;
+import pitheguy.waveform.util.ProgressTracker;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 

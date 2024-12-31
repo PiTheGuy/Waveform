@@ -1,9 +1,9 @@
 package pitheguy.waveform.ui.drawers;
 
-import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
 import pitheguy.waveform.config.visualizersettings.SettingsInstance;
+import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.util.rolling.RollingAverageTracker;
 
 import java.awt.image.BufferedImage;

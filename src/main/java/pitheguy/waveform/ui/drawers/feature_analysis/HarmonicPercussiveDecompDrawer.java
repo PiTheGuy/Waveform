@@ -1,11 +1,11 @@
 package pitheguy.waveform.ui.drawers.feature_analysis;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.io.DrawContext;
-import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.config.visualizersettings.SettingType;
 import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.config.visualizersettings.options.ColorChannel;
+import pitheguy.waveform.io.DrawContext;
+import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.drawers.HeatmapDrawer;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;

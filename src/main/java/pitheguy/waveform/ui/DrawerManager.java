@@ -5,7 +5,8 @@ import pitheguy.waveform.io.AudioData;
 import pitheguy.waveform.ui.drawers.AudioDrawer;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class DrawerManager {

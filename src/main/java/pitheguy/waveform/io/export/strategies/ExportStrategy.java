@@ -3,7 +3,7 @@ package pitheguy.waveform.io.export.strategies;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.io.export.ExportContext;
-import pitheguy.waveform.util.*;
+import pitheguy.waveform.util.ProgressTracker;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,16 +1,13 @@
 package pitheguy.waveform.config;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import pitheguy.waveform.config.visualizersettings.SettingType;
 import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.Waveform;
-import pitheguy.waveform.util.Util;
 
 import java.awt.*;
 import java.util.*;
-import java.util.function.Function;
 
 public class SavedPreferences {
 

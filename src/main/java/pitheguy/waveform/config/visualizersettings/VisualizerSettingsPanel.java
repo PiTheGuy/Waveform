@@ -3,7 +3,6 @@ package pitheguy.waveform.config.visualizersettings;
 import pitheguy.waveform.main.Visualizer;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

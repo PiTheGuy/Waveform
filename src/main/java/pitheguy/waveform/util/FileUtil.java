@@ -2,7 +2,6 @@ package pitheguy.waveform.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.appender.FileManager;
 import pitheguy.waveform.ui.Waveform;
 
 import java.io.*;

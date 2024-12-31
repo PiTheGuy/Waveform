@@ -1,10 +1,10 @@
 package pitheguy.waveform.ui.drawers.spectogram;
 
 import pitheguy.waveform.config.Config;
-import pitheguy.waveform.io.AudioData;
-import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.config.visualizersettings.SettingType;
 import pitheguy.waveform.config.visualizersettings.SettingsInstance;
+import pitheguy.waveform.io.AudioData;
+import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.util.FftAnalyser;
 import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.rolling.RollingList;

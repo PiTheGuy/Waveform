@@ -1,6 +1,5 @@
 package pitheguy.waveform.ui;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
@@ -16,11 +15,8 @@ import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.controls.ControlsPanel;
 import pitheguy.waveform.ui.dialogs.AboutDialog;
 import pitheguy.waveform.ui.dialogs.DialogManager;
-import pitheguy.waveform.ui.dialogs.preferences.PreferencesDialog;
 import pitheguy.waveform.ui.queue.QueueKeyboardListener;
-import pitheguy.waveform.ui.queue.QueueManagementPanel;
 import pitheguy.waveform.ui.util.KeyBindingManager;
-import pitheguy.waveform.ui.visualizer.VisualizerSelectionWindow;
 import pitheguy.waveform.util.*;
 
 import javax.swing.*;
@@ -33,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
 
 public class Waveform extends JFrame {
     private static final Logger LOGGER = LogManager.getLogger();

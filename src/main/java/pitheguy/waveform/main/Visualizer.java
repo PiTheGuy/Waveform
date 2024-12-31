@@ -1,8 +1,8 @@
 package pitheguy.waveform.main;
 
+import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.io.session.SessionManager;
-import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.ui.drawers.feature_analysis.*;
 import pitheguy.waveform.ui.drawers.spectogram.*;

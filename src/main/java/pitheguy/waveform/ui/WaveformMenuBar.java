@@ -7,15 +7,11 @@ import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.dialogs.AboutDialog;
 import pitheguy.waveform.ui.util.MenuHelper;
-import pitheguy.waveform.util.HttpUtil;
 import pitheguy.waveform.util.Util;
 import pitheguy.waveform.util.rolling.RollingList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
