@@ -1,5 +1,6 @@
 package pitheguy.waveform.ui.dialogs;
 
+import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.ui.Waveform;
 
@@ -74,7 +75,7 @@ public class DialogManager {
     }
 
     public void showRenderErrorDialog() {
-        String[] options = new String[]{"Switch Visualizer", "Try Again"};
+        String[] options = Config.disableVisualizerSelection ? new String[]{"Try Again"} : new String[]{"Switch Visualizer", "Try Again"};
         JOptionPane pane = new JOptionPane("An error occurred while rendering the visualization", JOptionPane.ERROR_MESSAGE,
                 JOptionPane.YES_NO_OPTION, null, options, options[0]);
         JDialog dialog = pane.createDialog(parent, "Render Error");
