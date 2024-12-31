@@ -53,7 +53,7 @@ public class VisualizerSelectionWindow extends JWindow {
     }
 
     private void addRecentlyUsedCategory() {
-        List<Visualizer> recentVisualizers = parent.menuBar.getRecentVisualizers();
+        List<Visualizer> recentVisualizers = parent.controller.getMenuBar().getRecentVisualizers();
         if (recentVisualizers.isEmpty()) return;
         CategoryEntry recentEntry = new CategoryEntry("Recently Used", recentVisualizers.toArray(Visualizer[]::new));
         mainPanel.add(recentEntry);
@@ -299,7 +299,7 @@ public class VisualizerSelectionWindow extends JWindow {
 
         private void onClick() {
             parent.switchVisualizer(visualizer);
-            parent.toggleVisualizerSelectionWindow();
+            parent.controller.toggleVisualizerSelectionWindow();
             if (fromError && parent.isPaused()) parent.togglePlayback();
         }
 

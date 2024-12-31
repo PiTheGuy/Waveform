@@ -70,7 +70,7 @@ public record Session(SavedPreferences savedPreferences, List<Visualizer> previo
 
     public void apply(boolean restoreVisualizer) {
         if (!Config.disablePreferences) savedPreferences.apply();
-        Waveform.getInstance().menuBar.applyPreviousVisualizers(previousVisualizers);
+        Waveform.getInstance().controller.getMenuBar().applyPreviousVisualizers(previousVisualizers);
         if (!previousVisualizers.isEmpty() && restoreVisualizer) Waveform.getInstance().switchVisualizer(previousVisualizers.getLast());
         new SessionManager(this);
     }

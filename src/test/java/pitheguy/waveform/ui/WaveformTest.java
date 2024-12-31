@@ -32,7 +32,7 @@ class WaveformTest {
         assertFalse(waveform.hasAudio);
         assertTrue(waveform.isResizable());
         assertEquals(0, waveform.queueIndex());
-        assertEquals(Waveform.DRAG_AND_DROP_TEXT, waveform.getText());
+        assertEquals(Waveform.DRAG_AND_DROP_TEXT, waveform.controller.getText());
         assertEquals(Waveform.STATIC_ICON, waveform.getIconImage());
         waveform.destroy();
     }
@@ -41,7 +41,7 @@ class WaveformTest {
     public void testPlay_withValidFile() throws Exception {
         Waveform waveform = new Waveform(false);
         waveform.play(TEST_FILE);
-        assertEquals("", waveform.getText());
+        assertEquals("", waveform.controller.getText());
         assertTrue(waveform.hasAudio);
         waveform.destroy();
     }
@@ -49,7 +49,7 @@ class WaveformTest {
     @Test
     public void testSwitchVisualizer() throws Exception {
         Waveform waveform = new Waveform(false);
-        waveform.populateMenuBar();
+        waveform.controller.populateMenuBar();
         waveform.play(TEST_FILE);
         waveform.switchVisualizer(Visualizer.VALUE_FREQUENCY_HEATMAP);
         assertEquals(Visualizer.VALUE_FREQUENCY_HEATMAP, Config.visualizer);
@@ -61,7 +61,7 @@ class WaveformTest {
     @Test
     public void testSwitchVisualizer_noAudio() {
         Waveform waveform = new Waveform(false);
-        waveform.populateMenuBar();
+        waveform.controller.populateMenuBar();
         waveform.switchVisualizer(Visualizer.EDGE_WAVEFORM);
         assertEquals(Visualizer.EDGE_WAVEFORM, Config.visualizer);
         waveform.destroy();
@@ -103,17 +103,6 @@ class WaveformTest {
         File textFile = new File("test.txt");
         assertTrue(Waveform.isFileSupported(textFile));
         Config.settings.setValue("forceRead", false);
-    }
-
-    @Test
-    public void testToggleQueuePanel() {
-        Waveform waveform = new Waveform(false);
-        assertFalse(waveform.isQueuePanelVisible);
-        assertFalse(waveform.queuePanel.isVisible());
-        waveform.toggleQueuePanel();
-        assertTrue(waveform.isQueuePanelVisible);
-        assertTrue(waveform.queuePanel.isVisible());
-        waveform.destroy();
     }
 
     @Test

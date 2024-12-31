@@ -15,22 +15,22 @@ public class QueueKeyboardListener extends KeyAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!parent.isQueuePanelVisible || Config.disableSkipping) return;
+        if (!parent.controller.isQueuePanelVisible() || Config.disableSkipping) return;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER -> {
-                if (parent.queuePanel.isItemSelected())
-                    parent.playIndex(parent.queuePanel.getSelectedIndex());
+                if (parent.controller.getQueuePanel().isItemSelected())
+                    parent.playIndex(parent.controller.getQueuePanel().getSelectedIndex());
             }
             case KeyEvent.VK_DOWN -> {
-                if (parent.queuePanel.getSelectedIndex() < parent.queueSize() - 1) {
-                    parent.queuePanel.setSelectedIndex(parent.queuePanel.getSelectedIndex() + 1);
-                    parent.queuePanel.repopulate();
+                if (parent.controller.getQueuePanel().getSelectedIndex() < parent.queueSize() - 1) {
+                    parent.controller.getQueuePanel().setSelectedIndex(parent.controller.getQueuePanel().getSelectedIndex() + 1);
+                    parent.controller.getQueuePanel().repopulate();
                 }
             }
             case KeyEvent.VK_UP -> {
-                if (parent.queuePanel.getSelectedIndex() > 0) {
-                    parent.queuePanel.setSelectedIndex(parent.queuePanel.getSelectedIndex() - 1);
-                    parent.queuePanel.repopulate();
+                if (parent.controller.getQueuePanel().getSelectedIndex() > 0) {
+                    parent.controller.getQueuePanel().setSelectedIndex(parent.controller.getQueuePanel().getSelectedIndex() - 1);
+                    parent.controller.getQueuePanel().repopulate();
                 }
             }
         }

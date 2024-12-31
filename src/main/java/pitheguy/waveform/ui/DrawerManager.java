@@ -18,7 +18,7 @@ public class DrawerManager {
     }
 
     public void registerAuxiliaryDrawer(AudioDrawer drawer, Consumer<BufferedImage> output) {
-        drawer.setPlayingAudio(parent.audioData);
+        if (parent.audioData != null) drawer.setPlayingAudio(parent.audioData);
         auxiliaryDrawers.put(drawer, output);
     }
 
@@ -34,16 +34,11 @@ public class DrawerManager {
     private void updateMainDrawer(double sec) {
         BufferedImage drawnArray = mainDrawer.drawFrame(sec);
         if (Config.showProgress) mainDrawer.updatePlayed(drawnArray, sec, parent.duration);
-        parent.setImageToDisplay(drawnArray);
+        parent.controller.setImageToDisplay(drawnArray);
     }
 
     public void setPlayingAudio(AudioData playingAudio) {
         mainDrawer.setPlayingAudio(playingAudio);
         auxiliaryDrawers.keySet().forEach(drawer -> drawer.setPlayingAudio(playingAudio));
-    }
-
-    public void regenerateIfNeeded() {
-        mainDrawer.regenerateIfNeeded();
-        auxiliaryDrawers.keySet().forEach(AudioDrawer::regenerateIfNeeded);
     }
 }

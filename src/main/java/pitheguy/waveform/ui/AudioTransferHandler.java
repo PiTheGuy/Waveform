@@ -51,14 +51,14 @@ public class AudioTransferHandler extends TransferHandler {
             List<File> unzippedFiles = new ArrayList<>(allFiles);
             int dropAction = support.getDropAction();
             Util.runInBackground(() -> {
-                waveform.setText("Importing...");
+                waveform.controller.setText("Importing...");
                 try {
                     for (File file : allFiles) {
                         if (file.getName().endsWith(".zip")) {
-                            waveform.setText("Extracting ZIP...");
+                            waveform.controller.setText("Extracting ZIP...");
                             unzippedFiles.remove(file);
                             unzippedFiles.addAll(FileUtil.extractAudioFilesFromZip(file));
-                            waveform.setText("Importing...");
+                            waveform.controller.setText("Importing...");
                         }
                     }
                     List<File> audioFiles = unzippedFiles.stream().filter(Waveform::isFileSupported).toList();

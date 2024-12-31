@@ -34,7 +34,7 @@ public class ShuffleButton extends ControlButton {
     static void shuffle(Waveform parent) {
         if (!parent.hasNextTrack()) return;
         Collections.shuffle(parent.getQueue().subList(parent.queueIndex() + 1, parent.queueSize()));
-        parent.queuePanel.repopulate();
+        parent.controller.updateState();
     }
 
     @VisibleForTesting
@@ -43,6 +43,6 @@ public class ShuffleButton extends ControlButton {
         Collections.shuffle(parent.getQueue());
         parent.frameUpdater.silentShutdown();
         Util.showErrorOnException(() -> parent.forcePlayIndex(0), "Failed to start playback after shuffling", LOGGER);
-        parent.queuePanel.repopulate();
+        parent.controller.updateState();
     }
 }

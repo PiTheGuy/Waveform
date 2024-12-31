@@ -3,6 +3,7 @@ package pitheguy.waveform.ui.dialogs;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.session.SessionManager;
 import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.ui.dialogs.preferences.PreferencesDialog;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -85,7 +86,7 @@ public class DialogManager {
         String value = pane.getValue() == null ? "Try Again" : pane.getValue().toString();
         switch (value) {
             case "Switch Visualizer" -> {
-                if (!parent.isVisualizerSelectionWindowOpen()) parent.showErrorVisualizerSelectionWindow();
+                if (!parent.controller.isVisualizerSelectionWindowOpen()) parent.controller.showErrorVisualizerSelectionWindow();
             }
             case "Try Again" -> parent.togglePlayback();
         }
@@ -105,6 +106,10 @@ public class DialogManager {
         boolean confirmed = choice == JOptionPane.YES_OPTION;
         if (confirmed && doNotShowAgainCheckbox.isSelected()) SessionManager.getInstance().suppressWarning(key);
         return confirmed;
+    }
+
+    public void openPreferences() {
+        if (!Config.disablePreferences) PreferencesDialog.showDialog(parent);
     }
 
     public record YoutubeImportInfo(String url, boolean addToQueue) {

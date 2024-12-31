@@ -50,14 +50,9 @@ public class Waveform extends JFrame {
     private static Waveform instance;
     public static int WIDTH = Main.DEFAULT_WIDTH;
     public static int HEIGHT = Main.DEFAULT_HEIGHT;
-    private final JLabel imgLabel;
-    public final WaveformMenuBar menuBar;
     public double duration = 0;
     public boolean hasAudio = false;
     private boolean isFullScreen = false;
-    private BufferedImage image;
-    public ControlsPanel controls;
-    public QueueManagementPanel queuePanel;
     public FrameUpdater frameUpdater;
     public File audioFile;
     public AudioData audioData;
@@ -71,8 +66,7 @@ public class Waveform extends JFrame {
     public final PlaybackManager playbackManager = new PlaybackManager(this);
     public final YoutubeAudioGetter audioGetter = new YoutubeAudioGetter();
     public final MicrophoneCapture microphone = new MicrophoneCapture();
-    public VisualizerSelectionWindow visualizerSelectionWindow;
-    public boolean isQueuePanelVisible = false;
+    public final GuiController controller = new GuiController(this);
     private boolean shuttingDown = false;
 
     public Waveform(boolean visible) {
@@ -84,15 +78,8 @@ public class Waveform extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         setLayout(null);
-        menuBar = new WaveformMenuBar(this);
-        setJMenuBar(menuBar);
-        this.imgLabel = new JLabel(LOADING_TEXT, JLabel.CENTER);
-        imgLabel.setOpaque(true);
-        imgLabel.setBackground(Config.backgroundColor());
-        imgLabel.setForeground(Config.foregroundColor());
-        imgLabel.setFont(new Font(this.imgLabel.getFont().getName(), this.imgLabel.getFont().getStyle(), 24));
-        imgLabel.setLayout(null);
-        add(imgLabel);
+        setJMenuBar(controller.getMenuBar());
+        add(controller.getImgLabel());
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -109,8 +96,6 @@ public class Waveform extends JFrame {
         if (Config.showInSystemTray()) addTrayIcon();
         addMouseListener(new WaveformMouseListener());
         addKeyListener(new QueueKeyboardListener(this));
-        addControls();
-        addQueuePanel();
         setupKeyBindings();
         setupMenuBarIntegration();
         startup();
@@ -131,14 +116,7 @@ public class Waveform extends JFrame {
         else return HEIGHT;
     }
 
-    public void populateMenuBar() {
-        menuBar.populate();
-        menuBar.setVisible(!Config.hideMenuBar);
-        revalidate();
-        repaint();
-        menuBar.updateState();
-        imgLabel.setSize(getContentPane().getWidth(), getContentPane().getHeight()); // Needs to be done after menu population
-    }
+
 
     public static Waveform getInstance() {
         return instance;
@@ -147,10 +125,10 @@ public class Waveform extends JFrame {
     private void setupKeyBindings() {
         keyBindingManager.registerKeyBinding("F11", "toggleFullscreen", this::toggleFullscreen);
         keyBindingManager.registerKeyBinding("SPACE", "togglePlayback", this::togglePlaybackIfAllowed);
-        keyBindingManager.registerKeyBinding("ctrl Q", "toggleQueuePanel", this::toggleQueuePanel);
-        keyBindingManager.registerKeyBinding("ctrl P", "preferences", this::openPreferences);
+        keyBindingManager.registerKeyBinding("ctrl Q", "toggleQueuePanel", controller::toggleQueuePanel);
+        keyBindingManager.registerKeyBinding("ctrl P", "preferences", dialogManager::openPreferences);
         keyBindingManager.registerGlobalKeyBinding("ESCAPE", "exit", this::handleExit);
-        keyBindingManager.registerGlobalKeyBinding("ctrl B", "visualizerSelection", this::toggleVisualizerSelectionWindow);
+        keyBindingManager.registerGlobalKeyBinding("ctrl B", "visualizerSelection", controller::toggleVisualizerSelectionWindow);
         keyBindingManager.setupKeyBindings();
     }
 
@@ -158,29 +136,13 @@ public class Waveform extends JFrame {
         if (!Desktop.isDesktopSupported()) return;
         Desktop desktop = Desktop.getDesktop();
         if (!Config.disablePreferences && desktop.isSupported(Desktop.Action.APP_PREFERENCES))
-            desktop.setPreferencesHandler(e -> openPreferences());
+            desktop.setPreferencesHandler(e -> dialogManager.openPreferences());
         if (desktop.isSupported(Desktop.Action.APP_QUIT_HANDLER)) desktop.setQuitHandler((e, response) -> exit(response));
         if (desktop.isSupported(Desktop.Action.APP_ABOUT)) desktop.setPreferencesHandler(e -> new AboutDialog(this));
     }
 
     public boolean isMinimized() {
         return (getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED;
-    }
-
-    public void openPreferences() {
-        if (!Config.disablePreferences) PreferencesDialog.showDialog(this);
-    }
-
-    private void addControls() {
-        controls = new ControlsPanel(this);
-        this.imgLabel.add(controls);
-        hideControls();
-    }
-
-    private void addQueuePanel() {
-        queuePanel = new QueueManagementPanel(this);
-        queuePanel.setVisible(false);
-        imgLabel.add(queuePanel);
     }
 
     public void play(File audioFile) throws Exception {
@@ -194,11 +156,12 @@ public class Waveform extends JFrame {
     }
 
     private void startVisualization() throws Exception {
+        iconManager.updateIconDrawer();
         drawerManager.mainDrawer = Config.visualizer.getDrawer();
         drawerManager.setPlayingAudio(audioData);
         if (Config.playerMode) {
             BufferedImage image = drawerManager.mainDrawer.drawFullAudio();
-            setImageToDisplay(image);
+            controller.setImageToDisplay(image);
             playbackManager.playAudio(this.audioFile);
             frameUpdater = new PlayerModeFrameUpdater(this, image);
         } else {
@@ -216,17 +179,15 @@ public class Waveform extends JFrame {
             return;
         }
         if (frameUpdater != null) frameUpdater.silentShutdown();
-        queuePanel.repopulate();
         playbackManager.initializeTrackPlayback(track);
         duration = audioData.duration();
-        controls.updateState();
-        menuBar.updateState();
+        controller.updateState();
         updateTitle();
     }
 
     public void play(List<TrackInfo> tracks) throws Exception {
         playbackManager.play(tracks);
-        controls.updateState();
+        controller.updateState();
     }
 
     public void playFiles(List<File> audioFiles) throws Exception {
@@ -270,7 +231,7 @@ public class Waveform extends JFrame {
             if (choice == JOptionPane.NO_OPTION) filteredTracks.removeIf(playbackManager::queueContains);
         }
         playbackManager.addToQueue(index, filteredTracks);
-        controls.showQueueConfirmation();
+        controller.showQueueConfirmation();
         if (isVisible()) Util.runInBackground(() -> filteredTracks.forEach(parsingService::preparseTrack));
     }
 
@@ -307,8 +268,7 @@ public class Waveform extends JFrame {
 
     public void removeIndexFromQueue(int index) {
         playbackManager.removeIndexFromQueue(index);
-        controls.updateState();
-        menuBar.updateState();
+        controller.updateState();
     }
 
     public int queueIndex() {
@@ -347,7 +307,7 @@ public class Waveform extends JFrame {
                 this.audioFile = FileConverter.convertAudioFile(audioFile, ".wav");
             else this.audioFile = audioFile;
             hasAudio = true;
-            setLoadingText();
+            controller.setLoadingText();
             return parsingService.getAudioData(track);
         } catch (IOException | ExecutionException e) {
             return null;
@@ -385,42 +345,12 @@ public class Waveform extends JFrame {
     }
 
     public void updateColors() {
-        menuBar.updateColors();
-        imgLabel.setBackground(Config.backgroundColor());
-        imgLabel.setForeground(Config.foregroundColor());
-    }
-
-    public void setLoadingText() {
-        setText(LOADING_TEXT);
-        setCursor(Cursor.getDefaultCursor());
-    }
-
-    public void setText(String text) {
-        imgLabel.setText(text);
-        imgLabel.setIcon(null);
-        hideControls();
-        repaint();
+        controller.updateColors();
     }
 
     private void importError() {
         showError("Import Error", "Failed to read audio file.");
         playbackManager.removeIndexFromQueue(playbackManager.queueIndex);
-    }
-
-    private void clearLoadingText() {
-        imgLabel.setText("");
-    }
-
-    @VisibleForTesting
-    public String getText() {
-        return imgLabel.getText();
-    }
-
-    public void setImageToDisplay(BufferedImage image) {
-        if (!hasAudio) return;
-        this.image = image;
-        imgLabel.setIcon(new ImageIcon(image));
-        repaint();
     }
 
     public void addTrayIcon() {
@@ -450,8 +380,8 @@ public class Waveform extends JFrame {
     public void startup() {
         hasAudio = false;
         playbackManager.reset();
-        menuBar.updateState();
-        setText(DRAG_AND_DROP_TEXT);
+        controller.updateState();
+        controller.setText(DRAG_AND_DROP_TEXT);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setResizable(true);
         iconManager.resetIcon();
@@ -471,10 +401,9 @@ public class Waveform extends JFrame {
 
     public void onAudioStarted() {
         hasAudio = true;
-        showControls();
-        clearLoadingText();
-        menuBar.updateState();
-        controls.updateState();
+        controller.showControls();
+        controller.clearText();
+        controller.updateState();
         if (Config.isSeekingEnabled()) setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
@@ -492,7 +421,7 @@ public class Waveform extends JFrame {
         setCursor(getCorrectCursor());
         if (!drawerManager.mainDrawer.usesDynamicIcon()) iconManager.resetIcon();
         else iconManager.updateIconDrawer();
-        menuBar.registerVisualizerSwitch(newVisualizer);
+        controller.getMenuBar().registerVisualizerSwitch(newVisualizer);
     }
 
     private boolean confirmVisualizerSwitch() {
@@ -517,7 +446,7 @@ public class Waveform extends JFrame {
         long oldClipPosition = playbackManager.getMicrosecondPosition();
         playbackManager.setMicrosecondPosition(clipPosition);
         if (clipPosition < oldClipPosition) {
-            drawerManager.mainDrawer.resetPlayed(image);
+            drawerManager.mainDrawer.resetPlayed(controller.getImage());
             repaint();
         }
         frameUpdater.forceUpdate();
@@ -545,8 +474,7 @@ public class Waveform extends JFrame {
 
     public void togglePlayback() {
         playbackManager.togglePlayback();
-        controls.updateState();
-        menuBar.updateState();
+        controller.updateState();
         if (trayIcon != null) trayIcon.updateState();
         updateTitle();
     }
@@ -567,10 +495,7 @@ public class Waveform extends JFrame {
 
     private void handleResize() {
         if (frameUpdater != null) frameUpdater.pause();
-        imgLabel.setSize(getContentPane().getWidth(), getContentPane().getHeight());
-        imgLabel.revalidate();
-        controls.reposition();
-        queuePanel.reposition();
+        controller.handleResize();
         if (frameUpdater != null) {
             frameUpdater.resume();
             frameUpdater.forceUpdate();
@@ -602,64 +527,6 @@ public class Waveform extends JFrame {
         setVisible(true);
     }
 
-    public void toggleVisualizerSelectionWindow() {
-        if (Config.disableVisualizerSelection || !hasAudio) return;
-        if (isVisualizerSelectionWindowOpen()) {
-            visualizerSelectionWindow.dispose();
-            visualizerSelectionWindow = null;
-        } else visualizerSelectionWindow = new VisualizerSelectionWindow(this, false);
-        menuBar.updateState();
-    }
-
-    public void showErrorVisualizerSelectionWindow() {
-        if (Config.disableVisualizerSelection || !hasAudio) return;
-        visualizerSelectionWindow = new VisualizerSelectionWindow(this, true);
-        menuBar.updateState();
-    }
-
-    public boolean isVisualizerSelectionWindowOpen() {
-        return visualizerSelectionWindow != null;
-    }
-
-
-    public void toggleQueuePanel() {
-        if (Config.disableQueueManagement) return;
-        if (isQueuePanelVisible) hideQueuePanel();
-        else showQueuePanel();
-        menuBar.updateState();
-    }
-
-    private void showQueuePanel() {
-        if (Config.microphoneMode) return;
-        queuePanel.setVisible(true);
-        queuePanel.setLocation(getContentPane().getSize().width - QueueManagementPanel.WIDTH, 0);
-        queuePanel.repopulate();
-        queuePanel.scrollToCurrentTrack();
-        revalidate();
-        repaint();
-        isQueuePanelVisible = true;
-    }
-
-    public void hideQueuePanel() {
-        queuePanel.setVisible(false);
-        revalidate();
-        repaint();
-        isQueuePanelVisible = false;
-    }
-
-    public void toggleControls() {
-        if (controls.isVisible()) hideControls();
-        else showControls();
-    }
-
-    private void hideControls() {
-        controls.setVisible(false);
-    }
-
-    private void showControls() {
-        if (!Config.hideControls && !Config.microphoneMode) controls.setVisible(true);
-    }
-
     public void importFromYoutube() {
         if (!HttpUtil.ensureInternetConnection()) return;
         if (!YoutubeAudioGetter.hasRequiredDependencies()) {
@@ -681,7 +548,7 @@ public class Waveform extends JFrame {
                     if (frameUpdater != null) frameUpdater.silentShutdown();
                     startup();
                 }
-                List<TrackInfo> tracks = audioGetter.getAudio(url, addToQueue ? status -> controls.showText(status, ControlsPanel.NEVER_TIMEOUT) : this::setText);
+                List<TrackInfo> tracks = audioGetter.getAudio(url, addToQueue ? status -> controller.showSubtext(status, ControlsPanel.NEVER_TIMEOUT) : controller::setText);
                 processTracks(tracks, addToQueue);
             } catch (IOException | DownloadFailedException | InterruptedException e) {
                 showError("Import Failed", "Failed to import " + (playlist ? "playlist" : "audio"));
@@ -713,19 +580,17 @@ public class Waveform extends JFrame {
     }
 
     private void handleQueueChange() {
-        queuePanel.repopulate();
+        controller.updateState();
         updateTitle();
         if (getQueue().isEmpty()) {
             if (frameUpdater != null) frameUpdater.silentShutdown();
             startup();
-            hideQueuePanel();
+            controller.hideQueuePanel();
         }
     }
 
     public void handleExit() {
-        if (isQueuePanelVisible) toggleQueuePanel();
-        else if (isVisualizerSelectionWindowOpen()) toggleVisualizerSelectionWindow();
-        else exit();
+        if (!controller.closeWindows()) exit();
     }
 
     public boolean confirmExit() {

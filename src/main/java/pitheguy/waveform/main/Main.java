@@ -39,7 +39,7 @@ public class Main {
 
         Waveform waveform = new Waveform(Config.exportFile == null);
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        waveform.populateMenuBar();
+        waveform.controller.populateMenuBar();
         restoreSession();
         Util.runInBackground(HttpUtil::checkInternetConnection);
         if (Config.exportFile != null) export(waveform);

@@ -15,8 +15,8 @@ class WaveformMenuBarTest {
     @BeforeEach
     void setUp() {
         waveform = new Waveform(false);
-        waveform.populateMenuBar();
-        menuBar = waveform.menuBar;
+        waveform.controller.populateMenuBar();
+        menuBar = waveform.controller.getMenuBar();
     }
 
     @AfterEach
@@ -41,10 +41,10 @@ class WaveformMenuBarTest {
 
     @Test
     void testFileMenu_exitButtonTextChanges() {
-        waveform.isQueuePanelVisible = true;
+        waveform.controller.toggleQueuePanel();
         menuBar.updateState();
         assertEquals("Close Queue", menuBar.exitItem.getText(), "Exit item text should be 'Close Queue' when queue panel is visible");
-        waveform.isQueuePanelVisible = false;
+        waveform.controller.toggleQueuePanel();
         menuBar.updateState();
         assertEquals("Exit", menuBar.exitItem.getText(), "Exit item text should be 'Exit' when queue panel is not visible");
     }
@@ -86,7 +86,7 @@ class WaveformMenuBarTest {
     void testVisualizerMenu_disableVisualizerSelection() {
         Config.disableVisualizerSelection = true;
         waveform.hasAudio = true;
-        waveform.menuBar.updateState();
+        waveform.controller.updateState();
         assertFalse(menuBar.visualizerMenu.isVisible(), "Visualizer menu should not be visible when visualizer selection is disabled");
     }
 
@@ -94,7 +94,7 @@ class WaveformMenuBarTest {
     void testTrackMenu_hideControls() {
         Config.hideControls = true;
         waveform.hasAudio = true;
-        waveform.menuBar.updateState();
+        waveform.controller.updateState();
         assertFalse(menuBar.trackMenu.isVisible(), "Track menu should not be visible when controls are hidden from command-line");
         Config.hideControls = false;
     }
@@ -111,11 +111,10 @@ class WaveformMenuBarTest {
     @Test
     void testTrackMenu_hideControlsCheckboxReflectsControlVisibility() throws Exception {
         waveform.play(TEST_FILE);
-        System.out.println(waveform.controls.isVisible());
-        waveform.toggleControls();
+        waveform.controller.toggleControls();
         menuBar.updateState();
         assertTrue(menuBar.hideControlsItem.getState(), "Hide controls checkbox should be checked if controls are not visible");
-        waveform.toggleControls();
+        waveform.controller.toggleControls();
         menuBar.updateState();
         assertFalse(menuBar.hideControlsItem.getState(), "Hide controls checkbox should be unchecked if controls are visible");
     }

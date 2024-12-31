@@ -63,10 +63,10 @@ public class WaveformMenuBar extends JMenuBar {
         JMenuItem openItem = MenuHelper.createMenuItem("Open...", 'O', KeyStroke.getKeyStroke("ctrl O"), e -> parent.selectFileAndProcess(false));
         JMenuItem addToQueueItem = MenuHelper.createMenuItem("Add to Queue...", 'Q', KeyStroke.getKeyStroke("shift ctrl O"), e -> parent.selectFileAndProcess(true));
         clearQueueItem = MenuHelper.createMenuItem("Clear Queue", 'C', null, e -> parent.clearQueue());
-        manageQueueItem = MenuHelper.createMenuItem("Manage Queue...", 'M', KeyStroke.getKeyStroke("ctrl Q"), e -> parent.toggleQueuePanel());
+        manageQueueItem = MenuHelper.createMenuItem("Manage Queue...", 'M', KeyStroke.getKeyStroke("ctrl Q"), e -> parent.controller.toggleQueuePanel());
         importFromYoutubeItem = MenuHelper.createMenuItem("Import from YouTube...", 'I', null, e -> parent.importFromYoutube());
         useMicrophoneItem = MenuHelper.createMenuItem("Use Microphone", 'M', null, e -> parent.microphoneInput());
-        preferencesItem = MenuHelper.createMenuItem("Preferences...", 'P', KeyStroke.getKeyStroke("ctrl P"), e -> parent.openPreferences());
+        preferencesItem = MenuHelper.createMenuItem("Preferences...", 'P', KeyStroke.getKeyStroke("ctrl P"), e -> parent.dialogManager.openPreferences());
         exitItem = MenuHelper.createMenuItem("Exit", 'X', KeyStroke.getKeyStroke("ESCAPE"), e -> parent.handleExit());
         if (!Config.disableUserImports) {
             fileMenu.add(openItem);
@@ -111,7 +111,7 @@ public class WaveformMenuBar extends JMenuBar {
         previousTrackItem = MenuHelper.createMenuItem("Previous Track", 'R', KeyStroke.getKeyStroke("ctrl LEFT"), e -> parent.previousTrack());
         pauseItem = MenuHelper.createMenuItem("Pause", 'P', KeyStroke.getKeyStroke("SPACE"), e -> parent.togglePlayback());
         nextTrackItem = MenuHelper.createMenuItem("Next Track", 'N', KeyStroke.getKeyStroke("ctrl RIGHT"), e -> parent.nextTrack());
-        hideControlsItem = MenuHelper.createCheckBoxMenuItem("Hide On-Screen Controls", 'H', null, e -> parent.toggleControls());
+        hideControlsItem = MenuHelper.createCheckBoxMenuItem("Hide On-Screen Controls", 'H', null, e -> parent.controller.toggleControls());
         trackMenu.add(previousTrackItem);
         trackMenu.add(pauseItem);
         trackMenu.add(nextTrackItem);
@@ -148,7 +148,7 @@ public class WaveformMenuBar extends JMenuBar {
         nextTrackItem.setEnabled(parent.hasNextTrack());
         nextTrackItem.setVisible(!Config.disableSkipping);
         pauseItem.setText(parent.isPaused() ? "Play" : "Pause");
-        hideControlsItem.setState(!parent.controls.isVisible());
+        hideControlsItem.setState(!parent.controller.controlsVisible());
     }
 
     private void repopulateVisualizerMenu() {
@@ -162,7 +162,7 @@ public class WaveformMenuBar extends JMenuBar {
             }
             visualizerMenu.addSeparator();
         }
-        JMenuItem allVisualizersItem = MenuHelper.createMenuItem("All Visualizers...", 'A', KeyStroke.getKeyStroke("ctrl B"), e -> parent.toggleVisualizerSelectionWindow());
+        JMenuItem allVisualizersItem = MenuHelper.createMenuItem("All Visualizers...", 'A', KeyStroke.getKeyStroke("ctrl B"), e -> parent.controller.toggleVisualizerSelectionWindow());
         visualizerMenu.add(allVisualizersItem);
     }
 
@@ -196,8 +196,8 @@ public class WaveformMenuBar extends JMenuBar {
     }
 
     private String getExitItemText() {
-        if (parent.isQueuePanelVisible) return "Close Queue";
-        if (parent.isVisualizerSelectionWindowOpen()) return "Close Visualizer Selection";
+        if (parent.controller.isQueuePanelVisible()) return "Close Queue";
+        if (parent.controller.isVisualizerSelectionWindowOpen()) return "Close Visualizer Selection";
         return "Exit";
     }
 

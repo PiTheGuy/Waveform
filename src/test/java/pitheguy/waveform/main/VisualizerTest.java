@@ -24,7 +24,7 @@ class VisualizerTest {
     @Test
     void testVisualizers() {
         Waveform waveform = new Waveform(false);
-        waveform.populateMenuBar();
+        waveform.controller.populateMenuBar();
         for (Visualizer v : Visualizer.getVisualizers(false))
             assertDoesNotThrow(() -> waveform.switchVisualizer(v), "Failed to switch to " + v.getName());
     }

@@ -22,6 +22,6 @@ public class PlayerModeFrameUpdater extends FrameUpdater {
     @Override
     protected void onForceUpdate() {
         image = parent.drawerManager.mainDrawer.drawFullAudio();
-        parent.setImageToDisplay(image);
+        parent.controller.setImageToDisplay(image);
     }
 }
