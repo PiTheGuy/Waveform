@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
+import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.ui.util.ClickableMouseListener;
 import pitheguy.waveform.ui.util.PlaceholderTextField;
 import pitheguy.waveform.util.ResourceGetter;
@@ -15,6 +16,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
@@ -22,15 +24,17 @@ public class VisualizerSelectionWindow extends JWindow {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final int HEIGHT = 400;
     private final Waveform parent;
+    private final boolean fromError;
     private final List<CategoryEntry> categoryEntries = new ArrayList<>();
     private final JPanel mainPanel;
     private Component glue;
     private final List<Row> searchResults = new ArrayList<>();
-    private boolean resumeOnClick = false;
+    private AudioDrawer drawer;
 
-    public VisualizerSelectionWindow(Waveform parent) {
+    public VisualizerSelectionWindow(Waveform parent, boolean fromError) {
         super(parent);
         this.parent = parent;
+        this.fromError = fromError;
         mainPanel = new JPanel();
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -46,10 +50,6 @@ public class VisualizerSelectionWindow extends JWindow {
         setSize(new Dimension(550, mainPanel.getPreferredSize().height + 2));
         setLocationRelativeTo(parent);
         setVisible(true);
-    }
-
-    public void resumeOnClick() {
-        resumeOnClick = true;
     }
 
     private void addRecentlyUsedCategory() {
@@ -100,6 +100,12 @@ public class VisualizerSelectionWindow extends JWindow {
             }
         }
         updateGlue();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        parent.drawerManager.unregisterAuxiliaryDrawer(drawer);
     }
 
     private static class TitlePanel extends JPanel {
@@ -234,15 +240,18 @@ public class VisualizerSelectionWindow extends JWindow {
     public class VisualizerEntry extends JPanel {
         private static final Map<Visualizer, ImageIcon> ICON_CACHE = new HashMap<>();
         public static final ImageIcon PLACEHOLDER_ICON = ResourceGetter.getUiIcon("visualizers/placeholder.png");
+        public static final int ICON_WIDTH = 150;
+        public static final int ICON_HEIGHT = 100;
         private final Visualizer visualizer;
+        private final JLabel imageLabel;
 
         public VisualizerEntry(Visualizer visualizer) {
             this.visualizer = visualizer;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             setBackground(getBackgroundColor());
-            JLabel imageLabel = new JLabel();
-            imageLabel.setPreferredSize(new Dimension(150, 100));
-            imageLabel.setMaximumSize(new Dimension(150, 100));
+            imageLabel = new JLabel();
+            imageLabel.setPreferredSize(new Dimension(ICON_WIDTH, ICON_HEIGHT));
+            imageLabel.setMaximumSize(new Dimension(ICON_WIDTH, ICON_HEIGHT));
             imageLabel.setIcon(getIcon(visualizer));
             add(imageLabel);
             JLabel label = new JLabel(visualizer.getName());
@@ -253,11 +262,23 @@ public class VisualizerSelectionWindow extends JWindow {
             add(label);
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             addMouseListener(new ClickableMouseListener(this, this::getBackgroundColor, Color.LIGHT_GRAY, this::onClick));
+            if (Config.visualizer == visualizer && !fromError) setupAuxiliaryDrawer();
+        }
+
+        private void setupAuxiliaryDrawer() {
+            drawer = Config.visualizer.getNewDrawer(ICON_WIDTH, ICON_HEIGHT);
+            parent.drawerManager.registerAuxiliaryDrawer(drawer, this::setIcon);
         }
 
         private Color getBackgroundColor() {
             if (Config.visualizer == visualizer) return new Color(128, 255, 128);
             else return new Color(240, 240, 240);
+        }
+
+        public void setIcon(BufferedImage image) {
+            if (image.getWidth() != ICON_WIDTH || image.getHeight() != ICON_HEIGHT)
+                throw new IllegalArgumentException("Incorrect image size");
+            imageLabel.setIcon(new ImageIcon(image));
         }
 
         private static ImageIcon getIcon(Visualizer visualizer) {
@@ -279,7 +300,7 @@ public class VisualizerSelectionWindow extends JWindow {
         private void onClick() {
             parent.switchVisualizer(visualizer);
             parent.toggleVisualizerSelectionWindow();
-            if (resumeOnClick && parent.isPaused()) parent.togglePlayback();
+            if (fromError && parent.isPaused()) parent.togglePlayback();
         }
 
     }

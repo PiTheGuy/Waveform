@@ -17,7 +17,6 @@ import pitheguy.waveform.ui.controls.ControlsPanel;
 import pitheguy.waveform.ui.dialogs.AboutDialog;
 import pitheguy.waveform.ui.dialogs.DialogManager;
 import pitheguy.waveform.ui.dialogs.preferences.PreferencesDialog;
-import pitheguy.waveform.ui.drawers.AudioDrawer;
 import pitheguy.waveform.ui.queue.QueueKeyboardListener;
 import pitheguy.waveform.ui.queue.QueueManagementPanel;
 import pitheguy.waveform.ui.util.KeyBindingManager;
@@ -60,11 +59,11 @@ public class Waveform extends JFrame {
     public ControlsPanel controls;
     public QueueManagementPanel queuePanel;
     public FrameUpdater frameUpdater;
-    public AudioDrawer audioDrawer;
     public File audioFile;
     public AudioData audioData;
     public WaveformTrayIcon trayIcon;
     public final TrackParsingService parsingService = new TrackParsingService(this);
+    public final DrawerManager drawerManager = new DrawerManager(this);
     public final ExportManager exportManager = new ExportManager(this);
     public final DialogManager dialogManager = new DialogManager(this);
     public final KeyBindingManager keyBindingManager = new KeyBindingManager(this);
@@ -194,20 +193,16 @@ public class Waveform extends JFrame {
     }
 
     private void startVisualization() throws Exception {
-        audioDrawer = Config.visualizer.getDrawer();
-        audioDrawer.setPlayingAudio(audioData);
+        drawerManager.mainDrawer = Config.visualizer.getDrawer();
+        drawerManager.setPlayingAudio(audioData);
         if (Config.playerMode) {
-            BufferedImage image = audioDrawer.drawFullAudio();
+            BufferedImage image = drawerManager.mainDrawer.drawFullAudio();
             setImageToDisplay(image);
             playbackManager.playAudio(this.audioFile);
             frameUpdater = new PlayerModeFrameUpdater(this, image);
         } else {
             playbackManager.playAudio(this.audioFile);
-            frameUpdater = new FrameUpdater(sec -> {
-                BufferedImage drawnArray = audioDrawer.drawFrame(sec);
-                if (Config.showProgress) audioDrawer.updatePlayed(drawnArray, sec, duration);
-                setImageToDisplay(drawnArray);
-            }, this);
+            frameUpdater = new FrameUpdater(drawerManager::updateDrawers, this);
         }
         frameUpdater.start();
     }
@@ -255,17 +250,15 @@ public class Waveform extends JFrame {
         playbackManager.trackTitle = "Microphone";
         if (frameUpdater != null) frameUpdater.silentShutdown();
         clearQueue();
-        audioDrawer = Config.visualizer.getDrawer();
+        drawerManager.mainDrawer = Config.visualizer.getDrawer();
         hasAudio = true;
         updateTitle();
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         microphone.startCapture();
         frameUpdater = new MicrophoneFrameUpdater(sec -> {
             AudioData audioData = AudioData.fromMicrophone(microphone.getAudioData());
-            audioDrawer.setPlayingAudio(audioData);
-            BufferedImage frame = audioDrawer.drawFrame(0);
-            setImageToDisplay(frame);
-        }, this, scheduler);
+            drawerManager.setPlayingAudio(audioData);
+            drawerManager.updateDrawers(0);
+        }, this);
         frameUpdater.start();
     }
 
@@ -492,12 +485,12 @@ public class Waveform extends JFrame {
         if (Config.visualizer.isCommandLineOnly() && !confirmVisualizerSwitch()) return;
         if (newVisualizer.shouldShowEpilepsyWarning() && !showEpilepsyWarning()) return;
         Config.visualizer = newVisualizer;
-        audioDrawer = Config.visualizer.getDrawer();
-        if (audioData != null) audioDrawer.setPlayingAudio(audioData);
+        drawerManager.mainDrawer = Config.visualizer.getDrawer();
+        if (audioData != null) drawerManager.setPlayingAudio(audioData);
         if (frameUpdater != null) frameUpdater.forceUpdate();
-        setResizable(audioDrawer.isResizable() || !hasAudio);
+        setResizable(drawerManager.mainDrawer.isResizable() || !hasAudio);
         setCursor(getCorrectCursor());
-        if (!audioDrawer.usesDynamicIcon()) setIconImage(STATIC_ICON);
+        if (!drawerManager.mainDrawer.usesDynamicIcon()) setIconImage(STATIC_ICON);
         menuBar.registerVisualizerSwitch(newVisualizer);
     }
 
@@ -523,7 +516,7 @@ public class Waveform extends JFrame {
         long oldClipPosition = playbackManager.getMicrosecondPosition();
         playbackManager.setMicrosecondPosition(clipPosition);
         if (clipPosition < oldClipPosition) {
-            audioDrawer.resetPlayed(image);
+            drawerManager.mainDrawer.resetPlayed(image);
             repaint();
         }
         frameUpdater.forceUpdate();
@@ -613,7 +606,13 @@ public class Waveform extends JFrame {
         if (isVisualizerSelectionWindowOpen()) {
             visualizerSelectionWindow.dispose();
             visualizerSelectionWindow = null;
-        } else visualizerSelectionWindow = new VisualizerSelectionWindow(this);
+        } else visualizerSelectionWindow = new VisualizerSelectionWindow(this, false);
+        menuBar.updateState();
+    }
+
+    public void showErrorVisualizerSelectionWindow() {
+        if (Config.disableVisualizerSelection || !hasAudio) return;
+        visualizerSelectionWindow = new VisualizerSelectionWindow(this, true);
         menuBar.updateState();
     }
 

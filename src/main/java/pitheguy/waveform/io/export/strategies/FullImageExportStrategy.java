@@ -13,7 +13,7 @@ public class FullImageExportStrategy extends ExportStrategy {
 
     @Override
     protected void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
-        AudioDrawer drawer = Config.visualizer.getExportDrawer(context.width(), context.height());
+        AudioDrawer drawer = Config.visualizer.getNewDrawer(context.width(), context.height());
         drawer.setPlayingAudio(context.audioData());
         BufferedImage fullAudio = drawer.drawFullAudio();
         ImageIO.write(fullAudio, "png", context.outputFile());

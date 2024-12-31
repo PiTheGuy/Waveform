@@ -84,8 +84,7 @@ public class DialogManager {
         String value = pane.getValue() == null ? "Try Again" : pane.getValue().toString();
         switch (value) {
             case "Switch Visualizer" -> {
-                if (!parent.isVisualizerSelectionWindowOpen()) parent.toggleVisualizerSelectionWindow();
-                parent.visualizerSelectionWindow.resumeOnClick();
+                if (!parent.isVisualizerSelectionWindowOpen()) parent.showErrorVisualizerSelectionWindow();
             }
             case "Try Again" -> parent.togglePlayback();
         }

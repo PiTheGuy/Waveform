@@ -32,7 +32,7 @@ public abstract class FfmpegExportStrategy extends ExportStrategy {
         List<String> command = new ArrayList<>(args);
         command.addFirst(ResourceGetter.getFFmpegPath());
         ffmpeg = Util.runProcess(command.toArray(new String[0]));
-        AudioDrawer drawer = Config.visualizer.getExportDrawer(context.width(), context.height());
+        AudioDrawer drawer = Config.visualizer.getNewDrawer(context.width(), context.height());
         ImageWriter imageWriter = new ImageWriter(context.width(), context.height());
         try (OutputStream ffmpegInput = ffmpeg.getOutputStream()) {
             drawer.setPlayingAudio(context.audioData());

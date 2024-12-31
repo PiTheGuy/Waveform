@@ -17,7 +17,7 @@ public class FrameExportStrategy extends ExportStrategy {
 
     @Override
     protected void doExport(ExportContext context, ProgressTracker progressTracker) throws IOException {
-        BufferedImage frame = Waveform.getInstance().audioDrawer.drawFrame(sec);
+        BufferedImage frame = Waveform.getInstance().drawerManager.mainDrawer.drawFrame(sec);
         ImageIO.write(frame, "png", context.outputFile());
     }
 }

@@ -14,14 +14,14 @@ public class PlayerModeFrameUpdater extends FrameUpdater {
     @Override
     protected Consumer<Double> getTask() {
         return sec -> {
-            parent.audioDrawer.updatePlayed(image, sec, parent.duration);
+            parent.drawerManager.mainDrawer.updatePlayed(image, sec, parent.duration);
             parent.repaint();
         };
     }
 
     @Override
     protected void onForceUpdate() {
-        image = parent.audioDrawer.drawFullAudio();
+        image = parent.drawerManager.mainDrawer.drawFullAudio();
         parent.setImageToDisplay(image);
     }
 }

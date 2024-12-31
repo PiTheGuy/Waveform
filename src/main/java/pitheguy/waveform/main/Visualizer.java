@@ -90,7 +90,7 @@ public enum Visualizer {
     }
 
     public AudioDrawer getDrawer() {
-        if (mainDrawer == null) mainDrawer = drawer.apply(DrawContext.realtime());
+        if (mainDrawer == null) mainDrawer = drawer.apply(DrawContext.dynamic());
         return mainDrawer;
     }
 
@@ -103,8 +103,8 @@ public enum Visualizer {
         return getSettings().hasSettings();
     }
 
-    public AudioDrawer getExportDrawer(int width, int height) {
-        return drawer.apply(DrawContext.forExport(width, height));
+    public AudioDrawer getNewDrawer(int width, int height) {
+        return drawer.apply(DrawContext.fixed(width, height));
     }
 
     public static Visualizer fromKey(String key) {

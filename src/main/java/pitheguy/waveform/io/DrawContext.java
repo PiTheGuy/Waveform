@@ -20,11 +20,11 @@ public class DrawContext {
         this(() -> imageWidth, () -> imageHeight);
     }
 
-    public static DrawContext realtime() {
+    public static DrawContext dynamic() {
         return new DrawContext(Waveform::getImageWidth, Waveform::getImageHeight);
     }
 
-    public static DrawContext forExport(int width, int height) {
+    public static DrawContext fixed(int width, int height) {
         return new DrawContext(width, height);
     }
 
