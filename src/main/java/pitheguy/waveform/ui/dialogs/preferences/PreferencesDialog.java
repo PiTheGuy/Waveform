@@ -186,7 +186,7 @@ public class PreferencesDialog extends JDialog {
         boolean visualizerSettingsChanged = visualizerSettingsPanel.saveSettings();
         SessionManager.getInstance().savePreferences(preferences);
         if (!Config.dynamicIcon()) parent.setIconImage(Waveform.STATIC_ICON);
-        parent.updateColors();
+        parent.controller.updateColors();
         parent.frameUpdater.forceUpdate();
         if (shouldRegenerate || visualizerSettingsChanged) Config.visualizer.getDrawer().regenerateIfNeeded();
         parent.setResizable(Config.canResize());

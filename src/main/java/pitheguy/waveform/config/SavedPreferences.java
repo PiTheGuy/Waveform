@@ -58,7 +58,7 @@ public class SavedPreferences {
 
     public void apply() {
         Config.setSettings(settings);
-        Waveform.getInstance().updateColors();
+        Waveform.getInstance().controller.updateColors();
     }
 
     public <T> T getSetting(String key, Class<T> clazz) {

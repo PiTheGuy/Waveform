@@ -20,7 +20,6 @@ import pitheguy.waveform.ui.util.KeyBindingManager;
 import pitheguy.waveform.util.*;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.desktop.QuitResponse;
 import java.awt.event.*;
@@ -34,7 +33,6 @@ import java.util.concurrent.ExecutionException;
 public class Waveform extends JFrame {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String VERSION = "1.2.1";
-    public static final String DRAG_AND_DROP_TEXT = "Drag and drop an audio file to start playing";
     public static final String LOADING_TEXT = "Loading...";
     public static final List<String> NATIVE_FORMATS = List.of(".mp3", ".wav");
     public static final List<String> CONVENTIONAL_FORMATS = List.of(
@@ -316,32 +314,9 @@ public class Waveform extends JFrame {
 
     public void selectFileAndProcess(boolean addToQueue) {
         pauseUntilFinished(() -> {
-            File file = selectAudioFile();
+            File file = dialogManager.selectAudioFile();
             if (file != null) processTracks(List.of(new TrackInfo(file)), addToQueue);
         });
-    }
-
-    private File selectAudioFile() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setDialogTitle("Select audio file");
-        chooser.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                return isFileSupported(f);
-            }
-
-            @Override
-            public String getDescription() {
-                return "Audio files";
-            }
-        });
-        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) return chooser.getSelectedFile();
-        else return null;
-    }
-
-    public void updateColors() {
-        controller.updateColors();
     }
 
     private void importError() {
@@ -376,9 +351,7 @@ public class Waveform extends JFrame {
     public void startup() {
         hasAudio = false;
         playbackManager.reset();
-        controller.updateState();
-        controller.setText(DRAG_AND_DROP_TEXT);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        controller.reset();
         setResizable(true);
         iconManager.resetIcon();
         updateTitle();
@@ -397,10 +370,7 @@ public class Waveform extends JFrame {
 
     public void onAudioStarted() {
         hasAudio = true;
-        controller.showControls();
-        controller.clearText();
-        controller.updateState();
-        if (Config.isSeekingEnabled()) setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        controller.onAudioStarted();
     }
 
     public void switchVisualizer(Visualizer newVisualizer) {

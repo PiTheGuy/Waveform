@@ -60,6 +60,25 @@ public class DialogManager {
         } else return null;
     }
 
+    public File selectAudioFile() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setDialogTitle("Select audio file");
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return Waveform.isFileSupported(f);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Audio files";
+            }
+        });
+        if (chooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) return chooser.getSelectedFile();
+        else return null;
+    }
+
     public YoutubeImportInfo promptForYoutubeUrl() {
         String[] options = new String[]{"Add to Queue", "Play"};
         JOptionPane pane = new JOptionPane("Enter a video or playlist URL: ", JOptionPane.QUESTION_MESSAGE,

@@ -40,7 +40,7 @@ public record CommandLinePreferences(Optional<Color> foregroundColor, Optional<C
         mono.ifPresent(m -> settings.setValue("mono", m));
         disableSmoothing.ifPresent(ds -> settings.setValue("disableSmoothing", ds));
         forceRead.ifPresent(d -> settings.setValue("forceRead", d));
-        Waveform.getInstance().updateColors();
+        Waveform.getInstance().controller.updateColors();
     }
 
     public static CommandLinePreferences fromCommandLine(CommandLine commandLine) throws ParseException {

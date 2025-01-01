@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GuiController {
+    public static final String DRAG_AND_DROP_TEXT = "Drag and drop an audio file to start playing";
     private final Waveform parent;
     private final WaveformMenuBar menuBar;
     private VisualizerSelectionWindow visualizerSelectionWindow;
@@ -187,6 +188,23 @@ public class GuiController {
         imgLabel.revalidate();
         controls.reposition();
         queuePanel.reposition();
+    }
+
+    public void onAudioStarted() {
+        showControls();
+        clearText();
+        updateState();
+        if (Config.isSeekingEnabled()) setCursor(Cursor.HAND_CURSOR);
+    }
+
+    public void reset() {
+        updateState();
+        setText(DRAG_AND_DROP_TEXT);
+        setCursor(Cursor.HAND_CURSOR);
+    }
+
+    public void setCursor(int cursor) {
+        parent.setCursor(Cursor.getPredefinedCursor(cursor));
     }
 
     public boolean closeWindows() {
