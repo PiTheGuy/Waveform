@@ -5,19 +5,22 @@ import pitheguy.waveform.main.Main;
 import pitheguy.waveform.main.Visualizer;
 import pitheguy.waveform.ui.Waveform;
 import pitheguy.waveform.util.FileUtil;
+import pitheguy.waveform.util.OS;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class VisualizerImageCollector {
+public class VisualizerIconCollector {
 
     public static void main(String[] args) throws Exception {
+        System.setProperty("PROGRAM_DATA_PATH", OS.getProgramDataPath().toString());
         Options options = createOptions();
         CommandLine commandLine = new DefaultParser().parse(options, args);
         if (commandLine.hasOption("help")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar VisualizerImageCollector.jar", options);
+            formatter.printHelp("java -jar VisualizerIconCollector.jar", options);
             return;
         }
 
@@ -28,7 +31,7 @@ public class VisualizerImageCollector {
         if (commandLine.hasOption("clean")) clean(outputPath);
         if (commandLine.hasOption("input")) {
             File inputFile = new File(commandLine.getOptionValue("input"));
-            createImages(inputFile, outputPath, visualizers, overwrite, verbose);
+            createIcons(inputFile, outputPath, visualizers, overwrite, verbose);
         }
         System.exit(0);
     }
@@ -55,24 +58,41 @@ public class VisualizerImageCollector {
         scanner.close();
     }
 
-    private static void createImages(File inputFile, Path outputPath, List<Visualizer> visualizers, boolean overwrite, boolean verbose) {
+    private static void createIcons(File inputFile, Path outputPath, List<Visualizer> visualizers, boolean overwrite, boolean verbose) {
+        List<Visualizer> manualVisualizers = new ArrayList<>();
+        int imagesCreated = 0;
         for (Visualizer visualizer : visualizers) {
             File outputFile = outputPath.resolve(visualizer.getKey() + ".png").toFile();
             if (!overwrite && outputFile.exists()) {
-                if (verbose) System.out.println("Skipped image for " + visualizer.getName() + "; already exists");
+                if (verbose) System.out.println("Skipped icon for " + visualizer.getName() + "; already exists");
                 continue;
             }
+
             try {
                 Main.processInput("-visualizer", visualizer.getKey(), "-size", "150", "100");
                 Waveform waveform = new Waveform(false);
+                if (!visualizer.supportsPlayerMode()) {
+                    manualVisualizers.add(visualizer);
+                    if (verbose) System.out.println("Skipped icon for " + visualizer.getName() + "; requires manual creation");
+                    continue;
+                }
                 waveform.play(inputFile);
                 waveform.exportManager.exportFullImage(outputFile, true);
-                System.out.println("Exported image for " + visualizer.getName());
+                System.out.println("Exported icon for " + visualizer.getName());
                 waveform.destroy();
+                imagesCreated++;
             } catch (Exception e) {
                 System.err.println("Error creating image for " + visualizer.getName());
                 e.printStackTrace();
             }
+        }
+        if (imagesCreated == 0) System.out.println("No new icons were created.");
+        else System.out.println("Successfully created icons for " + imagesCreated + " visualizers.");
+        if (!manualVisualizers.isEmpty()) {
+            String manualVisualizerNames = manualVisualizers.stream()
+                    .map(Visualizer::getName)
+                    .collect(Collectors.joining(", "));
+            System.out.println("Icons for the following visualizers still require manual creation: " + manualVisualizerNames);
         }
     }
 
@@ -91,11 +111,11 @@ public class VisualizerImageCollector {
     private static Options createOptions() {
         Options options = new Options();
         options.addOption("help", "Print this message");
-        options.addRequiredOption("input", "input", true, "Audio file to create images from");
+        options.addRequiredOption("input", "input", true, "Audio file to create icons from");
         options.addRequiredOption("output", "output", true, "Output directory");
         options.addOption("visualizers", true, "Comma separated list of visualizers to process. If absent, will process all visualizers");
-        options.addOption("clean", "Remove images that don't correspond to a visualizer");
-        options.addOption("overwrite", "Overwrite existing images with newly created ones");
+        options.addOption("clean", "Remove icons that don't correspond to a visualizer");
+        options.addOption("overwrite", "Overwrite existing icons with newly created ones");
         options.addOption("verbose", "Enable verbose output");
         return options;
     }
