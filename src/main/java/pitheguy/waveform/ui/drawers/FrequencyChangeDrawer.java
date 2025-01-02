@@ -82,6 +82,11 @@ public class FrequencyChangeDrawer extends AudioDrawer {
     }
 
     @Override
+    public boolean supportsPlayerMode() {
+        return false;
+    }
+
+    @Override
     public SettingsInstance.Builder constructSettings() {
         return super.constructSettings()
                 .addSetting("draw_direction", SettingType.forEnum(DrawDirection.class), DrawDirection.RINGS)

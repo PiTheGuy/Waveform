@@ -122,6 +122,10 @@ public enum Visualizer {
         return getDrawer().shouldShowEpilepsyWarning();
     }
 
+    public boolean supportsPlayerMode() {
+        return getDrawer().supportsPlayerMode();
+    }
+
     public String getName() {
         return Arrays.stream(toString().split("_"))
                 .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase() + " ")

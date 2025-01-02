@@ -142,4 +142,8 @@ public abstract class AudioDrawer {
     public boolean shouldShowEpilepsyWarning() {
         return false;
     }
+
+    public boolean supportsPlayerMode() {
+        return true;
+    }
 }

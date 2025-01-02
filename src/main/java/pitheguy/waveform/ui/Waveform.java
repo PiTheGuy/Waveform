@@ -377,6 +377,10 @@ public class Waveform extends JFrame {
         if (newVisualizer.isCommandLineOnly())
             throw new IllegalArgumentException("Cannot switch to a command line only visualizer");
         if (Config.visualizer == newVisualizer) return;
+        if (Config.playerMode && !newVisualizer.supportsPlayerMode()) {
+            showError("Visualizer Not Supported", "This visualizer does not support player mode.");
+            return;
+        }
         if (Config.visualizer.isCommandLineOnly() && !confirmVisualizerSwitch()) return;
         if (newVisualizer.shouldShowEpilepsyWarning() && !showEpilepsyWarning()) return;
         Config.visualizer = newVisualizer;

@@ -230,7 +230,7 @@ public class PreferencesDialog extends JDialog {
     private void addValue(Map<String, Object> map, Optional<?> commandLineValue, String key, Object value) {
         if (commandLineValue.isEmpty() || !commandLineValue.get().equals(value)) {
             map.put(key, value);
-        };
+        }
     }
 
     public void resetToDefaults() {

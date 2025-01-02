@@ -62,4 +62,9 @@ public abstract class CompoundDrawer extends AudioDrawer {
         if (drawer == null) return super.shouldShowEpilepsyWarning();
         return drawer.shouldShowEpilepsyWarning();
     }
+
+    public boolean supportsPlayerMode() {
+        if (drawer == null) return super.supportsPlayerMode();
+        return drawer.supportsPlayerMode();
+    }
 }
