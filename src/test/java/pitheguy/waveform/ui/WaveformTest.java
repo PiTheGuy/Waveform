@@ -32,7 +32,7 @@ class WaveformTest {
         assertFalse(waveform.hasAudio);
         assertTrue(waveform.isResizable());
         assertEquals(0, waveform.queueIndex());
-        assertEquals(Waveform.DRAG_AND_DROP_TEXT, waveform.controller.getText());
+        assertEquals(GuiController.DRAG_AND_DROP_TEXT, waveform.controller.getText());
         assertEquals(Waveform.STATIC_ICON, waveform.getIconImage());
         waveform.destroy();
     }

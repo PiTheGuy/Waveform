@@ -139,6 +139,10 @@ public class Util {
         return min + delta * (max - min);
     }
 
+    public static int lerp(double delta, int min, int max) {
+        return (int) (min + delta * (max - min));
+    }
+
     public static String getEnumKeys(Class<? extends Enum<?>> enumClass) {
         return Arrays.stream(enumClass.getEnumConstants()).map(v -> v.name().toLowerCase()).collect(Collectors.joining(", "));
     }

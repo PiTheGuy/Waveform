@@ -12,9 +12,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
-public class BeatDetectionRingsDrawer extends AudioDrawer {
-    private static final int HISTORY_SIZE = 200;
-    private final RollingList<Double> history = new RollingList<>(HISTORY_SIZE);
+public class BeatDetectionRingsDrawer extends AbstractBeatDetectionDrawer {
     private final RollingList<Boolean> pastPeaks = new DynamicRollingList<>(this::getNumRings);
 
     public BeatDetectionRingsDrawer(DrawContext context) {
@@ -23,6 +21,7 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
 
     @Override
     public BufferedImage drawFullAudio() {
+        super.drawFullAudio();
         int numRings = getNumRings();
         double[][] frequencyData = FftAnalyser.getFrequencyData(playingAudio.getMonoData(), numRings);
         double[] energy = Arrays.stream(frequencyData).mapToDouble(arr -> Arrays.stream(arr).sum()).toArray();
@@ -32,7 +31,7 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
         Graphics2D g = image.createGraphics();
         for (int ring = 0; ring < numRings; ring++) {
             history.add(energy[ring]);
-            double cutoff = BeatDetectionHelper.getCutoff(history, false);
+            double cutoff = getCutoff(history, false);
             if (energy[ring] > cutoff) CircularDrawer.drawRing(context, g, ring, 1);
         }
         return image;
@@ -41,12 +40,7 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
     @Override
     public BufferedImage drawFrame(double sec) {
         super.drawFrame(sec);
-        short[] data = AudioData.averageChannels(left, right);
-        double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
-        double energy = Arrays.stream(magnitudes).sum();
-        history.add(energy);
-        double cutoff = BeatDetectionHelper.getCutoff(history, false);
-        pastPeaks.add(energy > cutoff);
+        pastPeaks.add(isBeatDetected());
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         for (int i = 0; i < pastPeaks.size(); i++)
@@ -61,7 +55,6 @@ public class BeatDetectionRingsDrawer extends AudioDrawer {
     @Override
     public void setPlayingAudio(AudioData playingAudio) {
         super.setPlayingAudio(playingAudio);
-        history.clear();
         pastPeaks.clear();
     }
 }

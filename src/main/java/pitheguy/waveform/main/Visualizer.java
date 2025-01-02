@@ -3,6 +3,7 @@ package pitheguy.waveform.main;
 import pitheguy.waveform.config.visualizersettings.SettingsInstance;
 import pitheguy.waveform.io.DrawContext;
 import pitheguy.waveform.io.session.SessionManager;
+import pitheguy.waveform.ui.BeatDetectionRipplesDrawer;
 import pitheguy.waveform.ui.drawers.*;
 import pitheguy.waveform.ui.drawers.feature_analysis.*;
 import pitheguy.waveform.ui.drawers.spectogram.*;
@@ -68,6 +69,7 @@ public enum Visualizer {
     POLARITY(PolarityDrawer::new, "polarity", false, Category.MISC),
     ENERGY_DYNAMICS(EnergyDynamicsDrawer::new, "energy_dynamics", false, Category.MISC),
     BEAT_DETECTION_RINGS(BeatDetectionRingsDrawer::new, "beat_rings", false, Category.MISC),
+    BEAT_DETECTION_RIPPLES(BeatDetectionRipplesDrawer::new, "beat_ripples", false, Category.MISC),
     FREQUENCY_CHANGE(FrequencyChangeDrawer::new, "frequency_change", false, Category.MISC);
 
 

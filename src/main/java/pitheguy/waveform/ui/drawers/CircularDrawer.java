@@ -78,12 +78,14 @@ public abstract class CircularDrawer extends AudioDrawer {
         }
     }
 
-    public static void drawRing(DrawContext context, Graphics2D g, int radius, double brightness) {
+    public static void drawRing(Graphics2D g, int centerX, int centerY, int radius, double brightness) {
         Color color = HeatmapDrawer.getColor(brightness);
-        int centerX = context.getWidth() / 2;
-        int centerY = context.getHeight() / 2;
         g.setColor(color);
         g.drawOval(centerX - radius, centerY - radius, 2 * radius + 1, 2 * radius + 1);
+    }
+
+    public static void drawRing(DrawContext context, Graphics2D g, int radius, double brightness) {
+        drawRing(g, context.getWidth() / 2, context.getHeight() / 2, radius, brightness);
     }
 
     @Override

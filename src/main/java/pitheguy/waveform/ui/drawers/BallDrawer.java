@@ -16,7 +16,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
-public class BallDrawer extends AudioDrawer {
+public class BallDrawer extends AbstractBeatDetectionDrawer {
     private static final int HISTORY_SIZE = 200;
     private double delta;
 
@@ -34,11 +34,7 @@ public class BallDrawer extends AudioDrawer {
     @Override
     protected BufferedImage drawAudio(double sec, double length) {
         super.drawAudio(sec, length);
-        short[] data = AudioData.averageChannels(left, right);
-        double[] magnitudes = FftAnalyser.performFFT(Util.normalize(data));
-        double energy = Arrays.stream(magnitudes).sum();
-        history.add(energy);
-        double cutoff = BeatDetectionHelper.getCutoff(history, getSetting("increased_sensitivity", Boolean.class));
+        boolean beatDetected = isBeatDetected();
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -46,13 +42,17 @@ public class BallDrawer extends AudioDrawer {
         int imageSize = Math.min(context.getWidth(), context.getHeight());
         int smallRadius = (int) (imageSize * getSetting("small_radius", Double.class));
         int bigRadius = (int) (imageSize * getSetting("big_radius", Double.class));
-        double delta = getDelta(energy > cutoff);
+        double delta = getDelta(beatDetected);
         int radius = (int) Util.lerp(delta, smallRadius, bigRadius);
         int startX = context.getWidth() / 2 - radius;
         int startY = context.getHeight() / 2 - radius;
         g.fillOval(startX, startY, radius * 2, radius * 2);
-        drawDebugText(g, new DebugText().add("Energy", energy).add("Cutoff", cutoff).add("Delta", delta));
         return image;
+    }
+
+    @Override
+    public boolean extraSensitivity() {
+        return getSetting("increased_sensitivity", Boolean.class);
     }
 
     private double getDelta(boolean isPeak) {
