@@ -4,7 +4,11 @@ Open-source Java application for visualizing audio files.
 
 ## Dependencies
 
-All dependencies have their Windows executables bundled with the program. But on
+- Java 21
+
+### External Dependencies
+
+All external dependencies have their Windows executables bundled with the program. But on
 other operating systems, the following programs must be installed in order to access
 certain functionality:
 
