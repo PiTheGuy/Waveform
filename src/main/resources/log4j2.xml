@@ -5,18 +5,32 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <!-- File Appender -->
-        <File name="FileLogger" fileName="${sys:WAVEFORM_DATA_PATH}/logs/application.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>
+
+        <!-- Rolling File Appender (keeps logs in one file but retains last 5 backups) -->
+        <RollingFile name="FileLogger"
+                     fileName="${sys:WAVEFORM_DATA_PATH}/logs/application.log"
+                     filePattern="${sys:WAVEFORM_DATA_PATH}/logs/application-%d{yyyy-MM-dd-HH-mm}.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- Roll file when it exceeds 10MB -->
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
     </Appenders>
+
     <Loggers>
-        <!-- Root Logger -->
-        <Root level="${env:LOG_LEVEL:-WARN}">
-            <AppenderRef ref="Console"/>
-        </Root>
+        <!-- Ensure FileLogger captures everything at DEBUG level -->
         <Logger name="FileLogger" level="DEBUG" additivity="false">
             <AppenderRef ref="FileLogger"/>
         </Logger>
+
+        <!-- Root Logger (Console uses LOG_LEVEL, FileLogger is always DEBUG) -->
+        <Root level="${env:LOG_LEVEL:-WARN}">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileLogger"/>
+        </Root>
     </Loggers>
 </Configuration>

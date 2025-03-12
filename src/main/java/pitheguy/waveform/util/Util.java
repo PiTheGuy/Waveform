@@ -156,7 +156,7 @@ public class Util {
         }
     }
 
-    public static Process runProcess(String... command) throws IOException {
+    public static Process  runProcess(String... command) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         if (Config.debug) processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT);
         return processBuilder.start();

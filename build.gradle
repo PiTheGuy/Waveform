@@ -86,3 +86,9 @@ jar {
 shadowJar {
     archiveClassifier.set('all') // Ensures all dependencies are included
 }
+
+tasks.register('runDebug', JavaExec) {
+    mainClass = 'pitheguy.waveform.main.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['-debug']
+}

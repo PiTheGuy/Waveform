@@ -75,7 +75,7 @@ public class YoutubeAudioGetter {
         String resourcePath = ResourceGetter.getYtdlpPath();
         String tempDir = System.getProperty("java.io.tmpdir");
         String audioPath = tempDir + File.separator + "audio-" + UUID.randomUUID() + ".wav";
-        Process process = Util.runProcess(resourcePath, "--extract-audio", "--audio-format", "wav", "-o", audioPath, videoUrl);
+        Process process = Util.runProcess(resourcePath, "--extract-audio", "--audio-format", "wav", "--ffmpeg-location", ResourceGetter.getFFmpegPath(), "-o", audioPath, videoUrl);
         int exitCode = process.waitFor();
         if (exitCode != 0) throw new IOException("Failed to extract audio: " + videoUrl);
         File audioFile = new File(audioPath);
