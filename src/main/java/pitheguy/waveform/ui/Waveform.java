@@ -464,10 +464,10 @@ public class Waveform extends JFrame {
     }
 
     private void handleResize() {
-        if (frameUpdater != null) frameUpdater.pause();
+        //if (frameUpdater != null) frameUpdater.pause();
         controller.handleResize();
         if (frameUpdater != null) {
-            frameUpdater.resume();
+            //frameUpdater.resume();
             frameUpdater.forceUpdate();
         }
     }

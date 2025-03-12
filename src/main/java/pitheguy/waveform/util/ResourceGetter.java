@@ -6,20 +6,27 @@ import pitheguy.waveform.ui.Waveform;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ResourceGetter {
+    private static final Map<String, File> CACHED_RESOURCES = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static String getResourcePath(String resource) {
+        if (CACHED_RESOURCES.containsKey(resource)) return CACHED_RESOURCES.get(resource).getAbsolutePath();
         try {
-            URL url = Waveform.class.getResource(resource);
-            if (url == null) throw new IOException("Resource not found: " + resource);
-            return Paths.get(url.toURI()).toString();
-        } catch (URISyntaxException | IOException e) {
+            InputStream stream = Waveform.class.getResourceAsStream(resource);
+            if (stream == null) throw new IOException("Resource not found: " + resource);
+            File tempFile = TempFileManager.createTempFile("resource", FileUtil.getExtension(resource));
+            Files.copy(stream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            CACHED_RESOURCES.put(resource, tempFile);
+            return tempFile.getAbsolutePath();
+        } catch (IOException e) {
             LOGGER.error("Could not find resource: {}", resource, e);
             return null;
         }

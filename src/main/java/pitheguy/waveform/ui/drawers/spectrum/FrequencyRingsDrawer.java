@@ -11,6 +11,8 @@ import pitheguy.waveform.util.Util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FrequencyRingsDrawer extends AudioDrawer {
 
@@ -27,7 +29,10 @@ public class FrequencyRingsDrawer extends AudioDrawer {
         double[] magnitudes = FftAnalyser.resampleMagnitudesToBands(frequencyData, numRings);
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
-        for (int ring = 0; ring < magnitudes.length; ring++) CircularDrawer.drawRing(context, g, ring, magnitudes[ring]);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        List<CircularDrawer.Ring> rings = new ArrayList<>();
+        for (int ringNum = 0; ringNum < magnitudes.length; ringNum++) rings.add(new CircularDrawer.Ring(ringNum, magnitudes[ringNum]));
+        CircularDrawer.combineRings(rings).forEach(ring -> ring.draw(context, g));
         return image;
     }
 
