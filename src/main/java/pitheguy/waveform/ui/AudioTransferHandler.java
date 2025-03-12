@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AudioTransferHandler extends TransferHandler {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(AudioTransferHandler.class);
     private final Waveform waveform;
 
     public AudioTransferHandler(Waveform waveform) {

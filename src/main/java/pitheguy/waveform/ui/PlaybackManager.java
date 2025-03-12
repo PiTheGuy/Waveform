@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaybackManager {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(PlaybackManager.class);
     private final Waveform parent;
     private AudioPlayer audioPlayer;
     public final ArrayList<TrackInfo> queue = new ArrayList<>();

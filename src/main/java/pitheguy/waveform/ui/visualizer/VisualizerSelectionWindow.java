@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.*;
 
 public class VisualizerSelectionWindow extends JWindow {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(VisualizerSelectionWindow.class);
     public static final int HEIGHT = 400;
     private final Waveform parent;
     private final boolean fromError;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SessionManager {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(SessionManager.class);
     private static SessionManager instance;
     private Session session;
 

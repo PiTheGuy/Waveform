@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Util {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(Util.class);
 
     public static boolean areUnique(Object... elements) {
         Set<Object> uniqueElements = new HashSet<>(Arrays.asList(elements));

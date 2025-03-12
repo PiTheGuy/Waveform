@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public abstract class ExportStrategy {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(ExportStrategy.class);
     private ExportContext context;
     private boolean isExporting = false;
 

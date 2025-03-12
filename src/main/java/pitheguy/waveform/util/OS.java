@@ -57,7 +57,7 @@ public enum OS {
                 case OTHER -> 32;
             };
         } catch (Exception e) {
-            LogManager.getLogger().warn("Failed to get icon size", e);
+            LogManager.getLogger(OS.class).warn("Failed to get icon size", e);
             return 32;
         }
     }

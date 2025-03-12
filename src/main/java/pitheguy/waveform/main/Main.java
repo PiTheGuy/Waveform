@@ -47,7 +47,7 @@ public class Main {
     }
 
     private static void setSystemProperties() {
-        System.setProperty("PROGRAM_DATA_PATH", OS.getProgramDataPath().toString());
+        System.setProperty("WAVEFORM_DATA_PATH", OS.getProgramDataPath().toString());
         System.setProperty("sun.java2d.opengl", "true");
         System.setProperty("sun.java2d.d3d", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");

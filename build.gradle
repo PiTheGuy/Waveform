@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'pitheguy.waveform' // Replace with your actual group ID
@@ -72,4 +73,16 @@ sourceSets {
 
 application {
     mainClass = 'pitheguy.waveform.main.Main'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'pitheguy.waveform.main.Main'
+        )
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('all') // Ensures all dependencies are included
 }

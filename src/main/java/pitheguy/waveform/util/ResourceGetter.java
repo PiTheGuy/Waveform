@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ResourceGetter {
     private static final Map<String, File> CACHED_RESOURCES = new HashMap<>();
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(ResourceGetter.class);
 
     public static String getResourcePath(String resource) {
         if (CACHED_RESOURCES.containsKey(resource)) return CACHED_RESOURCES.get(resource).getAbsolutePath();

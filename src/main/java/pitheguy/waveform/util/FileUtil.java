@@ -13,7 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class FileUtil {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(FileUtil.class);
 
     public static String getExtension(String filename) {
         return filename.substring(filename.lastIndexOf(".")).toLowerCase();

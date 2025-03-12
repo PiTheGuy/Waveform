@@ -14,7 +14,7 @@ import java.nio.file.*;
 import java.util.List;
 
 public class QueueExportStrategy extends ExportStrategy {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(QueueExportStrategy.class);
 
     public QueueExportStrategy() {
     }

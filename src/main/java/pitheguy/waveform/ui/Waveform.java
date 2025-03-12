@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Waveform extends JFrame {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(Waveform.class);
     public static final String VERSION = "1.2.1";
     public static final String LOADING_TEXT = "Loading...";
     public static final List<String> NATIVE_FORMATS = List.of(".mp3", ".wav");
