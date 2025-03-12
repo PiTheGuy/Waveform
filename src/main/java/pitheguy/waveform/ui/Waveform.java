@@ -65,6 +65,7 @@ public class Waveform extends JFrame {
 
     public Waveform(boolean visible) {
         super("Waveform");
+        LOGGER.info("Starting...");
         instance = this;
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         if (Config.fullScreen && visible) toggleFullscreen();
