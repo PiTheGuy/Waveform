@@ -5,6 +5,8 @@ import pitheguy.waveform.io.DrawContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CircularDrawer extends AudioDrawer {
     public static final int MAX_DOUBLE_UP_LENGTH = 5000;
@@ -94,5 +96,45 @@ public abstract class CircularDrawer extends AudioDrawer {
     }
 
     public record PolarCoordinates(double r, double theta) {
+    }
+    public static List<Ring> combineRings(List<Ring> rings) {
+        List<Ring> result = new ArrayList<>();
+        Ring currentChain = null;
+        for (Ring ring : rings) {
+            if (ring.brightness < 1) {
+                if (currentChain != null) {
+                    result.add(currentChain);
+                    currentChain = null;
+                }
+                result.add(ring);
+            } else {
+                if (currentChain == null) currentChain = new Ring(ring.startRadius, ring.endRadius, 1);
+                else currentChain.endRadius = ring.endRadius;
+            }
+        }
+        if (currentChain != null) result.add(currentChain);
+        return result;
+    }
+
+    public static class Ring {
+        public final int startRadius;
+        public int endRadius;
+        public final double brightness;
+
+        public Ring(int startRadius, int endRadius, double brightness) {
+            this.startRadius = startRadius;
+            this.endRadius = endRadius;
+            this.brightness = brightness;
+        }
+
+        public Ring(int radius, double brightness) {
+            this(radius, radius + 1, brightness);
+        }
+
+        public void draw(DrawContext context, Graphics2D g) {
+            if (brightness == 0) return;
+            g.setStroke(new BasicStroke(endRadius - startRadius));
+            CircularDrawer.drawRing(context, g, (startRadius + endRadius) / 2, brightness);
+        }
     }
 }

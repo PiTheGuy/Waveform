@@ -10,7 +10,8 @@ import pitheguy.waveform.util.Util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.BitSet;
+import java.util.List;
+import java.util.*;
 
 public class FrequencyChangeDrawer extends AudioDrawer {
     double[] previousMagnitudes;
@@ -37,14 +38,23 @@ public class FrequencyChangeDrawer extends AudioDrawer {
         BufferedImage image = createBlankImage();
         Graphics2D g = image.createGraphics();
         g.setColor(Config.foregroundColor());
+        drawLines(magnitudes, increasedFrequencies, g);
+        return image;
+    }
+
+    private void drawLines(double[] magnitudes, BitSet increasedFrequencies, Graphics2D g) {
         double scale = (double) getNumLines() / magnitudes.length;
+        List<CircularDrawer.Ring> rings = new ArrayList<>();
         for (int i = 0; i < magnitudes.length; i++) {
             int startIndex = (int) (i * scale);
             int endIndex = (int) ((i + 1) * scale) - 1;
-            if (increasedFrequencies.get(i)) for (int index = startIndex; index <= endIndex; index++)
+            if (drawDirection == DrawDirection.RINGS) {
+                rings.add(new CircularDrawer.Ring(startIndex, endIndex, increasedFrequencies.get(i) ? 1 : 0));
+            } else if (increasedFrequencies.get(i)) for (int index = startIndex; index <= endIndex; index++)
                 drawLine(g, index);
         }
-        return image;
+        if (drawDirection == DrawDirection.RINGS)
+            CircularDrawer.combineRings(rings).forEach(ring -> ring.draw(context, g));
     }
 
     private int getNumLines() {
@@ -96,7 +106,8 @@ public class FrequencyChangeDrawer extends AudioDrawer {
     private enum DrawDirection {
         HORIZONTAL("Horizontal"),
         VERTICAL("Vertical"),
-        RINGS("Rings"),;
+        RINGS("Rings"),
+        ;
 
         private final String name;
 

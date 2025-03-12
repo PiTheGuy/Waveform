@@ -35,36 +35,34 @@ public class BeatDetectionRipplesDrawer extends AbstractBeatDetectionDrawer {
     }
 
     private void newRipple() {
-        Point point = getRandomPoint();
-        ripples.add(new Ripple(point.x, point.y));
-    }
-
-    private Point getRandomPoint() {
         boolean allowEdge = getSetting("allow_edge", Boolean.class);
-        int rippleSize = getRippleEndSize();
-        int margin = allowEdge ? 0 : rippleSize;
+        double rippleSize = getSetting("end_radius", Double.class);
+        double margin = allowEdge ? 0 : rippleSize;
         Random random = new Random();
-        Point point;
         int attempts = 0;
+        double x, y;
         do {
-            int x = random.nextInt(margin, context.getWidth() - margin);
-            int y = random.nextInt(margin, context.getHeight() - margin);
-            point = new Point(x, y);
-        } while (!isValidPoint(point) && attempts++ < 20);
-        return point;
+            x = random.nextDouble(margin, 1 - margin);
+            y = random.nextDouble(margin, 1 - margin);
+        } while (!isValidPoint(x, y) && attempts++ < 20);
+        ripples.add(new Ripple(x, y));
     }
 
-    private boolean isValidPoint(Point point) {
+    private boolean isValidPoint(double x, double y) {
         boolean allowOverlap = getSetting("allow_overlap", Boolean.class);
         boolean allowEdge = getSetting("allow_edge", Boolean.class);
-        int rippleSize = getRippleEndSize();
+        double rippleSize = getSetting("end_radius", Double.class);
         if (!allowEdge) {
-            if (point.x < rippleSize || point.x > context.getWidth() - rippleSize) return false;
-            if (point.y < rippleSize || point.y > context.getHeight() - rippleSize) return false;
+            if (x < rippleSize || x > 1 - rippleSize) return false;
+            if (y < rippleSize || y > 1 - rippleSize) return false;
         }
         if (!allowOverlap)
-            for (Ripple ripple : ripples)
-                if (point.distance(ripple.x, ripple.y) < rippleSize * 2) return false;
+            for (Ripple ripple : ripples) {
+                double dx = x - ripple.x;
+                double dy = y - ripple.y;
+                double distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < rippleSize * 2) return false;
+            }
         return true;
     }
 
@@ -106,12 +104,12 @@ public class BeatDetectionRipplesDrawer extends AbstractBeatDetectionDrawer {
     }
 
     private class Ripple {
-        private final int x;
-        private final int y;
+        private final double x;
+        private final double y;
         private int framesExisted = 0;
         private boolean finished = false;
 
-        public Ripple(int x, int y) {
+        public Ripple(double x, double y) {
             this.x = x;
             this.y = y;
         }
@@ -121,9 +119,12 @@ public class BeatDetectionRipplesDrawer extends AbstractBeatDetectionDrawer {
             int startSize = getRippleStartSize();
             int endSize = getRippleEndSize();
             int radius = Util.lerp((double) framesExisted / getRippleLifetime(), 0, endSize - startSize);
-            for (int r = radius; r < Math.min(startSize * 2, startSize + radius); r++)
-                CircularDrawer.drawRing(g, x, y, r, 1);
-            if (framesExisted++ > endSize) finished = true;
+            int endRadius = Math.min(endSize, startSize + radius);
+            g.setStroke(new BasicStroke(Math.max(0, endRadius - radius)));
+            int centerX = (int) (x * context.getWidth());
+            int centerY = (int) (y * context.getHeight());
+            CircularDrawer.drawRing(g, centerX, centerY, (radius + endRadius) / 2, 1);
+            if (framesExisted++ > getRippleLifetime() * 2) finished = true;
         }
 
         public boolean isFinished() {
