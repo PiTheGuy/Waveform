@@ -5,6 +5,7 @@ import org.apache.commons.cli.*;
 import pitheguy.waveform.config.*;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.io.download.YoutubeAudioGetter;
+import pitheguy.waveform.io.download.YoutubeImportStatusListener;
 import pitheguy.waveform.io.session.Session;
 import pitheguy.waveform.main.validator.CommandLineValidator;
 import pitheguy.waveform.main.validator.ValidationRule;
@@ -116,7 +117,27 @@ public class Main {
     private static List<TrackInfo> getInputFilesForExport(Waveform waveform) throws Exception {
         if (INPUT_FILE != null) return getInputFiles().stream().map(TrackInfo::new).toList();
         else if (IMPORT_URL != null)
-            return waveform.audioGetter.getAudio(IMPORT_URL, System.out::println);
+            return waveform.audioGetter.getAudio(IMPORT_URL, new YoutubeImportStatusListener() {
+                @Override
+                public void onStatusUpdate(String status) {
+                    System.out.println(status);
+                }
+
+                @Override
+                public void onDownloadProgressUpdate(double progress) {
+
+                }
+
+                @Override
+                public void onDownloadStarted() {
+
+                }
+
+                @Override
+                public void onDownloadFinished() {
+
+                }
+            });
         else return List.of();
     }
 

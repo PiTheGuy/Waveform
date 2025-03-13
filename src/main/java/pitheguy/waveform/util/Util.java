@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -156,7 +157,13 @@ public class Util {
         }
     }
 
-    public static Process  runProcess(String... command) throws IOException {
+    public static Process runProcess(String... command) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        if (Config.debug) processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        return processBuilder.start();
+    }
+
+    public static Process runProcess(List<String> command) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         if (Config.debug) processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT);
         return processBuilder.start();

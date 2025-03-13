@@ -5,8 +5,7 @@ import org.apache.logging.log4j.Logger;
 import pitheguy.waveform.config.Config;
 import pitheguy.waveform.config.LoopState;
 import pitheguy.waveform.io.*;
-import pitheguy.waveform.io.download.DownloadFailedException;
-import pitheguy.waveform.io.download.YoutubeAudioGetter;
+import pitheguy.waveform.io.download.*;
 import pitheguy.waveform.io.export.ExportManager;
 import pitheguy.waveform.io.microphone.MicrophoneCapture;
 import pitheguy.waveform.io.microphone.MicrophoneFrameUpdater;
@@ -519,10 +518,34 @@ public class Waveform extends JFrame {
                     if (frameUpdater != null) frameUpdater.silentShutdown();
                     startup();
                 }
-                List<TrackInfo> tracks = audioGetter.getAudio(url, addToQueue ? status -> controller.showSubtext(status, ControlsPanel.NEVER_TIMEOUT) : controller::setText);
+
+                List<TrackInfo> tracks = audioGetter.getAudio(url, new YoutubeImportStatusListener() {
+                    @Override
+                    public void onStatusUpdate(String status) {
+                        if (addToQueue) controller.showSubtext(status, ControlsPanel.NEVER_TIMEOUT);
+                        else controller.setText(status);
+                    }
+
+                    @Override
+                    public void onDownloadProgressUpdate(double progress) {
+                        controller.setProgress(progress);
+                    }
+
+                    @Override
+                    public void onDownloadStarted() {
+                        controller.showProgressBar();
+                    }
+
+                    @Override
+                    public void onDownloadFinished() {
+                        controller.hideProgressBar();
+                    }
+                });
                 processTracks(tracks, addToQueue);
             } catch (IOException | DownloadFailedException | InterruptedException e) {
-                showError("Import Failed", "Failed to import " + (playlist ? "playlist" : "audio"));
+                String desc = playlist ? "playlist" : "audio";
+                LOGGER.error("Failed to import {} with url {}", desc, url, e);
+                showError("Import Failed", "Failed to import " + desc);
                 if (!addToQueue) startup();
             }
         });

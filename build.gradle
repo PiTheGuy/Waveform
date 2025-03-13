@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'pitheguy.waveform' // Replace with your actual group ID
-version = '1.2.2'
+version = '1.2.3'
 
 repositories {
     mavenCentral()

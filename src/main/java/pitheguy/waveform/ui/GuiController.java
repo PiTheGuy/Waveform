@@ -18,6 +18,7 @@ public class GuiController {
     private QueueManagementPanel queuePanel;
     private ControlsPanel controls;
     private final JLabel imgLabel;
+    private JProgressBar progressBar;
     private boolean isQueuePanelVisible = false;
     private BufferedImage image;
 
@@ -32,6 +33,34 @@ public class GuiController {
         imgLabel.setLayout(null);
         addControls();
         addQueuePanel();
+        addProgressBar();
+    }
+
+    public void addProgressBar() {
+        progressBar = new JProgressBar();
+        int x = (int) (parent.getWidth() * 0.3);
+        int y = (int) (parent.getHeight() * 0.6);
+        int width = (int) (parent.getWidth() * 0.4);
+        int height = (int) (parent.getHeight() * 0.1);
+        progressBar.setBounds(x, y, width, height);
+        progressBar.setBackground(Config.backgroundColor());
+        progressBar.setForeground(Config.foregroundColor());
+        progressBar.setVisible(false);
+        progressBar.setMaximum(1000);
+        parent.add(progressBar);
+    }
+
+    public void showProgressBar() {
+        progressBar.setVisible(true);
+        progressBar.setValue(0);
+    }
+
+    public void hideProgressBar() {
+        progressBar.setVisible(false);
+    }
+
+    public void setProgress(double progress) {
+        progressBar.setValue((int) (progress * 1000));
     }
 
     public void populateMenuBar() {
@@ -128,6 +157,8 @@ public class GuiController {
         menuBar.updateColors();
         imgLabel.setBackground(Config.backgroundColor());
         imgLabel.setForeground(Config.foregroundColor());
+        progressBar.setBackground(Config.backgroundColor());
+        progressBar.setForeground(Config.foregroundColor());
     }
 
     public JLabel getImgLabel() {
@@ -188,6 +219,11 @@ public class GuiController {
         imgLabel.revalidate();
         controls.reposition();
         queuePanel.reposition();
+        int x = (int) (parent.getWidth() * 0.3);
+        int y = (int) (parent.getHeight() * 0.6);
+        int width = (int) (parent.getWidth() * 0.4);
+        int height = (int) (parent.getHeight() * 0.1);
+        progressBar.setBounds(x, y, width, height);
     }
 
     public void onAudioStarted() {

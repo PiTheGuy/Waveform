@@ -6,8 +6,7 @@ import pitheguy.waveform.config.Config;
 import pitheguy.waveform.io.TrackInfo;
 import pitheguy.waveform.util.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,44 +25,47 @@ public class YoutubeAudioGetter {
         return ResourceGetter.isYtdlpAvailable();
     }
 
-    public List<TrackInfo> getAudio(String url, Consumer<String> statusOutput) throws IOException, InterruptedException {
-        if (url.startsWith(PLAYLIST_PREFIX)) return getPlaylistAudio(url, statusOutput);
-        else return List.of(getVideoAudio(url, null, statusOutput));
+    public List<TrackInfo> getAudio(String url, YoutubeImportStatusListener listener) throws IOException, InterruptedException {
+        if (url.startsWith(PLAYLIST_PREFIX)) return getPlaylistAudio(url, listener);
+        else return List.of(getVideoAudio(url, null, listener));
     }
 
-    public List<TrackInfo> getPlaylistAudio(String url, Consumer<String> statusOutput) throws IOException, InterruptedException {
+    public List<TrackInfo> getPlaylistAudio(String url, YoutubeImportStatusListener listener) throws IOException, InterruptedException {
         if (!url.startsWith(PLAYLIST_PREFIX)) throw new IllegalArgumentException("Invalid playlist url: " + url);
         String playlistId = url.substring(PLAYLIST_PREFIX.length());
         if (playlistId.contains("&")) playlistId = playlistId.substring(0, playlistId.indexOf("&"));
-        statusOutput.accept("Getting videos...");
+        listener.onStatusUpdate("Getting videos...");
         List<YoutubeApiManager.PlaylistItem> playlistItems = YoutubeApiManager.getPlaylistItems(playlistId);
         List<TrackInfo> tracks = new ArrayList<>();
         AtomicInteger videosProcessed = new AtomicInteger(0);
-        statusOutput.accept("Downloading videos (" + videosProcessed.get() + "/" + playlistItems.size() + ")...");
+        listener.onStatusUpdate("Downloading videos (" + videosProcessed.get() + "/" + playlistItems.size() + ")...");
+        listener.onDownloadStarted();
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         for (YoutubeApiManager.PlaylistItem playlistItem : playlistItems) {
             executor.submit(() -> {
                 try {
-                    tracks.add(getVideoAudio(playlistItem.url(), playlistItem.title(), status -> {})); // Don't need per video status updates
+                    tracks.add(getVideoAudio(playlistItem.url(), playlistItem.title(), YoutubeImportStatusListener.EMPTY));
                 } catch (IOException | DownloadFailedException | InterruptedException e) {
                     LOGGER.warn("Failed to download video: {}", playlistItem.url(), e);
                     if (Config.debug) e.printStackTrace();
                 }
                 int processedCount = videosProcessed.incrementAndGet();
-                statusOutput.accept("Downloading videos (" + processedCount + "/" + playlistItems.size() + ")...");
+                listener.onStatusUpdate("Downloading videos (" + processedCount + "/" + playlistItems.size() + ")...");
+                listener.onDownloadProgressUpdate((double) processedCount / playlistItems.size());
             });
         }
         executor.shutdown();
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        listener.onDownloadFinished();
         return tracks;
     }
 
-    public TrackInfo getVideoAudio(String url, String title, Consumer<String> statusOutput) throws IOException, InterruptedException {
+    public TrackInfo getVideoAudio(String url, String title, YoutubeImportStatusListener listener) throws IOException, InterruptedException {
         if (cache.containsKey(url)) return cache.get(url);
-        statusOutput.accept("Downloading...");
-        File audioFile = extractVideoAudio(url);
+        listener.onStatusUpdate("Downloading...");
+        File audioFile = extractVideoAudio(url, listener);
         if (title == null) {
-            statusOutput.accept("Getting metadata...");
+            listener.onStatusUpdate("Getting metadata...");
             title = YoutubeApiManager.getVideoTitle(url);
         }
         TrackInfo trackInfo = new TrackInfo(audioFile, title);
@@ -71,13 +73,37 @@ public class YoutubeAudioGetter {
         return trackInfo;
     }
 
-    private File extractVideoAudio(String videoUrl) throws IOException, InterruptedException {
+    private File extractVideoAudio(String videoUrl, YoutubeImportStatusListener listener) throws IOException, InterruptedException {
         String resourcePath = ResourceGetter.getYtdlpPath();
         String tempDir = System.getProperty("java.io.tmpdir");
         String audioPath = tempDir + File.separator + "audio-" + UUID.randomUUID() + ".wav";
-        Process process = Util.runProcess(resourcePath, "--extract-audio", "--audio-format", "wav", "--ffmpeg-location", ResourceGetter.getFFmpegPath(), "-o", audioPath, videoUrl);
+        List<String> command = new ArrayList<>(List.of(resourcePath, "--extract-audio", "--audio-format", "wav"));
+        if (OS.isWindows()) {
+            command.add("--ffmpeg-location");
+            command.add(ResourceGetter.getFFmpegPath());
+        }
+        command.add("-o");
+        command.add(audioPath);
+        command.add(videoUrl);
+        listener.onDownloadStarted();
+        Process process = Util.runProcess(command);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        reader.lines().forEach(line -> {
+            if (!line.startsWith("[download]")) return;
+            String[] parts = line.split("\\s+");
+            String percentStr = parts[1];
+            if (!percentStr.contains("%")) return;
+            if (percentStr.equals("100%")) {
+                listener.onDownloadFinished();
+                listener.onStatusUpdate("Processing...");
+                return;
+            }
+            percentStr = percentStr.substring(0, percentStr.indexOf("%"));
+            double progress = Double.parseDouble(percentStr) / 100;
+            listener.onDownloadProgressUpdate(progress);
+        });
         int exitCode = process.waitFor();
-        if (exitCode != 0) throw new IOException("Failed to extract audio: " + videoUrl);
+        if (exitCode != 0) throw new IOException("YouTube download failed, exit code " + exitCode);
         File audioFile = new File(audioPath);
         TempFileManager.registerTempFile(audioFile);
         return audioFile;
