@@ -68,7 +68,10 @@ public class Waveform extends JFrame {
         instance = this;
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         if (Config.fullScreen && visible) toggleFullscreen();
-        setSize(WIDTH, HEIGHT);
+        pack();
+        Insets insets = getInsets();
+        int menuBarHeight = Config.hideMenuBar ? 0 : 20;
+        setSize(insets.left + insets.right + WIDTH, insets.top + insets.bottom + menuBarHeight + HEIGHT);
         setLocationRelativeTo(null);
         setResizable(true);
         setLayout(null);

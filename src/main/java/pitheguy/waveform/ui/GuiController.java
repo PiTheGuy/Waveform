@@ -68,7 +68,7 @@ public class GuiController {
         menuBar.setVisible(!Config.hideMenuBar);
         parent.revalidate();
         parent.repaint();
-        updateState();
+        updateState();;
         imgLabel.setSize(parent.getContentPane().getWidth(), parent.getContentPane().getHeight()); // Needs to be done after menu population
     }
 

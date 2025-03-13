@@ -209,7 +209,7 @@ public class ExportOptionsDialog extends JDialog {
 
     private boolean showOverrideWarning() {
         return parent.dialogManager.showConfirmDialog("export_override", "File Already Exists",
-                "A file already exist at the specified path. Do you want to override it?");
+                "A file already exists at the specified path. Do you want to override it?");
     }
 
     private ResolutionPreset[] getResolutionPresets() {
